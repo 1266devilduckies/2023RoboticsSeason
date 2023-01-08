@@ -4,12 +4,12 @@
 
 package frc.robot;
 
-import frc.robot.Constants.OperatorConstants;
-import frc.robot.commands.Autos;
+import frc.robot.Constants.DriverConstants;
 import frc.robot.commands.ExampleCommand;
+import frc.robot.subsystems.DrivetrainSubsystem;
 import frc.robot.subsystems.ExampleSubsystem;
+
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
-import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandPS4Controller;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
@@ -22,16 +22,18 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
+  private final DrivetrainSubsystem drivetrainSubsystem;
   
   private SendableChooser<DuckAutoProfile> autonomousMode = new SendableChooser<DuckAutoProfile>();
 
-  // Replace with CommandPS4Controller or CommandJoystick if needed
-  private final CommandPS4Controller m_driverController =
-      new CommandPS4Controller(OperatorConstants.kDriverControllerPort);
+  public final static CommandPS4Controller driverJoystick =
+      new CommandPS4Controller(DriverConstants.port);
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
 
+    drivetrainSubsystem = new DrivetrainSubsystem();
+    
     DuckAutoProfile emptyProfile = new DuckAutoProfile();
     autonomousMode.setDefaultOption("Do nothing", emptyProfile);
 
@@ -55,7 +57,7 @@ public class RobotContainer {
 
     // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
     // cancelling on release.
-    m_driverController.square().whileTrue(m_exampleSubsystem.exampleMethodCommand());
+    driverJoystick.square().whileTrue(m_exampleSubsystem.exampleMethodCommand());
   }
 
   public DuckAutoProfile getAutonomousProfile() {
