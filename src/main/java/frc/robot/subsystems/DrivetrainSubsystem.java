@@ -1,19 +1,31 @@
 package frc.robot.subsystems;
 
+import java.io.IOException;
+
+import org.photonvision.PhotonCamera;
+import org.photonvision.PhotonUtils;
+import org.photonvision.targeting.PhotonTrackedTarget;
+
 import com.ctre.phoenix.motorcontrol.InvertType;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.TalonFXFeedbackDevice;
 import com.ctre.phoenix.motorcontrol.TalonFXSimCollection;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 
+import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.math.estimator.DifferentialDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Transform2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
 import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.wpilibj.ADXRS450_Gyro;
+import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.RobotController;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.simulation.ADXRS450_GyroSim;
 import edu.wpi.first.wpilibj.simulation.DifferentialDrivetrainSim;
@@ -46,9 +58,18 @@ public class DrivetrainSubsystem extends SubsystemBase {
     0,0,
     new Pose2d()); //will add vision measurements once auton starts;
 
-  private final Field2d field;
+  private final Field2d field = new Field2d();
+  private final PhotonCamera camera = new PhotonCamera(Constants.LimelightCharacteristics.photonVisionName);
+  private AprilTagFieldLayout aprilTagFieldLayout;
   public DrivetrainSubsystem() {
     //constructor gets ran at robotInit()
+    try {
+      aprilTagFieldLayout = new AprilTagFieldLayout(
+        Filesystem.getDeployDirectory().getName() + "/2023-chargedup.json"
+      );
+    } catch(IOException e) {
+      System.out.println("couldnt load field image :(");
+    }
     gyro.calibrate();
         
     // Reset settings
@@ -94,7 +115,6 @@ public class DrivetrainSubsystem extends SubsystemBase {
         Constants.DrivetrainCharacteristics.trackWidthMeters,
         null
     );
-    field = new Field2d();
     SmartDashboard.putData("Field", field);
 
     leftMotorSim = MainLeftMotorBack.getSimCollection();
@@ -109,6 +129,23 @@ public class DrivetrainSubsystem extends SubsystemBase {
     Constants.DrivetrainCharacteristics.gearing, 2048.0, Constants.DrivetrainCharacteristics.wheelRadiusMeters);
 
     odometry.update(gyro.getRotation2d(), leftDistanceMeters, rightDistanceMeters);
+    Rotation2d robotRotation2d = odometry.getEstimatedPosition().getRotation();
+    var result = camera.getLatestResult();
+    if (result.hasTargets() == true) {
+      PhotonTrackedTarget bestApriltag = result.getBestTarget();
+      Pose3d bestAprilTagPoseOnField = aprilTagFieldLayout.getTagPose(bestApriltag.getFiducialId()).get();
+      Pose2d apriltagPose2d = new Pose2d(bestAprilTagPoseOnField.getX(), bestAprilTagPoseOnField.getY(), Rotation2d.fromDegrees(bestAprilTagPoseOnField.getRotation().getY()));
+      double targetDistanceMeters = PhotonUtils.calculateDistanceToTargetMeters(Constants.LimelightCharacteristics.cameraHeightMeters, 
+      bestAprilTagPoseOnField.getZ(), 
+      Constants.LimelightCharacteristics.cameraPitchRadians, 
+      bestApriltag.getPitch());
+      Translation2d cameraToTargetTranslation = PhotonUtils.estimateCameraToTargetTranslation(targetDistanceMeters, Rotation2d.fromDegrees(bestApriltag.getYaw()));
+      Transform2d cameraToTarget = PhotonUtils.estimateCameraToTarget(cameraToTargetTranslation, apriltagPose2d, robotRotation2d);
+      Pose2d robotPose = PhotonUtils.estimateFieldToRobot(cameraToTarget, 
+      apriltagPose2d, 
+      Constants.LimelightCharacteristics.offsetMeters);
+      odometry.addVisionMeasurement(robotPose, Timer.getFPGATimestamp());
+    }
 
     double x = -RobotContainer.driverJoystick.getRawAxis(Constants.DriverConstants.ForwardDriveAxis);
     double y = RobotContainer.driverJoystick.getRawAxis(Constants.DriverConstants.TurningDriveAxis);

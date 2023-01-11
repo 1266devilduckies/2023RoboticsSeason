@@ -4,6 +4,7 @@
 
 package frc.robot;
 
+import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.util.Units;
 
 /**
@@ -41,5 +42,11 @@ public final class Constants {
     public static final double trackWidthMeters = Units.inchesToMeters(24.75);
     public static final double gearing = 25/3.;
     public static final double wheelRadiusMeters = Units.inchesToMeters(2);
+  }
+  public static class LimelightCharacteristics {
+    public static final Transform2d offsetMeters = new Transform2d();
+    public static final String photonVisionName = "camera";
+    public static final double cameraPitchRadians = 0;
+    public static final double cameraHeightMeters = 0;
   }
 }
