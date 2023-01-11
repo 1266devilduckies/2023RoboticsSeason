@@ -4,8 +4,11 @@
 
 package frc.robot;
 
+import java.util.HashMap;
+
 import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj2.command.Command;
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
@@ -42,6 +45,9 @@ public final class Constants {
     public static final double trackWidthMeters = Units.inchesToMeters(24.75);
     public static final double gearing = 25/3.;
     public static final double wheelRadiusMeters = Units.inchesToMeters(2);
+    public static final double kS = 0;
+    public static final double kV = 0;
+    public static final double kA = 0;
   }
   public static class LimelightCharacteristics {
     public static final Transform2d offsetMeters = new Transform2d();
@@ -49,4 +55,5 @@ public final class Constants {
     public static final double cameraPitchRadians = 0;
     public static final double cameraHeightMeters = 0;
   }
+  public static HashMap<String, Command> eventMap = new HashMap<>();
 }

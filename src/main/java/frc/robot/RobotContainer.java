@@ -9,7 +9,10 @@ import frc.robot.commands.ExampleCommand;
 import frc.robot.subsystems.DrivetrainSubsystem;
 import frc.robot.subsystems.ExampleSubsystem;
 
+import com.pathplanner.lib.auto.RamseteAutoBuilder;
+
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandPS4Controller;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
@@ -22,8 +25,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
-  private final DrivetrainSubsystem drivetrainSubsystem;
-  
+  private final DrivetrainSubsystem drivetrainSubsystem = new DrivetrainSubsystem();
   private SendableChooser<DuckAutoProfile> autonomousMode = new SendableChooser<DuckAutoProfile>();
 
   public final static CommandPS4Controller driverJoystick =
@@ -31,14 +33,13 @@ public class RobotContainer {
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
-
-    drivetrainSubsystem = new DrivetrainSubsystem();
-    
     DuckAutoProfile emptyProfile = new DuckAutoProfile();
     autonomousMode.setDefaultOption("Do nothing", emptyProfile);
 
     // Configure the trigger bindings
     configureBindings();
+    //configure the auton markers
+    configureMarkers();
   }
 
   /**
@@ -58,6 +59,10 @@ public class RobotContainer {
     // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
     // cancelling on release.
     driverJoystick.square().whileTrue(m_exampleSubsystem.exampleMethodCommand());
+  }
+
+  private void configureMarkers() {
+    Constants.eventMap.put("marker1", new PrintCommand("passed marker 1"));
   }
 
   public DuckAutoProfile getAutonomousProfile() {

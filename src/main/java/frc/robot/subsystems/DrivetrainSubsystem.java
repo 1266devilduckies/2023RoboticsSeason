@@ -13,6 +13,8 @@ import com.ctre.phoenix.motorcontrol.TalonFXSimCollection;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
+import edu.wpi.first.math.controller.RamseteController;
+import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.estimator.DifferentialDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
@@ -52,8 +54,13 @@ public class DrivetrainSubsystem extends SubsystemBase {
   private final ADXRS450_Gyro gyro = new ADXRS450_Gyro();
   private final ADXRS450_GyroSim gyroSim = new ADXRS450_GyroSim(gyro);
 
+  public final RamseteController ramseteController = new RamseteController();
+  public final DifferentialDriveKinematics drivetrainKinematics = new DifferentialDriveKinematics(Constants.DrivetrainCharacteristics.trackWidthMeters);
+  private final SimpleMotorFeedforward drivetrainFeedforward = new SimpleMotorFeedforward(Constants.DrivetrainCharacteristics.kS, 
+  Constants.DrivetrainCharacteristics.kV, Constants.DrivetrainCharacteristics.kA);
+
   private final DifferentialDrivePoseEstimator odometry = new DifferentialDrivePoseEstimator(
-    new DifferentialDriveKinematics(Constants.DrivetrainCharacteristics.trackWidthMeters), 
+    drivetrainKinematics, 
     Rotation2d.fromDegrees(-gyro.getAngle()), 
     0,0,
     new Pose2d()); //will add vision measurements once auton starts;
@@ -212,6 +219,10 @@ public class DrivetrainSubsystem extends SubsystemBase {
     MainLeftMotorBack.setVoltage(leftVolts);
     MainRightMotorBack.setVoltage(rightVolts);
     robotDrive.feed(); // feed watchdog to prevent error from clogging can bus
+  }
+
+  public void tankDriveMetersPerSecond(double leftMetersSecond, double rightMetersSecond) {
+    tankDriveVolts(drivetrainFeedforward.calculate(leftMetersSecond), drivetrainFeedforward.calculate(rightMetersSecond));
   }
 
   public void resetOdometry(Pose2d pose) {
