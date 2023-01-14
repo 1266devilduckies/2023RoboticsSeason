@@ -7,6 +7,7 @@ package frc.robot;
 import frc.robot.Constants.DriverConstants;
 import frc.robot.commands.DriveCommand;
 import frc.robot.subsystems.DrivetrainSubsystem;
+import frc.robot.subsystems.MotorTestSubsystem;
 
 import com.pathplanner.lib.auto.RamseteAutoBuilder;
 
@@ -26,6 +27,7 @@ public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   //private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
   private final DrivetrainSubsystem drivetrainSubsystem = new DrivetrainSubsystem();
+  private final MotorTestSubsystem motorTestSubsystem = new MotorTestSubsystem();
   private SendableChooser<DuckAutoProfile> autonomousMode = new SendableChooser<DuckAutoProfile>();
 
   private CommandScheduler commandScheduler = CommandScheduler.getInstance();

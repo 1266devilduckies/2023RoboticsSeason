@@ -24,6 +24,14 @@ import frc.robot.subsystems.DrivetrainSubsystem;
 
 public final class Autos {
   
+public Auto()
+
+  public enum Auto{
+    HIGH_DOCKHIGH,
+    HIGH_DOCKLOW,
+    HIGH_FORWARD(),
+  }
+
   public static CommandBase templateAuto(DrivetrainSubsystem drivetrainSubsystem) {
     PathPlannerTrajectory examplePath = PathPlanner.loadPath("New Path", new PathConstraints(4, 3)); //in terms of m/s
     
@@ -37,6 +45,22 @@ public final class Autos {
     drivetrainSubsystem);
 
     return autoBuilder.fullAuto(examplePath);
+  }
+
+  //example auto that drives forward 
+  public static CommandBase driveForwardAuto(DrivetrainSubsystem drivetrainSubsystem) {
+    PathPlannerTrajectory path = PathPlanner.loadPath("ForwardPath", new PathConstraints(4, 3)); //in terms of m/s
+    
+    RamseteAutoBuilder autoBuilder = new RamseteAutoBuilder(
+    drivetrainSubsystem::getPose, 
+    drivetrainSubsystem::resetOdometry, 
+    drivetrainSubsystem.ramseteController, 
+    drivetrainSubsystem.drivetrainKinematics, 
+    drivetrainSubsystem::tankDriveMetersPerSecond, 
+    Constants.eventMap, 
+    drivetrainSubsystem);
+
+    return autoBuilder.fullAuto(path);
   }
 
   private Autos() {
