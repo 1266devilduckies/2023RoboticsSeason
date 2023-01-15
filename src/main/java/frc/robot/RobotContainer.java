@@ -37,7 +37,7 @@ public class RobotContainer {
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
-    DuckAutoProfile emptyProfile = new DuckAutoProfile();
+    DuckAutoProfile emptyProfile = new DuckAutoProfile(this);
     autonomousMode.setDefaultOption("Do nothing", emptyProfile);
 
     commandScheduler.setDefaultCommand(drivetrainSubsystem, new DriveCommand(drivetrainSubsystem));
@@ -74,5 +74,9 @@ public class RobotContainer {
   public DuckAutoProfile getAutonomousProfile() {
     // An example command will be run in autonomous
     return autonomousMode.getSelected();
+  }
+
+  public DrivetrainSubsystem getDrivetrainSubsystem(){
+    return drivetrainSubsystem;
   }
 }

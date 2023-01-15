@@ -102,9 +102,9 @@ public class DrivetrainSubsystem extends SubsystemBase {
 
     //Apply brake mode to prevent robot from hitting people if watchdog fails
     MainLeftMotorBack.setNeutralMode(NeutralMode.Brake);
-    MainLeftMotorFront.setNeutralMode(NeutralMode.Brake);
+    MainLeftMotorFront.setNeutralMode(NeutralMode.Coast);
     MainRightMotorBack.setNeutralMode(NeutralMode.Brake);
-    MainRightMotorFront.setNeutralMode(NeutralMode.Brake);
+    MainRightMotorFront.setNeutralMode(NeutralMode.Coast);
 
     // Invert one of the sides
     MainLeftMotorBack.setInverted(true);

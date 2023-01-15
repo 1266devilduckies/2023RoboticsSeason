@@ -27,7 +27,7 @@ public final class Constants {
 
   public static class DriverConstants {
     public static final int port = 0;
-    public static final double deadbandLeftJoystick = 0.2;
+    public static final double deadbandLeftJoystick = 0.05;
     public static final double deadbandRightJoystick = deadbandLeftJoystick;
     public static final int ForwardDriveAxis = 1;
     public static final int TurningDriveAxis = 2;
@@ -35,9 +35,10 @@ public final class Constants {
 
   public static class CAN {
     public static class Drivetrain {
-      public static final int BL = 1;
+      //configured for ducktails
+      public static final int BL = 3;
       public static final int BR = 2;
-      public static final int FL = 3;
+      public static final int FL = 5;
       public static final int FR = 4;
     }
   }

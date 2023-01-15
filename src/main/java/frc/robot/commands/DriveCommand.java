@@ -7,6 +7,8 @@ import frc.robot.subsystems.DrivetrainSubsystem;
 
 public class DriveCommand extends CommandBase{
     
+    double speed = 0.3;
+
     DrivetrainSubsystem drivetrainSubsystem;
     public DriveCommand(DrivetrainSubsystem subsystem){
         drivetrainSubsystem = subsystem;
@@ -24,6 +26,9 @@ public class DriveCommand extends CommandBase{
         y = Math.signum(x) * (Math.abs(x) < Constants.DriverConstants.deadbandLeftJoystick ? 0 : 1);
         x = Math.signum(tempY) * (Math.abs(tempY) < Constants.DriverConstants.deadbandRightJoystick ? 0 : 1);
     
+        y = y*speed;
+        x = x*speed;
+
         if (y != 0) {
             drivetrainSubsystem.robotDrive.arcadeDrive(y, -x);
         } else {
