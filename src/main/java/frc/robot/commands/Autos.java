@@ -9,8 +9,13 @@ import com.pathplanner.lib.PathPlanner;
 import com.pathplanner.lib.PathPlannerTrajectory;
 import com.pathplanner.lib.auto.RamseteAutoBuilder;
 
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Constants;
+import frc.robot.DuckAutoProfile;
 import frc.robot.subsystems.DrivetrainSubsystem;
 
 public final class Autos {
@@ -30,9 +35,15 @@ public final class Autos {
     return autoBuilder.fullAuto(examplePath);
   }*/
 
-  //example auto that drives forward 
-  public static CommandBase runPath(DrivetrainSubsystem drivetrainSubsystem, AutoPath autoPath) {
-    PathPlannerTrajectory path = PathPlanner.loadPath(autoPath.getPathName(), new PathConstraints(4, 3)); //in terms of m/s
+  public static DuckAutoProfile forwardAuto(DrivetrainSubsystem drivetrainSubsystem){
+    SequentialCommandGroup command = new SequentialCommandGroup(runPath(drivetrainSubsystem, Constants.AutoTrajectoryFileNames.LOW_FORWARD));
+    Pose2d startPosition = new Pose2d(new Translation2d(1.81, 0.94), Rotation2d.fromRadians(-0.34));
+    return new DuckAutoProfile(command, startPosition);
+  }
+
+  //run an auto path
+  private static CommandBase runPath(DrivetrainSubsystem drivetrainSubsystem, String autoPathName) {
+    PathPlannerTrajectory path = PathPlanner.loadPath(autoPathName, new PathConstraints(4, 3)); //in terms of m/s
     
     RamseteAutoBuilder autoBuilder = new RamseteAutoBuilder(
     drivetrainSubsystem::getPose, 

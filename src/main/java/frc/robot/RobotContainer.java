@@ -5,6 +5,7 @@
 package frc.robot;
 
 import frc.robot.Constants.DriverConstants;
+import frc.robot.commands.Autos;
 import frc.robot.commands.DriveCommand;
 import frc.robot.subsystems.DrivetrainSubsystem;
 import frc.robot.subsystems.MotorTestSubsystem;
@@ -12,6 +13,7 @@ import frc.robot.subsystems.MotorTestSubsystem;
 import com.pathplanner.lib.auto.RamseteAutoBuilder;
 
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandPS4Controller;
@@ -39,9 +41,9 @@ public class RobotContainer {
   public RobotContainer() {
     DuckAutoProfile emptyProfile = new DuckAutoProfile(this);
     autonomousMode.setDefaultOption("Do nothing", emptyProfile);
+    autonomousMode.addOption("forward auto", Autos.forwardAuto(drivetrainSubsystem));
 
-    commandScheduler.setDefaultCommand(drivetrainSubsystem, new DriveCommand(drivetrainSubsystem));
-
+    SmartDashboard.putData(autonomousMode);
     // Configure the trigger bindings
     configureBindings();
     //configure the auton markers

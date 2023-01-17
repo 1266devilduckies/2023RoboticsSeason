@@ -56,5 +56,16 @@ public final class Constants {
     public static final double cameraPitchRadians = 0;
     public static final double cameraHeightMeters = 0;
   }
+
+  public static class AutoTrajectoryFileNames {
+    public static final String HIGH_DOCKHIGH = "HighDockingHighPath";
+    public static final String HIGH_DOCKLOW = "HighDockingLowPath";
+    public static final String HIGH_FORWARD = "HighForwardPath";
+    public static final String LOW_DOCKHIGH = "LowDockingHighPath";
+    public static final String LOW_DOCKLOW = "LowDockingLowPath";
+    public static final String LOW_FORWARD = "LowForwardPath";
+
+  }
+
   public static HashMap<String, Command> eventMap = new HashMap<>();
 }

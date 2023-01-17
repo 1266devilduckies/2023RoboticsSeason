@@ -70,6 +70,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
   private AprilTagFieldLayout aprilTagFieldLayout;
   public DrivetrainSubsystem() {
     //constructor gets ran at robotInit()
+    this.setDefaultCommand(new DriveCommand(this));
     try {
       aprilTagFieldLayout = new AprilTagFieldLayout(
         Filesystem.getDeployDirectory().getName() + "/2023-chargedup.json"
@@ -151,7 +152,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
       Pose2d robotPose = PhotonUtils.estimateFieldToRobot(cameraToTarget, 
       apriltagPose2d, 
       Constants.LimelightCharacteristics.offsetMeters);
-      odometry.addVisionMeasurement(robotPose, Timer.getFPGATimestamp());
+      //odometry.addVisionMeasurement(robotPose, Timer.getFPGATimestamp());
     }
   }
 
