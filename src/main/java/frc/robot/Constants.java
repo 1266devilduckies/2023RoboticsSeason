@@ -6,7 +6,10 @@ package frc.robot;
 
 import java.util.HashMap;
 
+import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform2d;
+import edu.wpi.first.math.geometry.Transform3d;
+import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.Command;
 
@@ -56,6 +59,9 @@ public final class Constants {
     public static final String photonVisionName = "HD_Pro_Webcam_C920";
     public static final double cameraPitchRadians = 0;
     public static final double cameraHeightMeters = 0;
+    public static final Transform3d robotToCamMeters = new Transform3d(
+      new Translation3d(0,0,0),
+      new Rotation3d(0,0,0));
   }
 
   public static class AutoTrajectoryFileNames {
