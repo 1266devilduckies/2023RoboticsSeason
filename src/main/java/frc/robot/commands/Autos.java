@@ -5,7 +5,11 @@
 package frc.robot.commands;
 
 import com.pathplanner.lib.PathConstraints;
-import frc.robot.betterpathplanner.*;
+import com.pathplanner.lib.PathPlanner;
+import com.pathplanner.lib.PathPlannerTrajectory;
+import com.pathplanner.lib.auto.PIDConstants;
+import com.pathplanner.lib.auto.RamseteAutoBuilder;
+
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -14,27 +18,10 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Constants;
 import frc.robot.DuckAutoProfile;
 import frc.robot.RobotContainer;
-import frc.robot.betterpathplanner.PathPlannerTrajectory;
-import frc.robot.betterpathplanner.RamseteAutoBuilder;
 import frc.robot.subsystems.DrivetrainSubsystem;
 
 public final class Autos {
   
-  /*public static CommandBase templateAuto(DrivetrainSubsystem drivetrainSubsystem) {
-    PathPlannerTrajectory examplePath = PathPlanner.loadPath("New Path", new PathConstraints(4, 3)); //in terms of m/s
-    
-    RamseteAutoBuilder autoBuilder = new RamseteAutoBuilder(
-    drivetrainSubsystem::getPose, 
-    drivetrainSubsystem::resetOdometry, 
-    drivetrainSubsystem.ramseteController, 
-    drivetrainSubsystem.drivetrainKinematics, 
-    drivetrainSubsystem::tankDriveMetersPerSecond, 
-    Constants.eventMap,  
-    drivetrainSubsystem);
-
-    return autoBuilder.fullAuto(examplePath);
-  }*/
-
   public static DuckAutoProfile lowDockLowAuto(DrivetrainSubsystem drivetrainSubsystem){
     String pathName = Constants.AutoTrajectoryFileNames.LOW_DOCKLOW;
     PathPlannerTrajectory pathTrajectory = PathPlanner.loadPath(pathName, new PathConstraints(4, 3));//in terms of m/s
