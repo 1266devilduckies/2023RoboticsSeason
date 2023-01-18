@@ -71,6 +71,7 @@ public class RobotContainer {
 
   private void configureMarkers() {
     Constants.eventMap.put("marker1", new PrintCommand("passed marker 1"));
+    Constants.eventMap.put("sayHi", new PrintCommand("hiiii!!!"));
   }
 
   public DuckAutoProfile getAutonomousProfile() {

@@ -48,5 +48,12 @@
   "maxVelocity": null,
   "maxAcceleration": null,
   "isReversed": false,
-  "markers": []
+  "markers": [
+    {
+      "position": 0.5545454545454546,
+      "names": [
+        "sayHi"
+      ]
+    }
+  ]
 }

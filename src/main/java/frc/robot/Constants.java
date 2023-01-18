@@ -53,7 +53,7 @@ public final class Constants {
   }
   public static class LimelightCharacteristics {
     public static final Transform2d offsetMeters = new Transform2d();
-    public static final String photonVisionName = "camera";
+    public static final String photonVisionName = "HD_Pro_Webcam_C920";
     public static final double cameraPitchRadians = 0;
     public static final double cameraHeightMeters = 0;
   }

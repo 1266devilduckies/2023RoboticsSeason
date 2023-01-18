@@ -42,10 +42,9 @@ public final class Autos {
 
   public static DuckAutoProfile forwardAuto(DrivetrainSubsystem drivetrainSubsystem){
     SequentialCommandGroup command = new SequentialCommandGroup(runPath(drivetrainSubsystem, Constants.AutoTrajectoryFileNames.LOW_FORWARD));
-    Pose2d startPosition = new Pose2d(new Translation2d(1.81, 0.94), Rotation2d.fromRadians(-0.34));
+    Pose2d startPosition = new Pose2d(1.81,0.94, Rotation2d.fromRadians(-0.34)); //1.81,0.94
     return new DuckAutoProfile(command, startPosition);
   }
-
   //run an auto path
   private static CommandBase runPath(DrivetrainSubsystem drivetrainSubsystem, String autoPathName) {
     PathPlannerTrajectory path = PathPlanner.loadPath(autoPathName, new PathConstraints(4, 3)); //in terms of m/s

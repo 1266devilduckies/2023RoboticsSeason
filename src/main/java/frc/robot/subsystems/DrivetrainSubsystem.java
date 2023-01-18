@@ -160,7 +160,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
   public void simulationPeriodic() {
     Pose2d robotPose = odometry.getEstimatedPosition();
     SmartDashboard.putString("pose", robotPose.toString());
-    field.setRobotPose(robotPose);
+    field.setRobotPose(new Pose2d(robotPose.getX(), 8.-robotPose.getY(), robotPose.getRotation()));
     // For the motor master which is inverted, you'll need to invert it manually (ie
     // with a negative sign) here when fetching any data
     // CTRE doesn't support setInverted() for simulation
