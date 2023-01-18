@@ -36,6 +36,7 @@ public class RobotContainer {
     DuckAutoProfile emptyProfile = new DuckAutoProfile(this);
     autonomousMode.setDefaultOption("Do nothing", emptyProfile);
     autonomousMode.addOption("forward auto", Autos.forwardAuto(drivetrainSubsystem));
+    autonomousMode.addOption("low dock low auto", Autos.lowDockLowAuto(drivetrainSubsystem));
 
     SmartDashboard.putData(autonomousMode);
     // Configure the trigger bindings

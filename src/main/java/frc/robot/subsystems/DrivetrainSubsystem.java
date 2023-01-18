@@ -34,6 +34,7 @@ import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.simulation.ADXRS450_GyroSim;
 import edu.wpi.first.wpilibj.simulation.DifferentialDrivetrainSim;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
+import edu.wpi.first.wpilibj.smartdashboard.FieldObject2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
@@ -67,7 +68,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
     0,0,
     new Pose2d()); //will add vision measurements once auton starts;
 
-  private final Field2d field = new Field2d();
+  public static final Field2d field = new Field2d();
   Transform3d robotToCam = Constants.LimelightCharacteristics.robotToCamMeters;
   private ArrayList<Pair<PhotonCamera, Transform3d>> camList = new ArrayList<Pair<PhotonCamera, Transform3d>>();
   private final PhotonCamera camera = new PhotonCamera(Constants.LimelightCharacteristics.photonVisionName);
