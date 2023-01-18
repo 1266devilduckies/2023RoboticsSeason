@@ -6,15 +6,11 @@ package frc.robot;
 
 import frc.robot.Constants.DriverConstants;
 import frc.robot.commands.Autos;
-import frc.robot.commands.DriveCommand;
 import frc.robot.subsystems.DrivetrainSubsystem;
 import frc.robot.subsystems.MotorTestSubsystem;
 
-import com.pathplanner.lib.auto.RamseteAutoBuilder;
-
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandPS4Controller;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -31,8 +27,6 @@ public class RobotContainer {
   private final DrivetrainSubsystem drivetrainSubsystem = new DrivetrainSubsystem();
   private final MotorTestSubsystem motorTestSubsystem = new MotorTestSubsystem();
   private SendableChooser<DuckAutoProfile> autonomousMode = new SendableChooser<DuckAutoProfile>();
-
-  private CommandScheduler commandScheduler = CommandScheduler.getInstance();
 
   public final static CommandPS4Controller driverJoystick =
       new CommandPS4Controller(DriverConstants.port);

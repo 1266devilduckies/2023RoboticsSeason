@@ -5,10 +5,8 @@ import java.util.ArrayList;
 import java.util.Optional;
 
 import org.photonvision.PhotonCamera;
-import org.photonvision.PhotonUtils;
 import org.photonvision.RobotPoseEstimator;
 import org.photonvision.RobotPoseEstimator.PoseStrategy;
-import org.photonvision.targeting.PhotonTrackedTarget;
 
 import com.ctre.phoenix.motorcontrol.InvertType;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
@@ -24,9 +22,7 @@ import edu.wpi.first.math.estimator.DifferentialDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Transform3d;
-import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
 import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.math.system.plant.DCMotor;
@@ -152,7 +148,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
 
     double currentTime = Timer.getFPGATimestamp();
     Optional<Pair<Pose3d, Double>> result = photonPoseEstimator.update();
-    if (result.isPresent()) {
+    if (result.isPresent() && result.get().getFirst() != null) {
         odometry.addVisionMeasurement(result.get().getFirst().toPose2d(), currentTime);
     }
   }
@@ -161,7 +157,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
   public void simulationPeriodic() {
     Pose2d robotPose = odometry.getEstimatedPosition();
     SmartDashboard.putString("pose", robotPose.toString());
-    field.setRobotPose(new Pose2d(robotPose.getX(), 8.-robotPose.getY(), robotPose.getRotation()));
+    field.setRobotPose(odometry.getEstimatedPosition());
     // For the motor master which is inverted, you'll need to invert it manually (ie
     // with a negative sign) here when fetching any data
     // CTRE doesn't support setInverted() for simulation
