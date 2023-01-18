@@ -4,11 +4,8 @@
 
 package frc.robot.commands;
 
-import here.pathplanner.lib.PathConstraints;
-import here.pathplanner.lib.PathPlanner;
-import here.pathplanner.lib.PathPlannerTrajectory;
-import here.pathplanner.lib.auto.PIDConstants;
-import here.pathplanner.lib.auto.RamseteAutoBuilder;
+import com.pathplanner.lib.PathConstraints;
+import frc.robot.betterpathplanner.*;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -17,6 +14,8 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Constants;
 import frc.robot.DuckAutoProfile;
 import frc.robot.RobotContainer;
+import frc.robot.betterpathplanner.PathPlannerTrajectory;
+import frc.robot.betterpathplanner.RamseteAutoBuilder;
 import frc.robot.subsystems.DrivetrainSubsystem;
 
 public final class Autos {
