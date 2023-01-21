@@ -59,8 +59,6 @@ public class DrivetrainSubsystem extends SubsystemBase {
 
   public final RamseteController ramseteController = new RamseteController();
   public final DifferentialDriveKinematics drivetrainKinematics = new DifferentialDriveKinematics(Constants.DrivetrainCharacteristics.trackWidthMeters);
-  private final SimpleMotorFeedforward drivetrainFeedforward = new SimpleMotorFeedforward(Constants.DrivetrainCharacteristics.kS, 
-  Constants.DrivetrainCharacteristics.kV, Constants.DrivetrainCharacteristics.kA);
 
   private final DifferentialDrivePoseEstimator odometry = new DifferentialDrivePoseEstimator(
     drivetrainKinematics, 
@@ -116,8 +114,8 @@ public class DrivetrainSubsystem extends SubsystemBase {
     MainRightMotorFront.setNeutralMode(NeutralMode.Coast);
 
     // Invert one of the sides
-    MainLeftMotorBack.setInverted(true);
-    MainRightMotorBack.setInverted(false);
+    MainLeftMotorBack.setInverted(false);
+    MainRightMotorBack.setInverted(true);
     MainLeftMotorFront.setInverted(InvertType.FollowMaster);
     MainRightMotorFront.setInverted(InvertType.FollowMaster);
 
@@ -206,23 +204,19 @@ public class DrivetrainSubsystem extends SubsystemBase {
     robotDrive.feed(); // feed watchdog to prevent error from clogging can bus
   }
 
-  public void tankDriveMetersPerSecond(double leftMetersSecond, double rightMetersSecond) {
-    tankDriveVolts(drivetrainFeedforward.calculate(leftMetersSecond), drivetrainFeedforward.calculate(rightMetersSecond));
-  }
-
   public void resetOdometry(Pose2d pose) {
+    gyro.reset();
     resetEncoders();
 
-    odometry.resetPosition(gyro.getRotation2d(),
-    DuckGearUtil.encoderTicksToMeters(MainLeftMotorBack.getSelectedSensorPosition(),
-    Constants.DrivetrainCharacteristics.gearing, 2048.0, Constants.DrivetrainCharacteristics.wheelRadiusMeters),
-    DuckGearUtil.encoderTicksToMeters(MainLeftMotorBack.getSelectedSensorPosition(),
-    Constants.DrivetrainCharacteristics.gearing, 2048.0, Constants.DrivetrainCharacteristics.wheelRadiusMeters), 
-    pose);
+    odometry.resetPosition(gyro.getRotation2d(),0.,0., pose);
   }
 
   public void resetEncoders() {
     MainLeftMotorBack.setSelectedSensorPosition(0);
     MainRightMotorBack.setSelectedSensorPosition(0);
+  }
+
+  public double[] getEncoderPositions() {
+    return new double[]{MainLeftMotorBack.getSelectedSensorPosition(0), MainRightMotorBack.getSelectedSensorPosition(0)};
   }
 }

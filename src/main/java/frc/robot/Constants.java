@@ -48,11 +48,13 @@ public final class Constants {
   public static class DrivetrainCharacteristics {
     public static final double trackWidthMeters = Units.inchesToMeters(24.75);
     public static final double gearing = 25/3.;
-    public static final double wheelRadiusMeters = Units.inchesToMeters(2);
-    public static final double kS = 0.67766;
-    public static final double kV = 2.2804;
+    public static final double wheelRadiusMeters = Units.inchesToMeters(3);
+    public static double kS = 0.67766;
+    public static double kV = 2.2804;
     public static final double kA = 0.6814;
-    public static final double kP = 3.473;
+    public static double kP = 15; //3.473
+    public static final double maxAutoVelocityMeters = 4;
+    public static final double maxAutoAccelerationMeters = maxAutoVelocityMeters*0.75;
   }
   public static class LimelightCharacteristics {
     public static final Transform2d offsetMeters = new Transform2d();

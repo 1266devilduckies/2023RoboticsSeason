@@ -24,7 +24,9 @@ public final class Autos {
   
   public static DuckAutoProfile lowDockLowAuto(DrivetrainSubsystem drivetrainSubsystem){
     String pathName = Constants.AutoTrajectoryFileNames.LOW_DOCKLOW;
-    PathPlannerTrajectory pathTrajectory = PathPlanner.loadPath(pathName, new PathConstraints(4, 3));//in terms of m/s
+    PathPlannerTrajectory pathTrajectory = PathPlanner.loadPath(pathName, new PathConstraints(
+      Constants.DrivetrainCharacteristics.maxAutoVelocityMeters, 
+    Constants.DrivetrainCharacteristics.maxAutoAccelerationMeters));
     SequentialCommandGroup command = new SequentialCommandGroup(runPath(drivetrainSubsystem, pathTrajectory));
     Pose2d startPosition = pathTrajectory.getInitialPose();
     return new DuckAutoProfile(command, startPosition);
@@ -32,7 +34,9 @@ public final class Autos {
 
   public static DuckAutoProfile forwardAuto(DrivetrainSubsystem drivetrainSubsystem){
     String pathName = Constants.AutoTrajectoryFileNames.LOW_FORWARD;
-    PathPlannerTrajectory pathTrajectory = PathPlanner.loadPath(pathName, new PathConstraints(4, 3));//in terms of m/s
+    PathPlannerTrajectory pathTrajectory = PathPlanner.loadPath(pathName, new PathConstraints(
+      Constants.DrivetrainCharacteristics.maxAutoVelocityMeters, 
+    Constants.DrivetrainCharacteristics.maxAutoAccelerationMeters));
     SequentialCommandGroup command = new SequentialCommandGroup(runPath(drivetrainSubsystem, pathTrajectory));
     Pose2d startPosition = pathTrajectory.getInitialPose();
 
@@ -47,9 +51,9 @@ public final class Autos {
     drivetrainSubsystem::resetOdometry, 
     drivetrainSubsystem.ramseteController, 
     drivetrainSubsystem.drivetrainKinematics, 
-    new SimpleMotorFeedforward(Constants.DrivetrainCharacteristics.kS, Constants.DrivetrainCharacteristics.kV,Constants.DrivetrainCharacteristics.kA),
+    new SimpleMotorFeedforward(0.,0.,0./*Constants.DrivetrainCharacteristics.kS, Constants.DrivetrainCharacteristics.kV,Constants.DrivetrainCharacteristics.kA*/),
     drivetrainSubsystem::getWheelSpeeds, 
-    new PIDConstants(Constants.DrivetrainCharacteristics.kP, 0.0, 0.0),
+    new PIDConstants(0./*Constants.DrivetrainCharacteristics.kP*/, 0.0, 0.0),
     drivetrainSubsystem::tankDriveVolts,
     Constants.eventMap,  
     true,

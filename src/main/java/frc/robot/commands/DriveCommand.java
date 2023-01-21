@@ -7,7 +7,7 @@ import frc.robot.subsystems.DrivetrainSubsystem;
 
 public class DriveCommand extends CommandBase{
     
-    double speed = 1.0;
+    double speed = 0.5;
 
     DrivetrainSubsystem drivetrainSubsystem;
     public DriveCommand(DrivetrainSubsystem subsystem){
