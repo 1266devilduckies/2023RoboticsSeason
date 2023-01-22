@@ -26,7 +26,7 @@ public class RobotContainer {
   //private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
   private final DrivetrainSubsystem drivetrainSubsystem = new DrivetrainSubsystem();
   private final MotorTestSubsystem motorTestSubsystem = new MotorTestSubsystem();
-  private SendableChooser<DuckAutoProfile> autonomousMode = new SendableChooser<DuckAutoProfile>();
+  SendableChooser<DuckAutoProfile> autonomousMode = new SendableChooser<DuckAutoProfile>();
 
   public final static CommandPS4Controller driverJoystick =
       new CommandPS4Controller(DriverConstants.port);

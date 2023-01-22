@@ -7,7 +7,6 @@ import frc.robot.subsystems.DrivetrainSubsystem;
 
 public class DriveCommand extends CommandBase{
     
-    double speed = 0.5;
 
     DrivetrainSubsystem drivetrainSubsystem;
     public DriveCommand(DrivetrainSubsystem subsystem){
@@ -25,14 +24,20 @@ public class DriveCommand extends CommandBase{
         double tempY = y;
         y = Math.signum(x) * (Math.abs(x) < Constants.DriverConstants.deadbandLeftJoystick ? 0 : 1);
         x = Math.signum(tempY) * (Math.abs(tempY) < Constants.DriverConstants.deadbandRightJoystick ? 0 : 1);
-    
-        y = y*speed;
-        x = x*speed;
-
+        //kS xor kV must be 0
+        double voltage = 5;//Constants.DrivetrainCharacteristics.kS + Constants.DrivetrainCharacteristics.kV;
         if (y != 0) {
-            drivetrainSubsystem.robotDrive.arcadeDrive(y, -x);
+            double left = y + x;
+            double right = y - x;
+            drivetrainSubsystem.tankDriveVolts(
+                Math.signum(left) * voltage,
+                Math.signum(right) * voltage
+            );
         } else {
-            drivetrainSubsystem.robotDrive.tankDrive(x, -x);
+            drivetrainSubsystem.tankDriveVolts(
+                Math.signum(x) * voltage,
+                Math.signum(-x) * voltage
+            );
         }
     }
 

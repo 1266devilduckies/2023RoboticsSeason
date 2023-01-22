@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.commands.Autos;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -26,6 +27,8 @@ public class Robot extends TimedRobot {
   private DoubleEntry kPEntry;
   private DoubleEntry kSEntry;
   private DoubleEntry kVEntry;
+  private DoubleEntry kDEntry;
+  private DoubleEntry kAEntry;
 
   /**
    * This function is run when the robot is first started up and should be used for any
@@ -43,8 +46,14 @@ public class Robot extends TimedRobot {
     kSEntry = kSTopic.getEntry(0.0);
     DoubleTopic kVTopic = new DoubleTopic(NetworkTableInstance.getDefault().getTopic("/SmartDashboard/kV"));
     kVEntry = kVTopic.getEntry(0.0);
+    DoubleTopic kDTopic = new DoubleTopic(NetworkTableInstance.getDefault().getTopic("/SmartDashboard/kD"));
+    kDEntry = kDTopic.getEntry(0.0);
+    DoubleTopic kATopic = new DoubleTopic(NetworkTableInstance.getDefault().getTopic("/SmartDashboard/kA"));
+    kAEntry = kATopic.getEntry(0.0);
     kSEntry.setDefault(Constants.DrivetrainCharacteristics.kS);
     kVEntry.setDefault(Constants.DrivetrainCharacteristics.kV);
+    kDEntry.setDefault(Constants.DrivetrainCharacteristics.kD);
+    kAEntry.setDefault(Constants.DrivetrainCharacteristics.kA);
   }
 
   /**
@@ -61,13 +70,21 @@ public class Robot extends TimedRobot {
     // and running subsystem periodic() methods.  This must be called from the robot's periodic
     // block in order for anything in the Command-based framework to work.
     CommandScheduler.getInstance().run();
+    SmartDashboard.putNumber("0.478 metersPerSecond target",
+    m_robotContainer.getDrivetrainSubsystem().getWheelSpeeds().leftMetersPerSecond);
 
-    Constants.DrivetrainCharacteristics.kP = kPEntry.get();
-    SmartDashboard.putNumber("reported kP", Constants.DrivetrainCharacteristics.kP);
-    Constants.DrivetrainCharacteristics.kS = kSEntry.get();
-    SmartDashboard.putNumber("reported kS", Constants.DrivetrainCharacteristics.kS);
-    Constants.DrivetrainCharacteristics.kV = kVEntry.get();
-    SmartDashboard.putNumber("reported kV", Constants.DrivetrainCharacteristics.kV);
+    if (kSEntry.get() != Constants.DrivetrainCharacteristics.kS ||
+    kVEntry.get() != Constants.DrivetrainCharacteristics.kV ||
+    kPEntry.get() != Constants.DrivetrainCharacteristics.kP ||
+    kDEntry.get() != Constants.DrivetrainCharacteristics.kD ||
+    kAEntry.get() != Constants.DrivetrainCharacteristics.kA) {
+      Constants.DrivetrainCharacteristics.kS = kSEntry.get();
+      Constants.DrivetrainCharacteristics.kV = kVEntry.get();
+      Constants.DrivetrainCharacteristics.kP = kPEntry.get();
+      Constants.DrivetrainCharacteristics.kD = kDEntry.get();
+      Constants.DrivetrainCharacteristics.kA = kAEntry.get();
+      m_robotContainer.autonomousMode.addOption("forward auto", Autos.forwardAuto(m_robotContainer.getDrivetrainSubsystem()));
+    }
   }
 
   /** This function is called once each time the robot enters Disabled mode. */

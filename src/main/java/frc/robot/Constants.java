@@ -49,12 +49,13 @@ public final class Constants {
     public static final double trackWidthMeters = Units.inchesToMeters(24.75);
     public static final double gearing = 25/3.;
     public static final double wheelRadiusMeters = Units.inchesToMeters(3);
-    public static double kS = 0.67766;
-    public static double kV = 2.2804;
-    public static final double kA = 0.6814;
-    public static double kP = 15; //3.473
+    public static double kS = 0.69;
+    public static double kV = 1.42;
+    public static double kA = 0.68;
+    public static double kP = 0.274; //3.473
     public static final double maxAutoVelocityMeters = 4;
-    public static final double maxAutoAccelerationMeters = maxAutoVelocityMeters*0.75;
+    public static final double maxAutoAccelerationMeters = 3.2;
+    public static double kD = 0.1;
   }
   public static class LimelightCharacteristics {
     public static final Transform2d offsetMeters = new Transform2d();
