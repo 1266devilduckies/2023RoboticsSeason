@@ -25,7 +25,7 @@ public class DriveCommand extends CommandBase{
         y = Math.signum(x) * (Math.abs(x) < Constants.DriverConstants.deadbandLeftJoystick ? 0 : 1);
         x = Math.signum(tempY) * (Math.abs(tempY) < Constants.DriverConstants.deadbandRightJoystick ? 0 : 1);
         //kS xor kV must be 0
-        double voltage = 5;//Constants.DrivetrainCharacteristics.kS + Constants.DrivetrainCharacteristics.kV;
+        double voltage = Constants.DrivetrainCharacteristics.kS + Constants.DrivetrainCharacteristics.kV;
         if (y != 0) {
             double left = y + x;
             double right = y - x;

@@ -107,11 +107,11 @@ public class DrivetrainSubsystem extends SubsystemBase {
     MainRightMotorBack.enableVoltageCompensation(false);
     MainRightMotorFront.enableVoltageCompensation(false);
 
-    //Apply brake mode to prevent robot from hitting people if watchdog fails
+    //Apply brake mode in auton
     MainLeftMotorBack.setNeutralMode(NeutralMode.Brake);
-    MainLeftMotorFront.setNeutralMode(NeutralMode.Coast);
+    MainLeftMotorFront.setNeutralMode(NeutralMode.Brake);
     MainRightMotorBack.setNeutralMode(NeutralMode.Brake);
-    MainRightMotorFront.setNeutralMode(NeutralMode.Coast);
+    MainRightMotorFront.setNeutralMode(NeutralMode.Brake);
 
     // Invert one of the sides
     MainLeftMotorBack.setInverted(false);
@@ -218,5 +218,12 @@ public class DrivetrainSubsystem extends SubsystemBase {
 
   public double[] getEncoderPositions() {
     return new double[]{MainLeftMotorBack.getSelectedSensorPosition(0), MainRightMotorBack.getSelectedSensorPosition(0)};
+  }
+
+  public void setMotorsToCoast() {
+    MainLeftMotorBack.setNeutralMode(NeutralMode.Coast);
+    MainLeftMotorFront.setNeutralMode(NeutralMode.Coast);
+    MainRightMotorBack.setNeutralMode(NeutralMode.Coast);
+    MainRightMotorFront.setNeutralMode(NeutralMode.Coast);
   }
 }

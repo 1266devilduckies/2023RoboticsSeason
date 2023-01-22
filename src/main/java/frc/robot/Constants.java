@@ -51,11 +51,11 @@ public final class Constants {
     public static final double wheelRadiusMeters = Units.inchesToMeters(3);
     public static double kS = 0.69;
     public static double kV = 1.42;
-    public static double kA = 0.68;
+    public static double kA = 0;//0.68;
     public static double kP = 0.274; //3.473
-    public static final double maxAutoVelocityMeters = 4;
-    public static final double maxAutoAccelerationMeters = 3.2;
-    public static double kD = 0.1;
+    public static final double maxAutoVelocityMeters = 2;
+    public static final double maxAutoAccelerationMeters = 0.5;
+    public static double kD = 0.0;//0.1;
   }
   public static class LimelightCharacteristics {
     public static final Transform2d offsetMeters = new Transform2d();
