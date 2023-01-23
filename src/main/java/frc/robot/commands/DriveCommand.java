@@ -24,20 +24,11 @@ public class DriveCommand extends CommandBase{
         double tempY = y;
         y = Math.signum(x) * (Math.abs(x) < Constants.DriverConstants.deadbandLeftJoystick ? 0 : 1);
         x = Math.signum(tempY) * (Math.abs(tempY) < Constants.DriverConstants.deadbandRightJoystick ? 0 : 1);
-        //kS xor kV must be 0
-        double voltage = Constants.DrivetrainCharacteristics.kS + Constants.DrivetrainCharacteristics.kV;
+        
         if (y != 0) {
-            double left = y + x;
-            double right = y - x;
-            drivetrainSubsystem.tankDriveVolts(
-                Math.signum(left) * voltage,
-                Math.signum(right) * voltage
-            );
+            drivetrainSubsystem.robotDrive.arcadeDrive(y,x);
         } else {
-            drivetrainSubsystem.tankDriveVolts(
-                Math.signum(x) * voltage,
-                Math.signum(-x) * voltage
-            );
+            drivetrainSubsystem.robotDrive.tankDrive(-x, x);
         }
     }
 

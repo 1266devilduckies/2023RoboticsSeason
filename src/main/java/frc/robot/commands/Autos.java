@@ -58,7 +58,7 @@ public final class Autos {
     Constants.eventMap,  
     true,
     drivetrainSubsystem);
-    return autoBuilder.fullAuto(pathTrajectory);
+    return autoBuilder.fullAuto(pathTrajectory).andThen(() -> drivetrainSubsystem.tankDriveVolts(0,0));
   }
 
   private Autos() {

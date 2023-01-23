@@ -142,7 +142,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
     double rightDistanceMeters = DuckGearUtil.encoderTicksToMeters(MainLeftMotorBack.getSelectedSensorPosition(),
     Constants.DrivetrainCharacteristics.gearing, 2048.0, Constants.DrivetrainCharacteristics.wheelRadiusMeters);
 
-    odometry.update(gyro.getRotation2d(), leftDistanceMeters, rightDistanceMeters);
+    odometry.update(Rotation2d.fromDegrees(-gyro.getAngle()), leftDistanceMeters, rightDistanceMeters);
     photonPoseEstimator.setReferencePose(odometry.getEstimatedPosition());
 
     double currentTime = Timer.getFPGATimestamp();
@@ -150,13 +150,13 @@ public class DrivetrainSubsystem extends SubsystemBase {
     if (result.isPresent() && result.get().getFirst() != null) {
         odometry.addVisionMeasurement(result.get().getFirst().toPose2d(), currentTime);
     }
+    field.setRobotPose(odometry.getEstimatedPosition());
   }
 
   @Override
   public void simulationPeriodic() {
     Pose2d robotPose = odometry.getEstimatedPosition();
     SmartDashboard.putString("pose", robotPose.toString());
-    field.setRobotPose(odometry.getEstimatedPosition());
     // For the motor master which is inverted, you'll need to invert it manually (ie
     // with a negative sign) here when fetching any data
     // CTRE doesn't support setInverted() for simulation
@@ -187,6 +187,11 @@ public class DrivetrainSubsystem extends SubsystemBase {
     gyroSim.setAngle(robotDriveSim.getHeading().getDegrees());
   }
   public DifferentialDriveWheelSpeeds getWheelSpeeds() {
+    // return new DifferentialDriveWheelSpeeds(
+    //     DuckGearUtil.EncoderTicksPer100msToMetersPerSecond(MainLeftMotorBack.getSelectedSensorVelocity(),
+    //         Constants.DrivetrainCharacteristics.gearing, 2048.0, Constants.DrivetrainCharacteristics.wheelRadiusMeters),
+    //     DuckGearUtil.EncoderTicksPer100msToMetersPerSecond(MainRightMotorBack.getSelectedSensorVelocity(),
+    //         Constants.DrivetrainCharacteristics.gearing, 2048.0, Constants.DrivetrainCharacteristics.wheelRadiusMeters));
     return new DifferentialDriveWheelSpeeds(
         DuckGearUtil.EncoderTicksPer100msToMetersPerSecond(MainLeftMotorBack.getSelectedSensorVelocity(),
             Constants.DrivetrainCharacteristics.gearing, 2048.0, Constants.DrivetrainCharacteristics.wheelRadiusMeters),
@@ -199,8 +204,8 @@ public class DrivetrainSubsystem extends SubsystemBase {
   }
 
   public void tankDriveVolts(double leftVolts, double rightVolts) {
-    MainLeftMotorBack.setVoltage(leftVolts);
-    MainRightMotorBack.setVoltage(rightVolts);
+    MainLeftMotorBack.setVoltage(rightVolts);
+    MainRightMotorBack.setVoltage(leftVolts);
     robotDrive.feed(); // feed watchdog to prevent error from clogging can bus
   }
 
@@ -208,7 +213,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
     gyro.reset();
     resetEncoders();
 
-    odometry.resetPosition(gyro.getRotation2d(),0.,0., pose);
+    odometry.resetPosition(Rotation2d.fromDegrees(-gyro.getAngle()),0.,0., pose);
   }
 
   public void resetEncoders() {
