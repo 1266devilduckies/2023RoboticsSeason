@@ -19,11 +19,6 @@ public class DriveCommand extends CommandBase{
     public void execute() {
         double x = -RobotContainer.driverJoystick.getRawAxis(Constants.DriverConstants.ForwardDriveAxis);
         double y = RobotContainer.driverJoystick.getRawAxis(Constants.DriverConstants.TurningDriveAxis);
-    
-        // extremize
-        double tempY = y;
-        y = Math.signum(x) * (Math.abs(x) < Constants.DriverConstants.deadbandLeftJoystick ? 0 : 1);
-        x = Math.signum(tempY) * (Math.abs(tempY) < Constants.DriverConstants.deadbandRightJoystick ? 0 : 1);
         
         if (y != 0) {
             drivetrainSubsystem.robotDrive.arcadeDrive(y,x);

@@ -224,11 +224,4 @@ public class DrivetrainSubsystem extends SubsystemBase {
   public double[] getEncoderPositions() {
     return new double[]{MainLeftMotorBack.getSelectedSensorPosition(0), MainRightMotorBack.getSelectedSensorPosition(0)};
   }
-
-  public void setMotorsToCoast() {
-    MainLeftMotorBack.setNeutralMode(NeutralMode.Coast);
-    MainLeftMotorFront.setNeutralMode(NeutralMode.Coast);
-    MainRightMotorBack.setNeutralMode(NeutralMode.Coast);
-    MainRightMotorFront.setNeutralMode(NeutralMode.Coast);
-  }
 }
