@@ -32,6 +32,8 @@ public class Robot extends TimedRobot {
   private DoubleEntry kVEntry;
   private DoubleEntry kDEntry;
   private DoubleEntry kAEntry;
+  private DoubleEntry waitDelayEntry;
+  private double waitDelay = 0.0;
 
   /**
    * This function is run when the robot is first started up and should be used for any
@@ -42,21 +44,25 @@ public class Robot extends TimedRobot {
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer();
-    DoubleTopic kPTopic = new DoubleTopic(NetworkTableInstance.getDefault().getTopic("/SmartDashboard/kP"));
+    NetworkTableInstance nt = NetworkTableInstance.getDefault();
+    DoubleTopic kPTopic = new DoubleTopic(nt.getTopic("/SmartDashboard/kP"));
     kPEntry = kPTopic.getEntry(0.0);
     kPEntry.setDefault(Constants.DrivetrainCharacteristics.kP);
-    DoubleTopic kSTopic = new DoubleTopic(NetworkTableInstance.getDefault().getTopic("/SmartDashboard/kS"));
+    DoubleTopic kSTopic = new DoubleTopic(nt.getTopic("/SmartDashboard/kS"));
     kSEntry = kSTopic.getEntry(0.0);
-    DoubleTopic kVTopic = new DoubleTopic(NetworkTableInstance.getDefault().getTopic("/SmartDashboard/kV"));
+    DoubleTopic kVTopic = new DoubleTopic(nt.getTopic("/SmartDashboard/kV"));
     kVEntry = kVTopic.getEntry(0.0);
-    DoubleTopic kDTopic = new DoubleTopic(NetworkTableInstance.getDefault().getTopic("/SmartDashboard/kD"));
+    DoubleTopic kDTopic = new DoubleTopic(nt.getTopic("/SmartDashboard/kD"));
     kDEntry = kDTopic.getEntry(0.0);
-    DoubleTopic kATopic = new DoubleTopic(NetworkTableInstance.getDefault().getTopic("/SmartDashboard/kA"));
+    DoubleTopic kATopic = new DoubleTopic(nt.getTopic("/SmartDashboard/kA"));
     kAEntry = kATopic.getEntry(0.0);
     kSEntry.setDefault(Constants.DrivetrainCharacteristics.kS);
     kVEntry.setDefault(Constants.DrivetrainCharacteristics.kV);
     kDEntry.setDefault(Constants.DrivetrainCharacteristics.kD);
     kAEntry.setDefault(Constants.DrivetrainCharacteristics.kA);
+    DoubleTopic waitDelayTopic = new DoubleTopic(NetworkTableInstance.getDefault().getTopic("/SmartDashboard/Wait Delay (Seconds)"));
+    waitDelayEntry = waitDelayTopic.getEntry(0.0);
+    waitDelayEntry.setDefault(waitDelay);
   }
 
   /**
@@ -80,12 +86,14 @@ public class Robot extends TimedRobot {
     kVEntry.get() != Constants.DrivetrainCharacteristics.kV ||
     kPEntry.get() != Constants.DrivetrainCharacteristics.kP ||
     kDEntry.get() != Constants.DrivetrainCharacteristics.kD ||
-    kAEntry.get() != Constants.DrivetrainCharacteristics.kA) {
+    kAEntry.get() != Constants.DrivetrainCharacteristics.kA ||
+    waitDelayEntry.get() != waitDelay) {
       Constants.DrivetrainCharacteristics.kS = kSEntry.get();
       Constants.DrivetrainCharacteristics.kV = kVEntry.get();
       Constants.DrivetrainCharacteristics.kP = kPEntry.get();
       Constants.DrivetrainCharacteristics.kD = kDEntry.get();
       Constants.DrivetrainCharacteristics.kA = kAEntry.get();
+      waitDelay = waitDelayEntry.get();
       m_robotContainer.autonomousMode.addOption("forward auto", Autos.forwardAuto(m_robotContainer.getDrivetrainSubsystem()));
     }
   }
@@ -100,11 +108,13 @@ public class Robot extends TimedRobot {
   /** This autonomous runs the autonomous command selected by your {@link RobotContainer} class. */
   @Override
   public void autonomousInit() {
-    m_autonomousCommand = m_robotContainer.getAutonomousProfile().getAutoCommand();
+    DuckAutoProfile autoProfile = m_robotContainer.getAutonomousProfile();
+    autoProfile.addDelay(waitDelay);
+    m_autonomousCommand = autoProfile.getAutoCommand();
 
     // schedule the autonomous command (example)
     if (m_autonomousCommand != null) {
-      m_robotContainer.getDrivetrainSubsystem().resetOdometry(m_robotContainer.getAutonomousProfile().getStartingPose());
+      m_robotContainer.getDrivetrainSubsystem().resetOdometry(autoProfile.getStartingPose());
       m_autonomousCommand.schedule();
     }
   }

@@ -17,7 +17,6 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.math.Pair;
 import edu.wpi.first.math.controller.RamseteController;
-import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.estimator.DifferentialDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
@@ -34,7 +33,6 @@ import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.simulation.ADXRS450_GyroSim;
 import edu.wpi.first.wpilibj.simulation.DifferentialDrivetrainSim;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
-import edu.wpi.first.wpilibj.smartdashboard.FieldObject2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
@@ -114,8 +112,8 @@ public class DrivetrainSubsystem extends SubsystemBase {
     MainRightMotorFront.setNeutralMode(NeutralMode.Brake);
 
     // Invert one of the sides
-    MainLeftMotorBack.setInverted(false);
-    MainRightMotorBack.setInverted(true);
+    MainLeftMotorBack.setInverted(true);
+    MainRightMotorBack.setInverted(false);
     MainLeftMotorFront.setInverted(InvertType.FollowMaster);
     MainRightMotorFront.setInverted(InvertType.FollowMaster);
 
@@ -139,7 +137,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
   public void periodic() {
     double leftDistanceMeters = DuckGearUtil.encoderTicksToMeters(MainLeftMotorBack.getSelectedSensorPosition(),
     Constants.DrivetrainCharacteristics.gearing, 2048.0, Constants.DrivetrainCharacteristics.wheelRadiusMeters);
-    double rightDistanceMeters = DuckGearUtil.encoderTicksToMeters(MainLeftMotorBack.getSelectedSensorPosition(),
+    double rightDistanceMeters = DuckGearUtil.encoderTicksToMeters(MainRightMotorBack.getSelectedSensorPosition(),
     Constants.DrivetrainCharacteristics.gearing, 2048.0, Constants.DrivetrainCharacteristics.wheelRadiusMeters);
 
     odometry.update(Rotation2d.fromDegrees(-gyro.getAngle()), leftDistanceMeters, rightDistanceMeters);
@@ -187,11 +185,6 @@ public class DrivetrainSubsystem extends SubsystemBase {
     gyroSim.setAngle(robotDriveSim.getHeading().getDegrees());
   }
   public DifferentialDriveWheelSpeeds getWheelSpeeds() {
-    // return new DifferentialDriveWheelSpeeds(
-    //     DuckGearUtil.EncoderTicksPer100msToMetersPerSecond(MainLeftMotorBack.getSelectedSensorVelocity(),
-    //         Constants.DrivetrainCharacteristics.gearing, 2048.0, Constants.DrivetrainCharacteristics.wheelRadiusMeters),
-    //     DuckGearUtil.EncoderTicksPer100msToMetersPerSecond(MainRightMotorBack.getSelectedSensorVelocity(),
-    //         Constants.DrivetrainCharacteristics.gearing, 2048.0, Constants.DrivetrainCharacteristics.wheelRadiusMeters));
     return new DifferentialDriveWheelSpeeds(
         DuckGearUtil.EncoderTicksPer100msToMetersPerSecond(MainLeftMotorBack.getSelectedSensorVelocity(),
             Constants.DrivetrainCharacteristics.gearing, 2048.0, Constants.DrivetrainCharacteristics.wheelRadiusMeters),
@@ -204,8 +197,9 @@ public class DrivetrainSubsystem extends SubsystemBase {
   }
 
   public void tankDriveVolts(double leftVolts, double rightVolts) {
-    MainLeftMotorBack.setVoltage(rightVolts);
-    MainRightMotorBack.setVoltage(leftVolts);
+    //flipping voltage for some reason, it works better???
+    MainLeftMotorBack.setVoltage(leftVolts);
+    MainRightMotorBack.setVoltage(rightVolts);
     robotDrive.feed(); // feed watchdog to prevent error from clogging can bus
   }
 

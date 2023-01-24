@@ -17,13 +17,13 @@ public class DriveCommand extends CommandBase{
     // Called repeatedly when this Command is scheduled to run
     @Override
     public void execute() {
-        double x = -RobotContainer.driverJoystick.getRawAxis(Constants.DriverConstants.ForwardDriveAxis);
-        double y = RobotContainer.driverJoystick.getRawAxis(Constants.DriverConstants.TurningDriveAxis);
+        double y = -RobotContainer.driverJoystick.getRawAxis(Constants.DriverConstants.ForwardDriveAxis);
+        double x = RobotContainer.driverJoystick.getRawAxis(Constants.DriverConstants.TurningDriveAxis);
         
         if (y != 0) {
-            drivetrainSubsystem.robotDrive.arcadeDrive(y,x);
+            drivetrainSubsystem.robotDrive.arcadeDrive(y,-x);
         } else {
-            drivetrainSubsystem.robotDrive.tankDrive(-x, x);
+            drivetrainSubsystem.robotDrive.tankDrive(x, -x);
         }
     }
 

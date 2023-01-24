@@ -39,10 +39,10 @@ public final class Constants {
   public static class CAN {
     public static class Drivetrain {
       //configured for ducktails
-      public static final int BL = 3;
-      public static final int BR = 2;
-      public static final int FL = 5;
-      public static final int FR = 4;
+      public static final int BL = 2;
+      public static final int BR = 3;
+      public static final int FL = 4;
+      public static final int FR = 5;
     }
   }
   public static class DrivetrainCharacteristics {
@@ -53,8 +53,8 @@ public final class Constants {
     public static double kV = 1.42;
     public static double kA = 0.68;
     public static double kP = 0.274; //3.473
-    public static final double maxAutoVelocityMeters = 2;
-    public static final double maxAutoAccelerationMeters = 0.5;
+    public static final double maxAutoVelocityMeters = 4;
+    public static final double maxAutoAccelerationMeters = 3;
     public static double kD = 0.0;//0.1;
   }
   public static class LimelightCharacteristics {

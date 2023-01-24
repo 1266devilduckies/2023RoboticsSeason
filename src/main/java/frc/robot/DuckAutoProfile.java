@@ -3,6 +3,7 @@ package frc.robot;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 
 public class DuckAutoProfile {
     private CommandBase sequence;
@@ -24,5 +25,11 @@ public class DuckAutoProfile {
 
     public Pose2d getStartingPose() {
         return initPose;
+    }
+
+    public void addDelay(double waitDelaySeconds) {
+        sequence = new SequentialCommandGroup(
+            new WaitCommand(waitDelaySeconds),
+            sequence);
     }
 }
