@@ -9,7 +9,7 @@ public class DuckAutoProfile {
     private CommandBase sequence;
     private Pose2d initPose;
 
-    public DuckAutoProfile(RobotContainer container) {
+    public DuckAutoProfile() {
         sequence = new SequentialCommandGroup();
         initPose = new Pose2d();
     }

@@ -52,10 +52,10 @@ public final class Constants {
     public static double kS = 0.69;
     public static double kV = 1.42;
     public static double kA = 0.68;
-    public static double kP = 0.274; //3.473
-    public static final double maxAutoVelocityMeters = 4;
-    public static final double maxAutoAccelerationMeters = 3;
-    public static double kD = 0.0;//0.1;
+    public static double kP = 0.274;
+    public static double maxAutoVelocityMeters = 4;
+    public static double maxAutoAccelerationMeters = 3;
+    public static double kD = 0.0;
   }
   public static class LimelightCharacteristics {
     public static final Transform2d offsetMeters = new Transform2d();

@@ -12,17 +12,16 @@ import com.pathplanner.lib.auto.RamseteAutoBuilder;
 
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Constants;
 import frc.robot.DuckAutoProfile;
-import frc.robot.RobotContainer;
 import frc.robot.subsystems.DrivetrainSubsystem;
 
 public final class Autos {
   
-  public static DuckAutoProfile lowDockLowAuto(DrivetrainSubsystem drivetrainSubsystem){
+  private static DuckAutoProfile lowDockLowAuto(DrivetrainSubsystem drivetrainSubsystem){
     String pathName = Constants.AutoTrajectoryFileNames.LOW_DOCKLOW;
     PathPlannerTrajectory pathTrajectory = PathPlanner.loadPath(pathName, new PathConstraints(
       Constants.DrivetrainCharacteristics.maxAutoVelocityMeters, 
@@ -32,7 +31,7 @@ public final class Autos {
     return new DuckAutoProfile(command, startPosition);
   }
 
-  public static DuckAutoProfile forwardAuto(DrivetrainSubsystem drivetrainSubsystem){
+  private static DuckAutoProfile forwardAuto(DrivetrainSubsystem drivetrainSubsystem){
     String pathName = Constants.AutoTrajectoryFileNames.LOW_FORWARD;
     PathPlannerTrajectory pathTrajectory = PathPlanner.loadPath(pathName, new PathConstraints(
       Constants.DrivetrainCharacteristics.maxAutoVelocityMeters, 
@@ -42,9 +41,9 @@ public final class Autos {
 
     return new DuckAutoProfile(command, startPosition);
   }
-  //run an auto path
+
+  //auto factory
   private static CommandBase runPath(DrivetrainSubsystem drivetrainSubsystem, PathPlannerTrajectory pathTrajectory) {
-    //PathPlannerTrajectory path = PathPlanner.loadPath(autoPathName, new PathConstraints(4, 3)); //in terms of m/s
     
     RamseteAutoBuilder autoBuilder = new RamseteAutoBuilder(
     drivetrainSubsystem::getPose, 
@@ -63,5 +62,14 @@ public final class Autos {
 
   private Autos() {
     throw new UnsupportedOperationException("This is a utility class!");
+  }
+
+  public static void pushAutosToDashboard(SendableChooser<DuckAutoProfile> autonomousMode,
+      DrivetrainSubsystem drivetrainSubsystem) {
+
+    autonomousMode.setDefaultOption("Do nothing", new DuckAutoProfile());
+    
+    autonomousMode.addOption("forward auto", forwardAuto(drivetrainSubsystem));
+    autonomousMode.addOption("low dock low auto", lowDockLowAuto(drivetrainSubsystem));
   }
 }

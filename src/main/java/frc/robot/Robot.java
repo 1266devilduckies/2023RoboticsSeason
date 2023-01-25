@@ -34,6 +34,8 @@ public class Robot extends TimedRobot {
   private DoubleEntry kAEntry;
   private DoubleEntry waitDelayEntry;
   private double waitDelay = 0.0;
+  private DoubleEntry velocityAutoEntry;
+  private DoubleEntry accelerationAutoEntry;
 
   /**
    * This function is run when the robot is first started up and should be used for any
@@ -60,10 +62,16 @@ public class Robot extends TimedRobot {
     kVEntry.setDefault(Constants.DrivetrainCharacteristics.kV);
     kDEntry.setDefault(Constants.DrivetrainCharacteristics.kD);
     kAEntry.setDefault(Constants.DrivetrainCharacteristics.kA);
-    DoubleTopic waitDelayTopic = new DoubleTopic(NetworkTableInstance.getDefault().getTopic("/SmartDashboard/Wait Delay (Seconds)"));
+    DoubleTopic waitDelayTopic = new DoubleTopic(nt.getTopic("/SmartDashboard/Wait Delay (Seconds)"));
     waitDelayEntry = waitDelayTopic.getEntry(0.0);
     waitDelayEntry.setDefault(waitDelay);
-  }
+    DoubleTopic velocityAutoTopic = new DoubleTopic(nt.getTopic("/SmartDashboard/Velocity Auto ms"));
+    velocityAutoEntry = velocityAutoTopic.getEntry(0.0);
+    velocityAutoEntry.setDefault(Constants.DrivetrainCharacteristics.maxAutoVelocityMeters);
+    DoubleTopic accelerationAutoTopic = new DoubleTopic(nt.getTopic("/SmartDashboard/Acceleration Auto ms2"));
+    accelerationAutoEntry = accelerationAutoTopic.getEntry(0.0);
+    accelerationAutoEntry.setDefault(Constants.DrivetrainCharacteristics.maxAutoAccelerationMeters);
+  }i
 
   /**
    * This function is called every 20 ms, no matter the mode. Use this for items like diagnostics
@@ -87,14 +95,19 @@ public class Robot extends TimedRobot {
     kPEntry.get() != Constants.DrivetrainCharacteristics.kP ||
     kDEntry.get() != Constants.DrivetrainCharacteristics.kD ||
     kAEntry.get() != Constants.DrivetrainCharacteristics.kA ||
-    waitDelayEntry.get() != waitDelay) {
+    waitDelayEntry.get() != waitDelay ||
+    velocityAutoEntry.get() != Constants.DrivetrainCharacteristics.maxAutoVelocityMeters ||
+    accelerationAutoEntry.get() != Constants.DrivetrainCharacteristics.maxAutoAccelerationMeters) {
       Constants.DrivetrainCharacteristics.kS = kSEntry.get();
       Constants.DrivetrainCharacteristics.kV = kVEntry.get();
       Constants.DrivetrainCharacteristics.kP = kPEntry.get();
       Constants.DrivetrainCharacteristics.kD = kDEntry.get();
       Constants.DrivetrainCharacteristics.kA = kAEntry.get();
       waitDelay = waitDelayEntry.get();
-      m_robotContainer.autonomousMode.addOption("forward auto", Autos.forwardAuto(m_robotContainer.getDrivetrainSubsystem()));
+      Constants.DrivetrainCharacteristics.maxAutoVelocityMeters = velocityAutoEntry.get();
+      Constants.DrivetrainCharacteristics.maxAutoAccelerationMeters = accelerationAutoEntry.get();
+
+      Autos.pushAutosToDashboard(m_robotContainer.autonomousMode, (m_robotContainer.getDrivetrainSubsystem()));
     }
   }
 

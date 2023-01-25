@@ -33,11 +33,7 @@ public class RobotContainer {
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
-    DuckAutoProfile emptyProfile = new DuckAutoProfile(this);
-    autonomousMode.setDefaultOption("Do nothing", emptyProfile);
-    autonomousMode.addOption("forward auto", Autos.forwardAuto(drivetrainSubsystem));
-    autonomousMode.addOption("low dock low auto", Autos.lowDockLowAuto(drivetrainSubsystem));
-
+    Autos.pushAutosToDashboard(autonomousMode, drivetrainSubsystem);
     SmartDashboard.putData(autonomousMode);
     // Configure the trigger bindings
     configureBindings();
