@@ -1,5 +1,6 @@
 package frc.robot.commands;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
 import frc.robot.RobotContainer;
@@ -24,8 +25,12 @@ public class DriveCommand extends CommandBase{
             drivetrainSubsystem.robotDrive.setMaxOutput(Constants.DrivetrainCharacteristics.speedScale);
             drivetrainSubsystem.robotDrive.arcadeDrive(y,-x);
         } else {
-            drivetrainSubsystem.robotDrive.setMaxOutput(Constants.DrivetrainCharacteristics.turnSpeedScale);
-            drivetrainSubsystem.robotDrive.tankDrive(x * Constants.DrivetrainCharacteristics.turnSpeedScale, -x * Constants.DrivetrainCharacteristics.turnSpeedScale);
+            drivetrainSubsystem.robotDrive.setMaxOutput(1);
+            //map turn speed scale from 0 to 1 to 0.5 to 1
+            double mappedTurnScale = 0.5 + 0.5*(Constants.DrivetrainCharacteristics.turnSpeedScale);
+            SmartDashboard.putNumber("reported turn value", Constants.DrivetrainCharacteristics.turnSpeedScale);
+            SmartDashboard.putNumber("reported turn speed", mappedTurnScale);
+            drivetrainSubsystem.robotDrive.tankDrive(x * mappedTurnScale, -x * mappedTurnScale);
         }
     }
 
