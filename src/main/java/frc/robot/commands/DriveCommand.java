@@ -21,9 +21,11 @@ public class DriveCommand extends CommandBase{
         double x = RobotContainer.driverJoystick.getRawAxis(Constants.DriverConstants.TurningDriveAxis);
         
         if (y != 0) {
+            drivetrainSubsystem.robotDrive.setMaxOutput(Constants.DrivetrainCharacteristics.speedScale);
             drivetrainSubsystem.robotDrive.arcadeDrive(y,-x);
         } else {
-            drivetrainSubsystem.robotDrive.tankDrive(x, -x);
+            drivetrainSubsystem.robotDrive.setMaxOutput(Constants.DrivetrainCharacteristics.turnSpeedScale);
+            drivetrainSubsystem.robotDrive.tankDrive(x * Constants.DrivetrainCharacteristics.turnSpeedScale, -x * Constants.DrivetrainCharacteristics.turnSpeedScale);
         }
     }
 

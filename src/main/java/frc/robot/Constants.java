@@ -56,6 +56,8 @@ public final class Constants {
     public static double maxAutoVelocityMeters = 4;
     public static double maxAutoAccelerationMeters = 3;
     public static double kD = 0.0;
+    public static double speedScale = 1.0;
+    public static double turnSpeedScale = 1.0;
   }
   public static class LimelightCharacteristics {
     public static final Transform2d offsetMeters = new Transform2d();
