@@ -10,6 +10,7 @@ import org.photonvision.RobotPoseEstimator.PoseStrategy;
 
 import com.ctre.phoenix.motorcontrol.InvertType;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
+import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
 import com.ctre.phoenix.motorcontrol.TalonFXFeedbackDevice;
 import com.ctre.phoenix.motorcontrol.TalonFXSimCollection;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
@@ -70,6 +71,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
   private final PhotonCamera camera = new PhotonCamera(Constants.LimelightCharacteristics.photonVisionName);
   private AprilTagFieldLayout aprilTagFieldLayout;
   RobotPoseEstimator photonPoseEstimator;
+  public boolean isCurrentLimited = false;
   public DrivetrainSubsystem() {
     //constructor gets ran at robotInit()
     this.setDefaultCommand(new DriveCommand(this));
@@ -217,5 +219,13 @@ public class DrivetrainSubsystem extends SubsystemBase {
 
   public double[] getEncoderPositions() {
     return new double[]{MainLeftMotorBack.getSelectedSensorPosition(0), MainRightMotorBack.getSelectedSensorPosition(0)};
+  }
+
+  public void setCurrentLimit(boolean isCurrentLimited) {
+    SupplyCurrentLimitConfiguration supplyLimit = new SupplyCurrentLimitConfiguration(isCurrentLimited, 5, 2, 0.5);
+    MainLeftMotorBack.configSupplyCurrentLimit(supplyLimit, 100);
+    MainLeftMotorFront.configSupplyCurrentLimit(supplyLimit, 100);
+    MainRightMotorBack.configSupplyCurrentLimit(supplyLimit, 100);
+    MainRightMotorFront.configSupplyCurrentLimit(supplyLimit, 100);
   }
 }

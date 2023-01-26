@@ -6,6 +6,8 @@ package frc.robot;
 
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 
+import edu.wpi.first.networktables.BooleanEntry;
+import edu.wpi.first.networktables.BooleanTopic;
 import edu.wpi.first.networktables.DoubleEntry;
 import edu.wpi.first.networktables.DoubleTopic;
 import edu.wpi.first.networktables.NetworkTableInstance;
@@ -36,6 +38,7 @@ public class Robot extends TimedRobot {
   private double waitDelay = 0.0;
   private DoubleEntry velocityAutoEntry;
   private DoubleEntry accelerationAutoEntry;
+  private BooleanEntry currentLimitDriveEntry;
 
   /**
    * This function is run when the robot is first started up and should be used for any
@@ -71,7 +74,10 @@ public class Robot extends TimedRobot {
     DoubleTopic accelerationAutoTopic = new DoubleTopic(nt.getTopic("/SmartDashboard/Acceleration Auto ms2"));
     accelerationAutoEntry = accelerationAutoTopic.getEntry(0.0);
     accelerationAutoEntry.setDefault(Constants.DrivetrainCharacteristics.maxAutoAccelerationMeters);
-  }i
+    BooleanTopic enableCurrentLimitingDrivetrainTopic = new BooleanTopic(nt.getTopic("/SmartDashboard/Enable Current Limiting On Drivetrain"));
+    currentLimitDriveEntry = enableCurrentLimitingDrivetrainTopic.getEntry(false);
+    currentLimitDriveEntry.setDefault(false);
+  }
 
   /**
    * This function is called every 20 ms, no matter the mode. Use this for items like diagnostics
@@ -90,6 +96,10 @@ public class Robot extends TimedRobot {
     SmartDashboard.putNumber("0.478 metersPerSecond target",
     m_robotContainer.getDrivetrainSubsystem().getWheelSpeeds().leftMetersPerSecond);
 
+    if (currentLimitDriveEntry.get() != m_robotContainer.getDrivetrainSubsystem().isCurrentLimited) {
+      m_robotContainer.getDrivetrainSubsystem().isCurrentLimited = currentLimitDriveEntry.get();
+      m_robotContainer.getDrivetrainSubsystem().setCurrentLimit(m_robotContainer.getDrivetrainSubsystem().isCurrentLimited);
+    }
     if (kSEntry.get() != Constants.DrivetrainCharacteristics.kS ||
     kVEntry.get() != Constants.DrivetrainCharacteristics.kV ||
     kPEntry.get() != Constants.DrivetrainCharacteristics.kP ||
