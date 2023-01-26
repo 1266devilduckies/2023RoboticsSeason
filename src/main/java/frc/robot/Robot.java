@@ -39,6 +39,8 @@ public class Robot extends TimedRobot {
   private DoubleEntry velocityAutoEntry;
   private DoubleEntry accelerationAutoEntry;
   private BooleanEntry currentLimitDriveEntry;
+  private DoubleEntry maxSpeedEntry;
+  private DoubleEntry maxTurnSpeedEntry;
 
   /**
    * This function is run when the robot is first started up and should be used for any
@@ -77,6 +79,12 @@ public class Robot extends TimedRobot {
     BooleanTopic enableCurrentLimitingDrivetrainTopic = new BooleanTopic(nt.getTopic("/SmartDashboard/Enable Current Limiting On Drivetrain"));
     currentLimitDriveEntry = enableCurrentLimitingDrivetrainTopic.getEntry(false);
     currentLimitDriveEntry.setDefault(false);
+    DoubleTopic maxSpeedTopic = new DoubleTopic(nt.getTopic("/SmartDashboard/Speed Drive"));
+    maxSpeedEntry = maxSpeedTopic.getEntry(1.0);
+    maxSpeedEntry.setDefault(1.0);
+    DoubleTopic maxTurnSpeedTopic = new DoubleTopic(nt.getTopic("/SmartDashboard/Turn Speed"));
+    maxTurnSpeedEntry = maxTurnSpeedTopic.getEntry(1.0);
+    maxTurnSpeedEntry.setDefault(1.0);
   }
 
   /**
@@ -107,7 +115,9 @@ public class Robot extends TimedRobot {
     kAEntry.get() != Constants.DrivetrainCharacteristics.kA ||
     waitDelayEntry.get() != waitDelay ||
     velocityAutoEntry.get() != Constants.DrivetrainCharacteristics.maxAutoVelocityMeters ||
-    accelerationAutoEntry.get() != Constants.DrivetrainCharacteristics.maxAutoAccelerationMeters) {
+    accelerationAutoEntry.get() != Constants.DrivetrainCharacteristics.maxAutoAccelerationMeters ||
+    maxSpeedEntry.get() != Constants.DrivetrainCharacteristics.speedScale ||
+    maxTurnSpeedEntry.get() != Constants.DrivetrainCharacteristics.turnSpeedScale) {
       Constants.DrivetrainCharacteristics.kS = kSEntry.get();
       Constants.DrivetrainCharacteristics.kV = kVEntry.get();
       Constants.DrivetrainCharacteristics.kP = kPEntry.get();
@@ -116,6 +126,8 @@ public class Robot extends TimedRobot {
       waitDelay = waitDelayEntry.get();
       Constants.DrivetrainCharacteristics.maxAutoVelocityMeters = velocityAutoEntry.get();
       Constants.DrivetrainCharacteristics.maxAutoAccelerationMeters = accelerationAutoEntry.get();
+      Constants.DrivetrainCharacteristics.speedScale = maxSpeedEntry.get();
+      Constants.DrivetrainCharacteristics.turnSpeedScale = maxTurnSpeedEntry.get();
 
       Autos.pushAutosToDashboard(m_robotContainer.autonomousMode, (m_robotContainer.getDrivetrainSubsystem()));
     }
