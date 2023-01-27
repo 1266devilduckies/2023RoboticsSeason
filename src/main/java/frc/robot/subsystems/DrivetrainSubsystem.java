@@ -69,7 +69,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
   Transform3d robotToCam = Constants.LimelightCharacteristics.robotToCamMeters;
   private ArrayList<Pair<PhotonCamera, Transform3d>> camList = new ArrayList<Pair<PhotonCamera, Transform3d>>();
   private final PhotonCamera camera = new PhotonCamera(Constants.LimelightCharacteristics.photonVisionName);
-  private AprilTagFieldLayout aprilTagFieldLayout;
+  public AprilTagFieldLayout aprilTagFieldLayout;
   RobotPoseEstimator photonPoseEstimator;
   public boolean isCurrentLimited = false;
   public DrivetrainSubsystem() {
@@ -222,10 +222,10 @@ public class DrivetrainSubsystem extends SubsystemBase {
   }
 
   public void setCurrentLimit(boolean isCurrentLimited) {
-    SupplyCurrentLimitConfiguration supplyLimit = new SupplyCurrentLimitConfiguration(isCurrentLimited, 5, 2, 0.5);
+    int currentLimitAmp = 40;
+    int thresholdAmp = 2;
+    SupplyCurrentLimitConfiguration supplyLimit = new SupplyCurrentLimitConfiguration(isCurrentLimited, currentLimitAmp, currentLimitAmp+thresholdAmp, 0.5);
     MainLeftMotorBack.configSupplyCurrentLimit(supplyLimit, 100);
-    MainLeftMotorFront.configSupplyCurrentLimit(supplyLimit, 100);
     MainRightMotorBack.configSupplyCurrentLimit(supplyLimit, 100);
-    MainRightMotorFront.configSupplyCurrentLimit(supplyLimit, 100);
   }
 }

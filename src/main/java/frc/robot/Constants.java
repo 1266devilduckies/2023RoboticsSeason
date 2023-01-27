@@ -44,6 +44,9 @@ public final class Constants {
       public static final int FL = 4;
       public static final int FR = 5;
     }
+    public static class Elevator {
+      public static final int leftClimber = 6;
+    }
   }
   public static class DrivetrainCharacteristics {
     public static final double trackWidthMeters = Units.inchesToMeters(24.75);
