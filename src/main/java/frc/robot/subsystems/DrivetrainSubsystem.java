@@ -69,7 +69,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
   Transform3d robotToCam = Constants.LimelightCharacteristics.robotToCamMeters;
   private ArrayList<Pair<PhotonCamera, Transform3d>> camList = new ArrayList<Pair<PhotonCamera, Transform3d>>();
   private final PhotonCamera camera = new PhotonCamera(Constants.LimelightCharacteristics.photonVisionName);
-  private AprilTagFieldLayout aprilTagFieldLayout;
+  public AprilTagFieldLayout aprilTagFieldLayout;
   RobotPoseEstimator photonPoseEstimator;
   public boolean isCurrentLimited = false;
   public DrivetrainSubsystem() {
