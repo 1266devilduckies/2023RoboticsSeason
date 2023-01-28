@@ -4,9 +4,10 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Optional;
 
+import org.photonvision.EstimatedRobotPose;
 import org.photonvision.PhotonCamera;
-import org.photonvision.RobotPoseEstimator;
-import org.photonvision.RobotPoseEstimator.PoseStrategy;
+import org.photonvision.PhotonPoseEstimator;
+import org.photonvision.PhotonPoseEstimator.PoseStrategy;
 
 import com.ctre.phoenix.motorcontrol.InvertType;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
@@ -68,16 +69,14 @@ public class DrivetrainSubsystem extends SubsystemBase {
 
   public static final Field2d field = new Field2d();
   Transform3d robotToCam = Constants.LimelightCharacteristics.robotToCamMeters;
-  private ArrayList<Pair<PhotonCamera, Transform3d>> camList = new ArrayList<Pair<PhotonCamera, Transform3d>>();
   private final PhotonCamera camera = new PhotonCamera(Constants.LimelightCharacteristics.photonVisionName);
   public AprilTagFieldLayout aprilTagFieldLayout;
-  RobotPoseEstimator photonPoseEstimator;
+  PhotonPoseEstimator photonPoseEstimator;
   public boolean isCurrentLimited = false;
   public DrivetrainSubsystem() {
     //constructor gets ran at robotInit()
     this.setDefaultCommand(new DriveCommand(this));
-    camList.add(new Pair<PhotonCamera, Transform3d>(camera, robotToCam));
-    photonPoseEstimator = new RobotPoseEstimator(aprilTagFieldLayout, PoseStrategy.CLOSEST_TO_REFERENCE_POSE, camList);
+    photonPoseEstimator = new PhotonPoseEstimator(aprilTagFieldLayout, PoseStrategy.CLOSEST_TO_REFERENCE_POSE, camera, Constants.LimelightCharacteristics.robotToCamMeters);
     try {
       aprilTagFieldLayout = new AprilTagFieldLayout(
         Filesystem.getDeployDirectory().getAbsolutePath() + "/2023-chargedup.json"
@@ -147,9 +146,9 @@ public class DrivetrainSubsystem extends SubsystemBase {
     photonPoseEstimator.setReferencePose(odometry.getEstimatedPosition());
 
     double currentTime = Timer.getFPGATimestamp();
-    Optional<Pair<Pose3d, Double>> result = photonPoseEstimator.update();
-    if (result.isPresent() && result.get().getFirst() != null) {
-        odometry.addVisionMeasurement(result.get().getFirst().toPose2d(), currentTime);
+    Optional<EstimatedRobotPose> result = photonPoseEstimator.update();
+    if (result.isPresent() && result.get() != null) {
+        odometry.addVisionMeasurement(result.get().estimatedPose.toPose2d(), currentTime);
     }
     field.setRobotPose(odometry.getEstimatedPosition());
   }
