@@ -79,6 +79,9 @@ public final class Constants {
     public static final String LOW_DOCKHIGH = "LowDockingHighPath";
     public static final String LOW_DOCKLOW = "LowDockingLowPath";
     public static final String LOW_FORWARD = "LowForwardPath";
+    public static final String MID_FORWARD = "MidDockingForwardPath";
+    public static final String MID_DOCKHIGH = "MidDockingHighPath";
+    public static final String MID_DOCKLOW = "MidDockingLowPath";
 
   }
 
