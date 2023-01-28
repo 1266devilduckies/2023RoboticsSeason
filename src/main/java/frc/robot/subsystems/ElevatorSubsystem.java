@@ -24,7 +24,7 @@ public class ElevatorSubsystem extends SubsystemBase {
     public ProfiledPIDController leftClimbPIDController = new ProfiledPIDController(
         Constants.ElevatorCharacteristics.kP,
         0.0,
-        Constants.ElevatorCharacteristics.kD, new Constraints(50, 20)); //in terms of rotations
+        Constants.ElevatorCharacteristics.kD, new Constraints(200,200)); //in terms of rotations
         public SimpleMotorFeedforward feedforward = new SimpleMotorFeedforward(
             Constants.ElevatorCharacteristics.kS,
             Constants.ElevatorCharacteristics.kV,
@@ -53,7 +53,7 @@ public class ElevatorSubsystem extends SubsystemBase {
         double acceleration = (leftClimbPIDController.getSetpoint().velocity - lastSpeed) / (Timer.getFPGATimestamp() - lastTime);
         double controlVoltage = leftClimbPIDController.calculate(leftClimberEncoder.getPosition()) + 
         feedforward.calculate(leftClimbPIDController.getSetpoint().velocity, acceleration);
-        leftClimber.setVoltage(controlVoltage);
+        leftClimber.set(controlVoltage / RobotController.getBatteryVoltage());
         lastSpeed = leftClimbPIDController.getSetpoint().velocity;
         lastTime = Timer.getFPGATimestamp();  
     }
