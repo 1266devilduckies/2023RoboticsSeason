@@ -16,22 +16,18 @@ import frc.robot.Constants;
 import frc.robot.commands.HomeToElevatorPosition;
 
 public class ElevatorSubsystem extends SubsystemBase {
-    CANSparkMax leftClimber = new CANSparkMax(Constants.CAN.Elevator.leftClimber, MotorType.kBrushless);
-    RelativeEncoder leftClimberEncoder = leftClimber.getEncoder();
+    //CANSparkMax leftClimber = new CANSparkMax(Constants.CAN.Elevator.leftClimber, MotorType.kBrushless);
+    //RelativeEncoder leftClimberEncoder = leftClimber.getEncoder();
     double currentPosition = 0; //in terms of rotations
     double lastSpeed = 0;
     double lastTime = Timer.getFPGATimestamp();
     public ProfiledPIDController leftClimbPIDController = new ProfiledPIDController(
         Constants.ElevatorCharacteristics.kP,
         0.0,
-        Constants.ElevatorCharacteristics.kD, new Constraints(200,200)); //in terms of rotations
-        public SimpleMotorFeedforward feedforward = new SimpleMotorFeedforward(
-            Constants.ElevatorCharacteristics.kS,
-            Constants.ElevatorCharacteristics.kV,
-            Constants.ElevatorCharacteristics.kA
-        );
+        Constants.ElevatorCharacteristics.kD, new Constraints(500,200)); //in terms of ticks per second
     public ElevatorSubsystem() {
-        leftClimberEncoder.setPosition(0);
+        //leftClimberEncoder.setPosition(0);
+        DrivetrainSubsystem.MainLeftMotorBack.setSelectedSensorPosition(0);
         leftClimbPIDController.setTolerance(0.1, 0.1);
         setGoal(1);
         this.setDefaultCommand(new HomeToElevatorPosition(this));
@@ -40,26 +36,21 @@ public class ElevatorSubsystem extends SubsystemBase {
     @Override
     public void periodic() {
         //leftClimber.set(Math.sin(Timer.getFPGATimestamp()));
-        SmartDashboard.putBoolean("goal", isAtTarget());
-        SmartDashboard.putNumber("encoder position", leftClimberEncoder.getPosition());
+        SmartDashboard.putNumber("encoder position", DrivetrainSubsystem.MainLeftMotorBack.getSelectedSensorPosition());
     }
 
     public void setGoal(double elevatorOffset) {
         double position = Constants.ElevatorCharacteristics.elevatorBottomLimit + elevatorOffset * (Constants.ElevatorCharacteristics.elevatorTopLimit - Constants.ElevatorCharacteristics.elevatorBottomLimit);
+        SmartDashboard.putNumber("goal", position);
         leftClimbPIDController.setGoal(position);
     }
 
     public void homeToElevatorOffset() {
-        double acceleration = (leftClimbPIDController.getSetpoint().velocity - lastSpeed) / (Timer.getFPGATimestamp() - lastTime);
-        double controlVoltage = leftClimbPIDController.calculate(leftClimberEncoder.getPosition()) + 
-        feedforward.calculate(leftClimbPIDController.getSetpoint().velocity, acceleration);
-        leftClimber.set(controlVoltage / RobotController.getBatteryVoltage());
-        lastSpeed = leftClimbPIDController.getSetpoint().velocity;
-        lastTime = Timer.getFPGATimestamp();  
+        DrivetrainSubsystem.MainLeftMotorBack.set(leftClimbPIDController.calculate(DrivetrainSubsystem.MainLeftMotorBack.getSelectedSensorPosition()));
     }
 
     public boolean isAtTarget() {
-        double err = Math.abs(leftClimberEncoder.getPosition() - leftClimbPIDController.getGoal().position);
+        double err = Math.abs(DrivetrainSubsystem.MainLeftMotorBack.getSelectedSensorPosition() - leftClimbPIDController.getGoal().position);
         SmartDashboard.putNumber("error", err);
         return err < 0.1;
     }

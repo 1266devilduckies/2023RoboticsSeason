@@ -72,13 +72,10 @@ public final class Constants {
       new Rotation3d(0,0,0));
   }
   public static class ElevatorCharacteristics {
-    public static final double elevatorBottomLimit = 0; //in terms of rotations from reset
-    public static final double elevatorTopLimit = 100;
+    public static final double elevatorBottomLimit = 0; //in terms of ticks from reset
+    public static final double elevatorTopLimit = 50000;
     public static final double kD = 0;
-    public static final double kP = 2;
-    public static final double kS = 0.057515;
-    public static final double kV = 0.12458;
-    public static final double kA = 0.0048377;
+    public static final double kP = 0.1;
   }
 
   public static class AutoTrajectoryFileNames {
