@@ -55,7 +55,7 @@ public final class Constants {
     public static double kS = 0.69;
     public static double kV = 1.42;
     public static double kA = 0.68;
-    public static double kP = 0.274;
+    public static double kP = 0.274; //0.274
     public static double maxAutoVelocityMeters = 4;
     public static double maxAutoAccelerationMeters = 3;
     public static double kD = 0.0;
