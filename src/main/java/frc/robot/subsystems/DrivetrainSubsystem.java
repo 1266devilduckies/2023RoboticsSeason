@@ -80,7 +80,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
     photonPoseEstimator = new RobotPoseEstimator(aprilTagFieldLayout, PoseStrategy.CLOSEST_TO_REFERENCE_POSE, camList);
     try {
       aprilTagFieldLayout = new AprilTagFieldLayout(
-        Filesystem.getDeployDirectory().getName() + "/2023-chargedup.json"
+        Filesystem.getDeployDirectory().getAbsolutePath() + "/2023-chargedup.json"
       );
     } catch(IOException e) {
       System.out.println("couldnt load field image :(");
