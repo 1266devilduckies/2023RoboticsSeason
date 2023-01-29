@@ -1,5 +1,7 @@
 package frc.robot.subsystems;
 
+import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
@@ -16,19 +18,19 @@ import frc.robot.Constants;
 import frc.robot.commands.HomeToElevatorPosition;
 
 public class ElevatorSubsystem extends SubsystemBase {
-    //CANSparkMax leftClimber = new CANSparkMax(Constants.CAN.Elevator.leftClimber, MotorType.kBrushless);
-    //RelativeEncoder leftClimberEncoder = leftClimber.getEncoder();
-    double currentPosition = 0; //in terms of rotations
-    double lastSpeed = 0;
-    double lastTime = Timer.getFPGATimestamp();
-    public ProfiledPIDController leftClimbPIDController = new ProfiledPIDController(
-        Constants.ElevatorCharacteristics.kP,
-        0.0,
-        Constants.ElevatorCharacteristics.kD, new Constraints(500,200)); //in terms of ticks per second
+    public TalonFX leftClimber = new TalonFX(Constants.CAN.Elevator.leftClimber);
+    public TalonFX rightClimber = new TalonFX(Constants.CAN.Elevator.rightClimber);
+    double position = 0;
+    public int idxLevel = 0; //where we at in the array
     public ElevatorSubsystem() {
-        //leftClimberEncoder.setPosition(0);
-        DrivetrainSubsystem.MainLeftMotorBack.setSelectedSensorPosition(0);
-        leftClimbPIDController.setTolerance(0.1, 0.1);
+        leftClimber.configFactoryDefault();
+        rightClimber.configFactoryDefault();
+        leftClimber.setSelectedSensorPosition(0);
+        rightClimber.setSelectedSensorPosition(0);
+        leftClimber.config_kP(0, Constants.ElevatorCharacteristics.kP);
+        rightClimber.config_kP(0, Constants.ElevatorCharacteristics.kP);
+        rightClimber.setInverted(true);
+        leftClimber.setInverted(false);
         setGoal(1);
         this.setDefaultCommand(new HomeToElevatorPosition(this));
     }
@@ -36,22 +38,28 @@ public class ElevatorSubsystem extends SubsystemBase {
     @Override
     public void periodic() {
         //leftClimber.set(Math.sin(Timer.getFPGATimestamp()));
-        SmartDashboard.putNumber("encoder position", DrivetrainSubsystem.MainLeftMotorBack.getSelectedSensorPosition());
+        SmartDashboard.putNumber("encoder position", leftClimber.getSelectedSensorPosition());
     }
 
     public void setGoal(double elevatorOffset) {
-        double position = Constants.ElevatorCharacteristics.elevatorBottomLimit + elevatorOffset * (Constants.ElevatorCharacteristics.elevatorTopLimit - Constants.ElevatorCharacteristics.elevatorBottomLimit);
-        SmartDashboard.putNumber("goal", position);
-        leftClimbPIDController.setGoal(position);
-    }
-
-    public void homeToElevatorOffset() {
-        DrivetrainSubsystem.MainLeftMotorBack.set(leftClimbPIDController.calculate(DrivetrainSubsystem.MainLeftMotorBack.getSelectedSensorPosition()));
+        position = Constants.ElevatorCharacteristics.elevatorBottomLimit + elevatorOffset * (Constants.ElevatorCharacteristics.elevatorTopLimit - Constants.ElevatorCharacteristics.elevatorBottomLimit);
+        leftClimber.set(ControlMode.Position, position);
+        rightClimber.set(ControlMode.Position, position);
     }
 
     public boolean isAtTarget() {
-        double err = Math.abs(DrivetrainSubsystem.MainLeftMotorBack.getSelectedSensorPosition() - leftClimbPIDController.getGoal().position);
-        SmartDashboard.putNumber("error", err);
-        return err < 0.1;
+        double err = Math.abs(leftClimber.getSelectedSensorPosition() - position);
+        double errRight = Math.abs(rightClimber.getSelectedSensorPosition() - position);
+        return err < 0.1 && errRight < 0.1;
+    }
+    public boolean isAtTarget(double setpoint) {
+        double err = Math.abs(leftClimber.getSelectedSensorPosition() - setpoint);
+        double errRight = Math.abs(rightClimber.getSelectedSensorPosition() - setpoint);
+        return err < 0.1 && errRight < 0.1;
+    }
+    
+    public double getLevelPercentageFromIdx(int idx) {
+        double elevatorLevel = Constants.elevatorLevels[idx];
+        return (Constants.ElevatorCharacteristics.elevatorBottomLimit - elevatorLevel)/(Constants.ElevatorCharacteristics.elevatorTopLimit-Constants.ElevatorCharacteristics.elevatorBottomLimit);
     }
 }

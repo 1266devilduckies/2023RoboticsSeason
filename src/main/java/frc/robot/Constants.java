@@ -45,7 +45,8 @@ public final class Constants {
       public static final int FR = 5;
     }
     public static class Elevator {
-      public static final int leftClimber = 6;
+      public static final int leftClimber = 10;
+      public static final int rightClimber = 9;
     }
   }
   public static class DrivetrainCharacteristics {
@@ -74,8 +75,7 @@ public final class Constants {
   public static class ElevatorCharacteristics {
     public static final double elevatorBottomLimit = 0; //in terms of ticks from reset
     public static final double elevatorTopLimit = 50000;
-    public static final double kD = 0;
-    public static final double kP = 0.1;
+    public static final double kP = 0.25;
   }
 
   public static class AutoTrajectoryFileNames {
@@ -92,4 +92,11 @@ public final class Constants {
   }
 
   public static HashMap<String, Command> eventMap = new HashMap<>();
+  public static double[] elevatorLevels = {
+    //in terms of encoder ticks
+    0,
+    25000,
+    50000,
+    75000
+  };
 }
