@@ -73,9 +73,15 @@ public final class Constants {
       new Rotation3d(0,0,0));
   }
   public static class ElevatorCharacteristics {
-    public static final double elevatorBottomLimit = 0; //in terms of ticks from reset
-    public static final double elevatorTopLimit = 50000;
     public static final double kP = 0.25;
+    public static double[] elevatorLevels = {
+      //in terms of encoder ticks
+      0,
+      25000,
+      50000
+    };
+    public static final double elevatorBottomLimit = 0; //in terms of ticks from reset
+    public static final double elevatorTopLimit = Constants.ElevatorCharacteristics.elevatorLevels[Constants.ElevatorCharacteristics.elevatorLevels.length-1];
   }
 
   public static class AutoTrajectoryFileNames {
@@ -92,11 +98,4 @@ public final class Constants {
   }
 
   public static HashMap<String, Command> eventMap = new HashMap<>();
-  public static double[] elevatorLevels = {
-    //in terms of encoder ticks
-    0,
-    25000,
-    50000,
-    75000
-  };
 }

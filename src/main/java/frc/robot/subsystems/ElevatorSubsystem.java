@@ -18,8 +18,8 @@ import frc.robot.Constants;
 import frc.robot.commands.HomeToElevatorPosition;
 
 public class ElevatorSubsystem extends SubsystemBase {
-    public TalonFX leftClimber = new TalonFX(Constants.CAN.Elevator.leftClimber);
-    public TalonFX rightClimber = new TalonFX(Constants.CAN.Elevator.rightClimber);
+    public TalonFX leftClimber = DrivetrainSubsystem.MainLeftMotorBack;//new TalonFX(Constants.CAN.Elevator.leftClimber);
+    public TalonFX rightClimber = DrivetrainSubsystem.MainRightMotorBack;//new TalonFX(Constants.CAN.Elevator.rightClimber);
     double position = 0;
     public int idxLevel = 0; //where we at in the array
     public ElevatorSubsystem() {
@@ -46,6 +46,11 @@ public class ElevatorSubsystem extends SubsystemBase {
         leftClimber.set(ControlMode.Position, position);
         rightClimber.set(ControlMode.Position, position);
     }
+    public void setGoalAsTickOffset(double elevatorOffsetTicks) {
+        position = elevatorOffsetTicks;
+        leftClimber.set(ControlMode.Position, position);
+        rightClimber.set(ControlMode.Position, position);
+    }
 
     public boolean isAtTarget() {
         double err = Math.abs(leftClimber.getSelectedSensorPosition() - position);
@@ -59,7 +64,7 @@ public class ElevatorSubsystem extends SubsystemBase {
     }
     
     public double getLevelPercentageFromIdx(int idx) {
-        double elevatorLevel = Constants.elevatorLevels[idx];
-        return (Constants.ElevatorCharacteristics.elevatorBottomLimit - elevatorLevel)/(Constants.ElevatorCharacteristics.elevatorTopLimit-Constants.ElevatorCharacteristics.elevatorBottomLimit);
+        double elevatorLevel = Constants.ElevatorCharacteristics.elevatorLevels[idx];
+        return (elevatorLevel - Constants.ElevatorCharacteristics.elevatorBottomLimit)/(Constants.ElevatorCharacteristics.elevatorTopLimit-Constants.ElevatorCharacteristics.elevatorBottomLimit);
     }
 }
