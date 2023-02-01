@@ -22,9 +22,9 @@ public class ManuallyMoveRelativeToCurrentLevel extends CommandBase {
     }
 
     public void initialize() {
-        goal = 0.0;
+        goal = this.elevatorSubsystem.getLevelPercentageFromIdx(this.elevatorSubsystem.idxLevel);
         lowerLimit = 0.0;
-        upperLimit = 100.0;
+        upperLimit = 1.0;
         if (this.elevatorSubsystem.idxLevel == 0) {
             double a = this.elevatorSubsystem.getLevelPercentageFromIdx(0);
             double b = this.elevatorSubsystem.getLevelPercentageFromIdx(1);
@@ -45,15 +45,15 @@ public class ManuallyMoveRelativeToCurrentLevel extends CommandBase {
 
     public void execute() {
         double position = -RobotContainer.operatorJoystick.getRawAxis(1);
-        //double mappedPosition = lowerLimit + 0.5*((position + 1.0)*(upperLimit - lowerLimit));
-        if (position > 0.25) {
+        if (position > 0.25 && goal < upperLimit) {
             goal = goal + kSpeed;
-        } else if (position < -0.25) {
+        } else if (position < -0.25 && goal > lowerLimit) {
             goal = goal - kSpeed;
         }
-        goal = MathUtil.clamp(goal + this.elevatorSubsystem.getLevelPercentageFromIdx(this.elevatorSubsystem.idxLevel), lowerLimit, upperLimit);
+        double mappedGoal = MathUtil.clamp(goal + this.elevatorSubsystem.getLevelPercentageFromIdx(this.elevatorSubsystem.idxLevel), lowerLimit, upperLimit);
         SmartDashboard.putNumber("goal", goal);
-        SmartDashboard.putNumber("position", position);
-        elevatorSubsystem.setGoal(goal);
+        SmartDashboard.putNumber("lower limit", lowerLimit);
+        SmartDashboard.putNumber("upper limit", upperLimit);
+        elevatorSubsystem.setGoal(mappedGoal);
     }
 }

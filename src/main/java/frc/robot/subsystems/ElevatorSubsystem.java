@@ -37,7 +37,6 @@ public class ElevatorSubsystem extends SubsystemBase {
 
     @Override
     public void periodic() {
-        //leftClimber.set(Math.sin(Timer.getFPGATimestamp()));
         SmartDashboard.putNumber("encoder position", leftClimber.getSelectedSensorPosition());
     }
 
