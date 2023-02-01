@@ -45,7 +45,8 @@ public final class Constants {
       public static final int FR = 5;
     }
     public static class Elevator {
-      public static final int leftClimber = 6;
+      public static final int leftClimber = 10;
+      public static final int rightClimber = 9;
     }
   }
   public static class DrivetrainCharacteristics {
@@ -55,7 +56,7 @@ public final class Constants {
     public static double kS = 0.69;
     public static double kV = 1.42;
     public static double kA = 0.68;
-    public static double kP = 0.274;
+    public static double kP = 0.274; //0.274
     public static double maxAutoVelocityMeters = 4;
     public static double maxAutoAccelerationMeters = 3;
     public static double kD = 0.0;
@@ -71,6 +72,17 @@ public final class Constants {
       new Translation3d(0,0,0),
       new Rotation3d(0,0,0));
   }
+  public static class ElevatorCharacteristics {
+    public static final double kP = 0.25;
+    public static double[] elevatorLevels = {
+      //in terms of encoder ticks
+      0,
+      25000,
+      50000
+    };
+    public static final double elevatorBottomLimit = 0; //in terms of ticks from reset
+    public static final double elevatorTopLimit = Constants.ElevatorCharacteristics.elevatorLevels[Constants.ElevatorCharacteristics.elevatorLevels.length-1];
+  }
 
   public static class AutoTrajectoryFileNames {
     public static final String HIGH_DOCKHIGH = "HighDockingHighPath";
@@ -79,6 +91,9 @@ public final class Constants {
     public static final String LOW_DOCKHIGH = "LowDockingHighPath";
     public static final String LOW_DOCKLOW = "LowDockingLowPath";
     public static final String LOW_FORWARD = "LowForwardPath";
+    public static final String MID_FORWARD = "MidDockingForwardPath";
+    public static final String MID_DOCKHIGH = "MidDockingHighPath";
+    public static final String MID_DOCKLOW = "MidDockingLowPath";
 
   }
 

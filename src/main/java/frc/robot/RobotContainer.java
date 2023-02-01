@@ -5,13 +5,17 @@
 package frc.robot;
 
 import frc.robot.Constants.DriverConstants;
+import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.Autos;
+import frc.robot.commands.ManuallyMoveRelativeToCurrentLevel;
 import frc.robot.subsystems.DrivetrainSubsystem;
 import frc.robot.subsystems.ElevatorSubsystem;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandPS4Controller;
+import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 /**
@@ -28,6 +32,8 @@ public class RobotContainer {
 
   public final static CommandPS4Controller driverJoystick =
       new CommandPS4Controller(DriverConstants.port);
+  public final static CommandXboxController operatorJoystick =
+      new CommandXboxController(OperatorConstants.port);
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -56,6 +62,20 @@ public class RobotContainer {
     // // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
     // // cancelling on release.
     // driverJoystick.square().whileTrue(m_exampleSubsystem.exampleMethodCommand());
+
+    operatorJoystick.a().whileTrue(new InstantCommand( () -> {
+      elevatorSubsystem.idxLevel = 0;
+    }));
+
+    operatorJoystick.b().whileTrue(new InstantCommand( () -> {
+      elevatorSubsystem.idxLevel = 1;
+    }));
+
+    operatorJoystick.y().whileTrue(new InstantCommand( () -> {
+      elevatorSubsystem.idxLevel = 2;
+    }));
+
+    operatorJoystick.leftBumper().whileTrue(new ManuallyMoveRelativeToCurrentLevel(elevatorSubsystem));
   }
 
   private void configureMarkers() {

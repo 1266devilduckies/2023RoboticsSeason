@@ -4,9 +4,10 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Optional;
 
+import org.photonvision.EstimatedRobotPose;
 import org.photonvision.PhotonCamera;
-import org.photonvision.RobotPoseEstimator;
-import org.photonvision.RobotPoseEstimator.PoseStrategy;
+import org.photonvision.PhotonPoseEstimator;
+import org.photonvision.PhotonPoseEstimator.PoseStrategy;
 
 import com.ctre.phoenix.motorcontrol.InvertType;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
@@ -30,6 +31,7 @@ import edu.wpi.first.wpilibj.ADXRS450_Gyro;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.SPI.Port;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.simulation.ADXRS450_GyroSim;
 import edu.wpi.first.wpilibj.simulation.DifferentialDrivetrainSim;
@@ -45,8 +47,8 @@ public class DrivetrainSubsystem extends SubsystemBase {
   private final DifferentialDrivetrainSim robotDriveSim;
 
   // CAN devices
-  private final WPI_TalonFX MainLeftMotorBack = new WPI_TalonFX(Constants.CAN.Drivetrain.BL);
-  private final WPI_TalonFX MainRightMotorBack = new WPI_TalonFX(Constants.CAN.Drivetrain.BR);
+  final static WPI_TalonFX MainLeftMotorBack = new WPI_TalonFX(Constants.CAN.Drivetrain.BL);
+  final static  WPI_TalonFX MainRightMotorBack = new WPI_TalonFX(Constants.CAN.Drivetrain.BR);
   private final WPI_TalonFX MainLeftMotorFront = new WPI_TalonFX(Constants.CAN.Drivetrain.FL);
   private final WPI_TalonFX MainRightMotorFront = new WPI_TalonFX(Constants.CAN.Drivetrain.FR);
 
@@ -67,19 +69,17 @@ public class DrivetrainSubsystem extends SubsystemBase {
 
   public static final Field2d field = new Field2d();
   Transform3d robotToCam = Constants.LimelightCharacteristics.robotToCamMeters;
-  private ArrayList<Pair<PhotonCamera, Transform3d>> camList = new ArrayList<Pair<PhotonCamera, Transform3d>>();
   private final PhotonCamera camera = new PhotonCamera(Constants.LimelightCharacteristics.photonVisionName);
   public AprilTagFieldLayout aprilTagFieldLayout;
-  RobotPoseEstimator photonPoseEstimator;
+  PhotonPoseEstimator photonPoseEstimator;
   public boolean isCurrentLimited = false;
   public DrivetrainSubsystem() {
     //constructor gets ran at robotInit()
     this.setDefaultCommand(new DriveCommand(this));
-    camList.add(new Pair<PhotonCamera, Transform3d>(camera, robotToCam));
-    photonPoseEstimator = new RobotPoseEstimator(aprilTagFieldLayout, PoseStrategy.CLOSEST_TO_REFERENCE_POSE, camList);
+    photonPoseEstimator = new PhotonPoseEstimator(aprilTagFieldLayout, PoseStrategy.CLOSEST_TO_REFERENCE_POSE, camera, Constants.LimelightCharacteristics.robotToCamMeters);
     try {
       aprilTagFieldLayout = new AprilTagFieldLayout(
-        Filesystem.getDeployDirectory().getName() + "/2023-chargedup.json"
+        Filesystem.getDeployDirectory().getAbsolutePath() + "/2023-chargedup.json"
       );
     } catch(IOException e) {
       System.out.println("couldnt load field image :(");
@@ -146,9 +146,9 @@ public class DrivetrainSubsystem extends SubsystemBase {
     photonPoseEstimator.setReferencePose(odometry.getEstimatedPosition());
 
     double currentTime = Timer.getFPGATimestamp();
-    Optional<Pair<Pose3d, Double>> result = photonPoseEstimator.update();
-    if (result.isPresent() && result.get().getFirst() != null) {
-        odometry.addVisionMeasurement(result.get().getFirst().toPose2d(), currentTime);
+    Optional<EstimatedRobotPose> result = photonPoseEstimator.update();
+    if (result.isPresent() && result.get() != null) {
+        odometry.addVisionMeasurement(result.get().estimatedPose.toPose2d(), currentTime);
     }
     field.setRobotPose(odometry.getEstimatedPosition());
   }
@@ -156,7 +156,6 @@ public class DrivetrainSubsystem extends SubsystemBase {
   @Override
   public void simulationPeriodic() {
     Pose2d robotPose = odometry.getEstimatedPosition();
-    SmartDashboard.putString("pose", robotPose.toString());
     // For the motor master which is inverted, you'll need to invert it manually (ie
     // with a negative sign) here when fetching any data
     // CTRE doesn't support setInverted() for simulation
