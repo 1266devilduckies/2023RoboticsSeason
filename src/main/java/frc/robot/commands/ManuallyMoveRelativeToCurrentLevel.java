@@ -51,8 +51,9 @@ public class ManuallyMoveRelativeToCurrentLevel extends CommandBase {
         } else if (position < -0.25) {
             goal = goal - kSpeed;
         }
+        goal = MathUtil.clamp(goal + this.elevatorSubsystem.getLevelPercentageFromIdx(this.elevatorSubsystem.idxLevel), lowerLimit, upperLimit);
         SmartDashboard.putNumber("goal", goal);
         SmartDashboard.putNumber("position", position);
-        elevatorSubsystem.setGoal(MathUtil.clamp(goal + this.elevatorSubsystem.getLevelPercentageFromIdx(this.elevatorSubsystem.idxLevel), lowerLimit, upperLimit));
+        elevatorSubsystem.setGoal(goal);
     }
 }
