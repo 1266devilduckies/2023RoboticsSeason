@@ -33,6 +33,8 @@ public class Balance extends CommandBase{
                 drivetrainSubsystem.MainRightMotorBack.setNeutralMode(NeutralMode.Coast);
                 drivetrainSubsystem.MainLeftMotorFront.setNeutralMode(NeutralMode.Coast);
                 drivetrainSubsystem.MainRightMotorFront.setNeutralMode(NeutralMode.Coast);
+                drivetrainSubsystem.leftTopMotor.setNeutralMode(NeutralMode.Coast);
+                drivetrainSubsystem.rightTopMotor.setNeutralMode(NeutralMode.Coast);
 
                 goalLeft = drivetrainSubsystem.MainLeftMotorBack.getSelectedSensorPosition() + offsetFromReset;
                 goalRight = drivetrainSubsystem.MainRightMotorBack.getSelectedSensorPosition() + offsetFromReset;
@@ -59,5 +61,7 @@ public class Balance extends CommandBase{
                 drivetrainSubsystem.MainRightMotorBack.setNeutralMode(NeutralMode.Brake);
                 drivetrainSubsystem.MainLeftMotorFront.setNeutralMode(NeutralMode.Brake);
                 drivetrainSubsystem.MainRightMotorFront.setNeutralMode(NeutralMode.Brake);
+                drivetrainSubsystem.leftTopMotor.setNeutralMode(NeutralMode.Brake);
+                drivetrainSubsystem.rightTopMotor.setNeutralMode(NeutralMode.Brake);
         }
 }

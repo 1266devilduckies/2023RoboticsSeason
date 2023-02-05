@@ -39,10 +39,12 @@ public final class Constants {
   public static class CAN {
     public static class Drivetrain {
       //configured for ducktails
-      public static final int BL = 2;
-      public static final int BR = 3;
-      public static final int FL = 4;
-      public static final int FR = 5;
+      public static final int BL = 5;
+      public static final int BR = 4;
+      public static final int FL = 3;
+      public static final int FR = 7;
+      public static final int TL = 2;
+      public static final int TR = 6;
     }
     public static class Elevator {
       public static final int leftClimber = 10;

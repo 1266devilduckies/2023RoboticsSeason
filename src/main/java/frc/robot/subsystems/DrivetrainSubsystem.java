@@ -51,6 +51,8 @@ public class DrivetrainSubsystem extends SubsystemBase {
   public final  WPI_TalonFX MainRightMotorBack = new WPI_TalonFX(Constants.CAN.Drivetrain.BR);
   public final WPI_TalonFX MainLeftMotorFront = new WPI_TalonFX(Constants.CAN.Drivetrain.FL);
   public final WPI_TalonFX MainRightMotorFront = new WPI_TalonFX(Constants.CAN.Drivetrain.FR);
+  public final WPI_TalonFX leftTopMotor = new WPI_TalonFX(Constants.CAN.Drivetrain.TL);
+  public final WPI_TalonFX rightTopMotor = new WPI_TalonFX(Constants.CAN.Drivetrain.TR);
 
   private final TalonFXSimCollection leftMotorSim;
   private final TalonFXSimCollection rightMotorSim;
@@ -92,6 +94,8 @@ public class DrivetrainSubsystem extends SubsystemBase {
     MainRightMotorBack.configFactoryDefault();
     MainLeftMotorFront.configFactoryDefault();
     MainRightMotorFront.configFactoryDefault();
+    leftTopMotor.configFactoryDefault();
+    rightTopMotor.configFactoryDefault();
 
     // Setup the integrated sensor
     MainLeftMotorBack.configSelectedFeedbackSensor(TalonFXFeedbackDevice.IntegratedSensor, 0, 100);
@@ -100,6 +104,8 @@ public class DrivetrainSubsystem extends SubsystemBase {
     // Slave the front motors to their respective back motors
     MainLeftMotorFront.follow(MainLeftMotorBack);
     MainRightMotorFront.follow(MainRightMotorBack);
+    leftTopMotor.follow(MainLeftMotorBack);
+    rightTopMotor.follow(MainRightMotorBack);
 
     // Disable voltage compensation, it's bad to be compensating voltage for a
     // system which draws loads of amps
@@ -107,18 +113,24 @@ public class DrivetrainSubsystem extends SubsystemBase {
     MainLeftMotorFront.enableVoltageCompensation(false);
     MainRightMotorBack.enableVoltageCompensation(false);
     MainRightMotorFront.enableVoltageCompensation(false);
+    leftTopMotor.enableVoltageCompensation(false);
+    rightTopMotor.enableVoltageCompensation(false);
 
     //Apply brake mode in auton
     MainLeftMotorBack.setNeutralMode(NeutralMode.Brake);
     MainLeftMotorFront.setNeutralMode(NeutralMode.Brake);
     MainRightMotorBack.setNeutralMode(NeutralMode.Brake);
     MainRightMotorFront.setNeutralMode(NeutralMode.Brake);
+    leftTopMotor.setNeutralMode(NeutralMode.Brake);
+    rightTopMotor.setNeutralMode(NeutralMode.Brake);
 
     // Invert one of the sides
     MainLeftMotorBack.setInverted(true);
     MainRightMotorBack.setInverted(false);
     MainLeftMotorFront.setInverted(InvertType.FollowMaster);
     MainRightMotorFront.setInverted(InvertType.FollowMaster);
+    leftTopMotor.setInverted(InvertType.FollowMaster);
+    rightTopMotor.setInverted(InvertType.FollowMaster);
 
     robotDrive = new DifferentialDrive(MainLeftMotorBack, MainRightMotorBack);
     robotDriveSim = new DifferentialDrivetrainSim(
