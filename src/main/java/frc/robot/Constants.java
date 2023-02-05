@@ -53,6 +53,7 @@ public final class Constants {
     public static final double trackWidthMeters = Units.inchesToMeters(24.75);
     public static final double gearing = 25/3.;
     public static final double wheelRadiusMeters = Units.inchesToMeters(3);
+    public static final double rampPGain = 0.1;
     public static double kS = 0.69;
     public static double kV = 1.42;
     public static double kA = 0.68;

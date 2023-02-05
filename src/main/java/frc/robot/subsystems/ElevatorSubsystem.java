@@ -18,8 +18,8 @@ import frc.robot.Constants;
 import frc.robot.commands.HomeToElevatorPosition;
 
 public class ElevatorSubsystem extends SubsystemBase {
-    public TalonFX leftClimber = DrivetrainSubsystem.MainLeftMotorBack;//new TalonFX(Constants.CAN.Elevator.leftClimber);
-    public TalonFX rightClimber = DrivetrainSubsystem.MainRightMotorBack;//new TalonFX(Constants.CAN.Elevator.rightClimber);
+    public TalonFX leftClimber = new TalonFX(69);//DrivetrainSubsystem.MainLeftMotorBack;//new TalonFX(Constants.CAN.Elevator.leftClimber);
+    public TalonFX rightClimber = new TalonFX(70);//DrivetrainSubsystem.MainRightMotorBack;//new TalonFX(Constants.CAN.Elevator.rightClimber);
     double position = 0;
     public int idxLevel = 0; //where we at in the array
     public ElevatorSubsystem() {

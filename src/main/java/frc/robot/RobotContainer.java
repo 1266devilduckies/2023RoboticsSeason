@@ -7,11 +7,14 @@ package frc.robot;
 import frc.robot.Constants.DriverConstants;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.Autos;
+import frc.robot.commands.Balance;
 import frc.robot.commands.ManuallyMoveRelativeToCurrentLevel;
 import frc.robot.subsystems.DrivetrainSubsystem;
 import frc.robot.subsystems.ElevatorSubsystem;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandPS4Controller;
@@ -28,6 +31,7 @@ public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   private final DrivetrainSubsystem drivetrainSubsystem = new DrivetrainSubsystem();
   private final ElevatorSubsystem elevatorSubsystem = new ElevatorSubsystem();
+  private boolean startedBalance = false;
   SendableChooser<DuckAutoProfile> autonomousMode = new SendableChooser<DuckAutoProfile>();
 
   public final static CommandPS4Controller driverJoystick =
@@ -74,6 +78,7 @@ public class RobotContainer {
     operatorJoystick.y().whileTrue(new InstantCommand( () -> {
       elevatorSubsystem.idxLevel = 2;
     }));
+    operatorJoystick.x().whileTrue(new Balance(drivetrainSubsystem));
 
     operatorJoystick.leftBumper().whileTrue(new ManuallyMoveRelativeToCurrentLevel(elevatorSubsystem));
   }
