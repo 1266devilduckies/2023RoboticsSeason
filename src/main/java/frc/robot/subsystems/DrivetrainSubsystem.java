@@ -101,6 +101,9 @@ public class DrivetrainSubsystem extends SubsystemBase {
     MainLeftMotorBack.configSelectedFeedbackSensor(TalonFXFeedbackDevice.IntegratedSensor, 0, 100);
     MainRightMotorBack.configSelectedFeedbackSensor(TalonFXFeedbackDevice.IntegratedSensor, 0, 100);
 
+    MainLeftMotorBack.config_kP(0, 0.25);
+    MainRightMotorBack.config_kP(0, 0.25);
+
     // Slave the front motors to their respective back motors
     MainLeftMotorFront.follow(MainLeftMotorBack);
     MainRightMotorFront.follow(MainRightMotorBack);

@@ -80,7 +80,7 @@ public class RobotContainer {
       elevatorSubsystem.idxLevel = 2;
     }));
     operatorJoystick.x().whileTrue(new Balance(drivetrainSubsystem));
-    operatorJoystick.rightBumper().whileTrue(new RotateToAngle(drivetrainSubsystem, 90.0));
+    operatorJoystick.rightBumper().whileTrue(new RotateToAngle(drivetrainSubsystem, 3.0));
 
     operatorJoystick.leftBumper().whileTrue(new ManuallyMoveRelativeToCurrentLevel(elevatorSubsystem));
   }
