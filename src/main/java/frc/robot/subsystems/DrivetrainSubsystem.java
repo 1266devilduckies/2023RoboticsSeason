@@ -57,8 +57,8 @@ public class DrivetrainSubsystem extends SubsystemBase {
   private final TalonFXSimCollection leftMotorSim;
   private final TalonFXSimCollection rightMotorSim;
   
-  private final ADXRS450_Gyro gyro = new ADXRS450_Gyro();
-  private final ADXRS450_GyroSim gyroSim = new ADXRS450_GyroSim(gyro);
+  public final ADXRS450_Gyro gyro = new ADXRS450_Gyro();
+  public final ADXRS450_GyroSim gyroSim = new ADXRS450_GyroSim(gyro);
 
   public final RamseteController ramseteController = new RamseteController();
   public final DifferentialDriveKinematics drivetrainKinematics = new DifferentialDriveKinematics(Constants.DrivetrainCharacteristics.trackWidthMeters);

@@ -7,14 +7,13 @@ import frc.robot.RobotContainer;
 import frc.robot.subsystems.DrivetrainSubsystem;
 
 public class DriveCommand extends CommandBase{
-    
 
     DrivetrainSubsystem drivetrainSubsystem;
     public DriveCommand(DrivetrainSubsystem subsystem){
         drivetrainSubsystem = subsystem;
         addRequirements(drivetrainSubsystem);
     }
-
+//Dan wuz here, kyle too 
     // Called repeatedly when this Command is scheduled to run
     @Override
     public void execute() {

@@ -9,6 +9,7 @@ import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.Autos;
 import frc.robot.commands.Balance;
 import frc.robot.commands.ManuallyMoveRelativeToCurrentLevel;
+import frc.robot.commands.RotateToAngle;
 import frc.robot.subsystems.DrivetrainSubsystem;
 import frc.robot.subsystems.ElevatorSubsystem;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -79,6 +80,7 @@ public class RobotContainer {
       elevatorSubsystem.idxLevel = 2;
     }));
     operatorJoystick.x().whileTrue(new Balance(drivetrainSubsystem));
+    operatorJoystick.rightBumper().whileTrue(new RotateToAngle(drivetrainSubsystem, 90.0));
 
     operatorJoystick.leftBumper().whileTrue(new ManuallyMoveRelativeToCurrentLevel(elevatorSubsystem));
   }
