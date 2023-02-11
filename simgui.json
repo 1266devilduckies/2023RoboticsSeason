@@ -6,7 +6,27 @@
           "open": false
         }
       },
+      "Talon FX[2]": {
+        "header": {
+          "open": true
+        }
+      },
       "Talon FX[3]": {
+        "header": {
+          "open": true
+        }
+      },
+      "Talon FX[4]": {
+        "header": {
+          "open": true
+        }
+      },
+      "Talon FX[5]": {
+        "header": {
+          "open": true
+        }
+      },
+      "Talon FX[7]": {
         "header": {
           "open": true
         }
@@ -29,6 +49,9 @@
     }
   },
   "NetworkTables Info": {
+    "Clients": {
+      "open": true
+    },
     "Server": {
       "open": true
     },

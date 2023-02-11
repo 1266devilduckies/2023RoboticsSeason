@@ -6,8 +6,10 @@ package frc.robot;
 
 import frc.robot.Constants.DriverConstants;
 import frc.robot.Constants.OperatorConstants;
+import frc.robot.commands.AlignSequence;
 import frc.robot.commands.Autos;
 import frc.robot.commands.Balance;
+import frc.robot.commands.DriveToPosition;
 import frc.robot.commands.ManuallyMoveRelativeToCurrentLevel;
 import frc.robot.commands.RotateToAngle;
 import frc.robot.subsystems.DrivetrainSubsystem;
@@ -81,6 +83,8 @@ public class RobotContainer {
     }));
     operatorJoystick.x().whileTrue(new Balance(drivetrainSubsystem));
     operatorJoystick.rightBumper().whileTrue(new RotateToAngle(drivetrainSubsystem, 3.0));
+
+    operatorJoystick.povUp().whileTrue(new AlignSequence(drivetrainSubsystem, -30, 1));
 
     operatorJoystick.leftBumper().whileTrue(new ManuallyMoveRelativeToCurrentLevel(elevatorSubsystem));
   }
