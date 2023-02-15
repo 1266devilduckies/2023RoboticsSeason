@@ -5,6 +5,7 @@ import com.ctre.phoenix.motorcontrol.TalonFXSensorCollection;
 import com.ctre.phoenix.motorcontrol.TalonFXSimCollection;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.system.plant.DCMotor;
@@ -22,6 +23,7 @@ import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj.util.Color8Bit;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.RobotContainer;
 
 public class ArmSubsystem extends SubsystemBase{
         
@@ -31,9 +33,10 @@ public class ArmSubsystem extends SubsystemBase{
         public TalonFXSimCollection armMotorSim;
         SingleJointedArmSim armSim = new SingleJointedArmSim(DCMotor.getFalcon500(1), 
                 Constants.Arm.gearing, SingleJointedArmSim.estimateMOI(Constants.Arm.armLengthMeters, Constants.Arm.armMassKg), 
-                Constants.Arm.armLengthMeters, -6.28, 6.28, true);
+                Constants.Arm.armLengthMeters, -628, 628, true);
 
-        private final PIDController m_controller = new PIDController(m_armKp, 0, 0);
+        private final PIDController m_controller = new PIDController(m_armKp, 0, 0); //0.02 works well for kP in sim
+        private ArmFeedforward feedforward = new ArmFeedforward(0.0, m_armKg, 0.0); //0.109 works well for kG in sim
         private double m_armSetpointDegrees = 0;
 
         private final Mechanism2d m_mech2d = new Mechanism2d(60, 60);
@@ -49,7 +52,7 @@ public class ArmSubsystem extends SubsystemBase{
                         Units.radiansToDegrees(armSim.getAngleRads()),
                         6,
                         new Color8Bit(Color.kYellow)));
-
+        double currentMotorEffort = 0.0;
         public ArmSubsystem(){
                 SmartDashboard.putData("Arm Sim", m_mech2d);
                 m_armTower.setColor(new Color8Bit(Color.kBlue));
@@ -58,19 +61,28 @@ public class ArmSubsystem extends SubsystemBase{
                 Preferences.initDouble(Constants.Arm.kArmPositionKey, m_armSetpointDegrees);
                 Preferences.initDouble(Constants.Arm.kArmPKey, m_armKp);
                 Preferences.initDouble(Constants.Arm.kArmGKey, m_armKg);
-        
         }
 
         @Override
         public void periodic() {
-                armMotor.set(ControlMode.PercentOutput, m_armKg);
+                double effort = feedforward.calculate(Units.degreesToRadians(m_armSetpointDegrees), 0) + m_controller.calculate(
+                        ((armMotor.getSelectedSensorPosition() / 2048.0) / Constants.Arm.gearing) * 360.0,
+                        m_armSetpointDegrees
+                );
+                effort = MathUtil.clamp(effort, -1, 1);
+                currentMotorEffort = effort;
+                armMotor.set(ControlMode.PercentOutput, effort);
+        }
+        public void commandAngle(double angle) {
+                angle %= 360.;
+                m_armSetpointDegrees = angle;
         }
 
         @Override
         public void simulationPeriodic() {
                 // In this method, we update our simulation of what our arm is doing
                 // First, we set our "inputs" (voltages)
-                armSim.setInput(armMotor.get() * RobotController.getBatteryVoltage());
+                armSim.setInput(currentMotorEffort * RobotController.getBatteryVoltage());
             
                 // Next, we update it. The standard loop time is 20ms.
                 armSim.update(0.020);
@@ -93,7 +105,8 @@ public class ArmSubsystem extends SubsystemBase{
                   m_controller.setP(m_armKp);
                 }
                 if(m_armKg != Preferences.getDouble(Constants.Arm.kArmGKey, m_armKg)){
-                        m_armKg = Preferences.getDouble(Constants.Arm.kArmGKey, m_armKg);    
+                        m_armKg = Preferences.getDouble(Constants.Arm.kArmGKey, m_armKg);
+                        feedforward = new ArmFeedforward(0, m_armKg, 0);
                 }
         }
 }
