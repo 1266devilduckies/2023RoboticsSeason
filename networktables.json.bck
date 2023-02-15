@@ -10,7 +10,7 @@
   {
     "name": "/Preferences/arm kp",
     "type": "double",
-    "value": 0.1,
+    "value": 0.0,
     "properties": {
       "persistent": true
     }

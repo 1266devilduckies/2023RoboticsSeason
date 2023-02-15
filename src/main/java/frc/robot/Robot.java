@@ -135,6 +135,8 @@ public class Robot extends TimedRobot {
 
       Autos.pushAutosToDashboard(m_robotContainer.autonomousMode, (m_robotContainer.getDrivetrainSubsystem()));
     }
+
+    m_robotContainer.getArmSubsystem().loadPreferences();
   }
 
   /** This function is called once each time the robot enters Disabled mode. */

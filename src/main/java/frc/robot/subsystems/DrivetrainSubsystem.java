@@ -101,8 +101,10 @@ public class DrivetrainSubsystem extends SubsystemBase {
     MainLeftMotorBack.configSelectedFeedbackSensor(TalonFXFeedbackDevice.IntegratedSensor, 0, 100);
     MainRightMotorBack.configSelectedFeedbackSensor(TalonFXFeedbackDevice.IntegratedSensor, 0, 100);
 
-    MainLeftMotorBack.config_kP(0, 0.01);
-    MainRightMotorBack.config_kP(0, 0.01);
+//     MainLeftMotorBack.config_kP(0, 0.02);
+//     MainLeftMotorBack.config_kD(0, 0.0005);
+//     MainRightMotorBack.config_kP(0, 0.02);
+//     MainRightMotorBack.config_kD(0, 0.0005);
 
     // Slave the front motors to their respective back motors
     MainLeftMotorFront.follow(MainLeftMotorBack);
@@ -234,6 +236,10 @@ public class DrivetrainSubsystem extends SubsystemBase {
 
   public double[] getEncoderPositions() {
     return new double[]{MainLeftMotorBack.getSelectedSensorPosition(0), MainRightMotorBack.getSelectedSensorPosition(0)};
+  }
+
+  public PhotonCamera getCamera(){
+        return camera;
   }
 
   public void setCurrentLimit(boolean isCurrentLimited) {

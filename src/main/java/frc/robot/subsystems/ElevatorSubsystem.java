@@ -34,12 +34,7 @@ public class ElevatorSubsystem extends SubsystemBase {
         setGoal(1);
         this.setDefaultCommand(new HomeToElevatorPosition(this));
     }
-
-    @Override
-    public void periodic() {
-        SmartDashboard.putNumber("encoder position", leftClimber.getSelectedSensorPosition());
-    }
-
+    
     public void setGoal(double elevatorOffset) {
         position = Constants.ElevatorCharacteristics.elevatorBottomLimit + elevatorOffset * (Constants.ElevatorCharacteristics.elevatorTopLimit - Constants.ElevatorCharacteristics.elevatorBottomLimit);
         leftClimber.set(ControlMode.Position, position);

@@ -27,8 +27,6 @@ public class DriveCommand extends CommandBase{
             drivetrainSubsystem.robotDrive.setMaxOutput(1);
             //map turn speed scale from 0 to 1 to 0.5 to 1
             double mappedTurnScale = 0.5 + 0.5*(Constants.DrivetrainCharacteristics.turnSpeedScale);
-            SmartDashboard.putNumber("reported turn value", Constants.DrivetrainCharacteristics.turnSpeedScale);
-            SmartDashboard.putNumber("reported turn speed", mappedTurnScale);
             drivetrainSubsystem.robotDrive.tankDrive(x * mappedTurnScale, -x * mappedTurnScale);
         }
     }

@@ -12,6 +12,7 @@ import frc.robot.commands.Balance;
 import frc.robot.commands.DriveToPosition;
 import frc.robot.commands.ManuallyMoveRelativeToCurrentLevel;
 import frc.robot.commands.RotateToAngle;
+import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.DrivetrainSubsystem;
 import frc.robot.subsystems.ElevatorSubsystem;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -34,6 +35,7 @@ public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   private final DrivetrainSubsystem drivetrainSubsystem = new DrivetrainSubsystem();
   private final ElevatorSubsystem elevatorSubsystem = new ElevatorSubsystem();
+  private final ArmSubsystem armSubsystem = new ArmSubsystem();
   private boolean startedBalance = false;
   SendableChooser<DuckAutoProfile> autonomousMode = new SendableChooser<DuckAutoProfile>();
 
@@ -102,4 +104,8 @@ public class RobotContainer {
   public DrivetrainSubsystem getDrivetrainSubsystem(){
     return drivetrainSubsystem;
   }
+
+  public ArmSubsystem getArmSubsystem(){
+        return armSubsystem;
+      }
 }
