@@ -58,6 +58,12 @@ public class ArmSubsystem extends SubsystemBase{
                 m_armTower.setColor(new Color8Bit(Color.kBlue));
                 armMotorSim = armMotor.getSimCollection();
 
+                armMotor.configFactoryDefault();
+                armMotor.configForwardSoftLimitEnable(true);
+                armMotor.configForwardSoftLimitThreshold(Constants.Arm.maxAngle * Constants.Arm.gearing * 2048.0);
+                armMotor.configReverseSoftLimitEnable(false);
+                armMotor.configReverseSoftLimitThreshold(Constants.Arm.minAngle * Constants.Arm.gearing * 2048.0);
+
                 Preferences.initDouble(Constants.Arm.kArmPositionKey, m_armSetpointDegrees);
                 Preferences.initDouble(Constants.Arm.kArmPKey, m_armKp);
                 Preferences.initDouble(Constants.Arm.kArmGKey, m_armKg);
@@ -65,6 +71,7 @@ public class ArmSubsystem extends SubsystemBase{
 
         @Override
         public void periodic() {
+                m_armSetpointDegrees = MathUtil.clamp(m_armSetpointDegrees, Constants.Arm.minAngle, Constants.Arm.maxAngle);
                 double effort = feedforward.calculate(Units.degreesToRadians(m_armSetpointDegrees), 0) + m_controller.calculate(
                         ((armMotor.getSelectedSensorPosition() / 2048.0) / Constants.Arm.gearing) * 360.0,
                         m_armSetpointDegrees

@@ -66,6 +66,9 @@ public final class Constants {
                 public static class Arm {
                         public static final int arm = 90;
                 }
+                public static class Claw {
+                        public static final int motor = 91;
+                }
         }
 
         public static class Arm {
@@ -75,6 +78,8 @@ public final class Constants {
                 public static final String kArmPositionKey = "arm position";
                 public static final String kArmPKey = "arm kp";
                 public static final String kArmGKey = "arm kg";
+                public static final double minAngle = -90.0;
+                public static final double maxAngle = 90.0;
         }
 
         public static class DrivetrainCharacteristics {
@@ -127,6 +132,11 @@ public final class Constants {
                 public static final String MID_DOCKHIGH = "MidDockingHighPath";
                 public static final String MID_DOCKLOW = "MidDockingLowPath";
 
+        }
+
+        public static class ClawCharacteristics {
+                public static int forwardChannel = 0;
+                public static int reverseChannel = 1;
         }
 
         public static HashMap<String, Command> eventMap = new HashMap<>();
