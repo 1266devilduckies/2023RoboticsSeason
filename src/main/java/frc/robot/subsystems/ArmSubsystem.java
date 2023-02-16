@@ -83,6 +83,7 @@ public class ArmSubsystem extends SubsystemBase{
         public void commandAngle(double angle) {
                 angle %= 360.;
                 m_armSetpointDegrees = angle;
+                Preferences.setDouble(Constants.Arm.kArmPositionKey, angle);
         }
 
         @Override
@@ -115,5 +116,9 @@ public class ArmSubsystem extends SubsystemBase{
                         m_armKg = Preferences.getDouble(Constants.Arm.kArmGKey, m_armKg);
                         feedforward = new ArmFeedforward(0, m_armKg, 0);
                 }
+        }
+
+        public double getAngle(){
+                return m_armSetpointDegrees;
         }
 }
