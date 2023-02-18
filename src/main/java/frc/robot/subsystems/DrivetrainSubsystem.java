@@ -18,8 +18,10 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.math.Pair;
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.RamseteController;
 import edu.wpi.first.math.estimator.DifferentialDrivePoseEstimator;
+import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -28,19 +30,23 @@ import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
 import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.wpilibj.ADXRS450_Gyro;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Filesystem;
+import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.SPI.Port;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
-import edu.wpi.first.wpilibj.simulation.ADXRS450_GyroSim;
 import edu.wpi.first.wpilibj.simulation.DifferentialDrivetrainSim;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.DuckAHRS;
 import frc.robot.DuckGearUtil;
 import frc.robot.commands.DriveCommand;
+import com.kauailabs.navx.frc.AHRS;
+import com.pathplanner.lib.auto.PIDConstants;
 
 public class DrivetrainSubsystem extends SubsystemBase {
   public final DifferentialDrive robotDrive;
@@ -53,33 +59,30 @@ public class DrivetrainSubsystem extends SubsystemBase {
   public final WPI_TalonFX MainRightMotorFront = new WPI_TalonFX(Constants.CAN.Drivetrain.FR);
   public final WPI_TalonFX leftTopMotor = new WPI_TalonFX(Constants.CAN.Drivetrain.TL);
   public final WPI_TalonFX rightTopMotor = new WPI_TalonFX(Constants.CAN.Drivetrain.TR);
+  
 
   private final TalonFXSimCollection leftMotorSim;
   private final TalonFXSimCollection rightMotorSim;
   
-  public final ADXRS450_Gyro gyro = new ADXRS450_Gyro();
-  public final ADXRS450_GyroSim gyroSim = new ADXRS450_GyroSim(gyro);
+  public DuckAHRS gyro = new DuckAHRS();
 
   public final RamseteController ramseteController = new RamseteController();
   public final DifferentialDriveKinematics drivetrainKinematics = new DifferentialDriveKinematics(Constants.DrivetrainCharacteristics.trackWidthMeters);
 
-  private final DifferentialDrivePoseEstimator odometry = new DifferentialDrivePoseEstimator(
-    drivetrainKinematics, 
-    Rotation2d.fromDegrees(-gyro.getAngle()), 
-    0,0,
-    new Pose2d()); //will add vision measurements once auton starts;
+  private final DifferentialDrivePoseEstimator odometry;
 
   public static final Field2d field = new Field2d();
-  Transform3d robotToCam = Constants.LimelightCharacteristics.robotToCamMeters;
-  private final PhotonCamera camera = new PhotonCamera(Constants.LimelightCharacteristics.photonVisionName);
+  private final PhotonCamera camera = new PhotonCamera(Constants.CameraCharacteristics.photonVisionName);
   public AprilTagFieldLayout aprilTagFieldLayout;
   PhotonPoseEstimator photonPoseEstimator;
   public boolean isCurrentLimited = false;
+  private double gyroPitchkP = 0.0;
+  public PIDController pidGyroPitch = new PIDController(gyroPitchkP, 0.0, 0.0);
 
   public DrivetrainSubsystem() {
     //constructor gets ran at robotInit()
     this.setDefaultCommand(new DriveCommand(this));
-    photonPoseEstimator = new PhotonPoseEstimator(aprilTagFieldLayout, PoseStrategy.CLOSEST_TO_REFERENCE_POSE, camera, Constants.LimelightCharacteristics.robotToCamMeters);
+    photonPoseEstimator = new PhotonPoseEstimator(aprilTagFieldLayout, PoseStrategy.CLOSEST_TO_REFERENCE_POSE, camera, Constants.CameraCharacteristics.robotToCamMeters);
     try {
       aprilTagFieldLayout = new AprilTagFieldLayout(
         Filesystem.getDeployDirectory().getAbsolutePath() + "/2023-chargedup.json"
@@ -87,8 +90,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
     } catch(IOException e) {
       System.out.println("couldnt load field image :(");
     }
-    gyro.calibrate();
-        
+
     // Reset settings
     MainLeftMotorBack.configFactoryDefault();
     MainRightMotorBack.configFactoryDefault();
@@ -100,11 +102,6 @@ public class DrivetrainSubsystem extends SubsystemBase {
     // Setup the integrated sensor
     MainLeftMotorBack.configSelectedFeedbackSensor(TalonFXFeedbackDevice.IntegratedSensor, 0, 100);
     MainRightMotorBack.configSelectedFeedbackSensor(TalonFXFeedbackDevice.IntegratedSensor, 0, 100);
-
-//     MainLeftMotorBack.config_kP(0, 0.02);
-//     MainLeftMotorBack.config_kD(0, 0.0005);
-//     MainRightMotorBack.config_kP(0, 0.02);
-//     MainRightMotorBack.config_kD(0, 0.0005);
 
     // Slave the front motors to their respective back motors
     MainLeftMotorFront.follow(MainLeftMotorBack);
@@ -148,9 +145,15 @@ public class DrivetrainSubsystem extends SubsystemBase {
         null
     );
     SmartDashboard.putData("Field", field);
-
+    
+    odometry =  new DifferentialDrivePoseEstimator(
+        drivetrainKinematics, 
+        Rotation2d.fromDegrees(-gyro.getAngle()), 
+        0,0,
+        new Pose2d()); //will add vision measurements once auton starts;
     leftMotorSim = MainLeftMotorBack.getSimCollection();
     rightMotorSim = MainRightMotorBack.getSimCollection();
+    Preferences.initDouble(Constants.DrivetrainCharacteristics.gyroPitchPGainKey, 0.0);
   }
 
   @Override
@@ -163,10 +166,13 @@ public class DrivetrainSubsystem extends SubsystemBase {
     odometry.update(Rotation2d.fromDegrees(-gyro.getAngle()), leftDistanceMeters, rightDistanceMeters);
     photonPoseEstimator.setReferencePose(odometry.getEstimatedPosition());
 
+    SmartDashboard.putString("orientation", gyro.getAngle() + ", " + gyro.getPitch());
     double currentTime = Timer.getFPGATimestamp();
     Optional<EstimatedRobotPose> result = photonPoseEstimator.update();
     if (result.isPresent() && result.get() != null) {
-        odometry.addVisionMeasurement(result.get().estimatedPose.toPose2d(), currentTime);
+        Pose2d estimatedPoseMeters = result.get().estimatedPose.toPose2d();
+        SmartDashboard.putString("estimated pose meters", estimatedPoseMeters.toString());
+        odometry.addVisionMeasurement(estimatedPoseMeters, currentTime);
     }
     field.setRobotPose(odometry.getEstimatedPosition());
   }
@@ -200,8 +206,8 @@ public class DrivetrainSubsystem extends SubsystemBase {
         (int) DuckGearUtil.metersPerSecondToEncoderTicksPer100ms(-robotDriveSim.getRightVelocityMetersPerSecond(),
         Constants.DrivetrainCharacteristics.gearing, 2048.0, Constants.DrivetrainCharacteristics.wheelRadiusMeters));
 
-    // Update simulation gyro, it's detached from the actual gyro
-    gyroSim.setAngle(robotDriveSim.getHeading().getDegrees());
+//     // Update simulation gyro, it's detached from the actual gyro
+//     gyroSim.setAngle(robotDriveSim.getHeading().getDegrees());
   }
   public DifferentialDriveWheelSpeeds getWheelSpeeds() {
     return new DifferentialDriveWheelSpeeds(
@@ -228,6 +234,12 @@ public class DrivetrainSubsystem extends SubsystemBase {
 
     odometry.resetPosition(Rotation2d.fromDegrees(-gyro.getAngle()),0.,0., pose);
   }
+  public void loadPreferences() {
+        if (gyroPitchkP != Preferences.getDouble(Constants.DrivetrainCharacteristics.gyroPitchPGainKey, gyroPitchkP)) {
+                gyroPitchkP = Preferences.getDouble(Constants.DrivetrainCharacteristics.gyroPitchPGainKey, gyroPitchkP);
+                pidGyroPitch.setP(gyroPitchkP);
+        }
+  }
 
   public void resetEncoders() {
     MainLeftMotorBack.setSelectedSensorPosition(0);
@@ -246,6 +258,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
     int currentLimitAmp = 40;
     int thresholdAmp = 2;
     SupplyCurrentLimitConfiguration supplyLimit = new SupplyCurrentLimitConfiguration(isCurrentLimited, currentLimitAmp, currentLimitAmp+thresholdAmp, 0.5);
+    
     MainLeftMotorBack.configSupplyCurrentLimit(supplyLimit, 100);
     MainRightMotorBack.configSupplyCurrentLimit(supplyLimit, 100);
   }

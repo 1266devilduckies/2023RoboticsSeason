@@ -22,6 +22,7 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandPS4Controller;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -84,10 +85,10 @@ public class RobotContainer {
     operatorJoystick.y().whileTrue(new InstantCommand( () -> {
       elevatorSubsystem.idxLevel = 2;
     }));
-    operatorJoystick.x().whileTrue(new Balance(drivetrainSubsystem));
+    operatorJoystick.x().whileTrue(new SequentialCommandGroup(
+        new DriveToPosition(drivetrainSubsystem, 1),
+        new Balance(drivetrainSubsystem)));
     operatorJoystick.rightBumper().whileTrue(new RotateToAngle(drivetrainSubsystem, 3.0));
-
-    //operatorJoystick.whileTrue(new AlignSequence(drivetrainSubsystem, -30, 1));
 
     operatorJoystick.povUp().whileTrue(new RunCommand( () -> {
         armSubsystem.commandAngle(armSubsystem.getAngle() + 2);
