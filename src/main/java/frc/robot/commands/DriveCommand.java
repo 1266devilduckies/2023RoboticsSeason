@@ -1,5 +1,6 @@
 package frc.robot.commands;
 
+import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
@@ -9,15 +10,17 @@ import frc.robot.subsystems.DrivetrainSubsystem;
 public class DriveCommand extends CommandBase{
 
     DrivetrainSubsystem drivetrainSubsystem;
+    private final SlewRateLimiter accelerationLimiter = new SlewRateLimiter(1.0/0.5); //accelerate to 100% in half a second
     public DriveCommand(DrivetrainSubsystem subsystem){
         drivetrainSubsystem = subsystem;
         addRequirements(drivetrainSubsystem);
     }
-//Dan wuz here, kyle too 
+    
     // Called repeatedly when this Command is scheduled to run
     @Override
     public void execute() {
         double y = -RobotContainer.driverJoystick.getRawAxis(Constants.DriverConstants.ForwardDriveAxis);
+        y = accelerationLimiter.calculate(y);
         double x = RobotContainer.driverJoystick.getRawAxis(Constants.DriverConstants.TurningDriveAxis);
         
         if (y != 0) {

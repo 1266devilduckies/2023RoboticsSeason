@@ -37,25 +37,25 @@ public final class Constants {
                 public static final double deadbandLeftJoystick = 0.05;
                 public static final double deadbandRightJoystick = deadbandLeftJoystick;
                 public static final int ForwardDriveAxis = 1;
-                public static final int TurningDriveAxis = 2;
+                public static final int TurningDriveAxis = 0;
         }
 
         public static class CAN {
                 public static class Drivetrain {
                         // configured for heimerdinger
-                        // public static final int BL = 5;
-                        // public static final int BR = 4;
-                        // public static final int FL = 3;
-                        // public static final int FR = 7;
-                        // public static final int TL = 2;
-                        // public static final int TR = 6;
+                        public static final int BL = 5;
+                        public static final int BR = 4;
+                        public static final int FL = 3;
+                        public static final int FR = 7;
+                        public static final int TL = 2;
+                        public static final int TR = 6;
                         // configured for ducktails
-                        public static final int BL = 2;
-                        public static final int BR = 3;
-                        public static final int FL = 4;
-                        public static final int FR = 5;
-                        public static final int TL = 20; // out of bounds
-                        public static final int TR = 60; // out of bounds
+                        // public static final int BL = 2;
+                        // public static final int BR = 3;
+                        // public static final int FL = 4;
+                        // public static final int FR = 5;
+                        // public static final int TL = 20; // out of bounds
+                        // public static final int TR = 60; // out of bounds
                 }
 
                 public static class Elevator {
@@ -66,6 +66,9 @@ public final class Constants {
                 public static class Arm {
                         public static final int armMotor = 90;
                 }
+                public static class Claw {
+                        public static final int motor = 91;
+                }
         }
 
         public static class Arm {
@@ -75,6 +78,8 @@ public final class Constants {
                 public static final String kArmPositionKey = "arm position";
                 public static final String kArmPKey = "arm kp";
                 public static final String kArmGKey = "arm kg";
+                public static final double minAngle = -90.0;
+                public static final double maxAngle = 90.0;
         }
 
         public static class DrivetrainCharacteristics {
@@ -82,6 +87,7 @@ public final class Constants {
                 public static final double gearing = 25 / 3.;
                 public static final double wheelRadiusMeters = Units.inchesToMeters(3);
                 public static final double rampPGain = 0.1;
+                public static final String gyroPitchPGainKey = "gyro pitch kP";
                 public static double kS = 0.073213;// 0.607;
                 public static double kV = 1.91111;// 1.42;
                 public static double kA = 0.30399;// 0.68;
@@ -93,14 +99,11 @@ public final class Constants {
                 public static double turnSpeedScale = 1.0;
         }
 
-        public static class LimelightCharacteristics {
-                public static final Transform2d offsetMeters = new Transform2d();
+        public static class CameraCharacteristics {
                 public static final String photonVisionName = "HD_Pro_Webcam_C920";
-                public static final double cameraPitchRadians = 0;
-                public static final double cameraHeightMeters = 0;
                 public static final Transform3d robotToCamMeters = new Transform3d(
-                                new Translation3d(0, 0, 0),
-                                new Rotation3d(0, 0, 0));
+                                new Translation3d(-Units.inchesToMeters(8.5), 0.0, Units.inchesToMeters(15.5)),
+                                new Rotation3d(0, Units.degreesToRadians(13), 0));
         }
 
         public static class ElevatorCharacteristics {
@@ -127,6 +130,11 @@ public final class Constants {
                 public static final String MID_DOCKHIGH = "MidDockingHighPath";
                 public static final String MID_DOCKLOW = "MidDockingLowPath";
 
+        }
+
+        public static class ClawCharacteristics {
+                public static int forwardChannel = 0;
+                public static int reverseChannel = 1;
         }
 
         public static HashMap<String, Command> eventMap = new HashMap<>();

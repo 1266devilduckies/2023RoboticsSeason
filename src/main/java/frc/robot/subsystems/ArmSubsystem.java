@@ -62,6 +62,14 @@ public class ArmSubsystem extends SubsystemBase{
                 SmartDashboard.putData("Arm Sim", m_mech2d);
                 m_armTower.setColor(new Color8Bit(Color.kBlue));
 
+                armMotor.clearFaults();
+                armMotor.disableVoltageCompensation();
+                
+                // armMotor.configForwardSoftLimitEnable(true);
+                // armMotor.configForwardSoftLimitThreshold(Constants.Arm.maxAngle * Constants.Arm.gearing * 2048.0);
+                // armMotor.configReverseSoftLimitEnable(false);
+                // armMotor.configReverseSoftLimitThreshold(Constants.Arm.minAngle * Constants.Arm.gearing * 2048.0);
+
                 Preferences.initDouble(Constants.Arm.kArmPositionKey, m_armSetpointDegrees);
                 Preferences.initDouble(Constants.Arm.kArmPKey, m_armKp);
                 Preferences.initDouble(Constants.Arm.kArmGKey, m_armKg);
@@ -69,6 +77,7 @@ public class ArmSubsystem extends SubsystemBase{
 
         @Override
         public void periodic() {
+                m_armSetpointDegrees = MathUtil.clamp(m_armSetpointDegrees, Constants.Arm.minAngle, Constants.Arm.maxAngle);
                 double effort = feedforward.calculate(Units.degreesToRadians(m_armSetpointDegrees), 0) + m_controller.calculate(
                         (armEncoder.getPosition() / Constants.Arm.gearing) * 360.0,
                         m_armSetpointDegrees
@@ -81,6 +90,7 @@ public class ArmSubsystem extends SubsystemBase{
         public void commandAngle(double angle) {
                 angle %= 360.;
                 m_armSetpointDegrees = angle;
+                Preferences.setDouble(Constants.Arm.kArmPositionKey, angle);
         }
 
         @Override
@@ -113,5 +123,9 @@ public class ArmSubsystem extends SubsystemBase{
                         m_armKg = Preferences.getDouble(Constants.Arm.kArmGKey, m_armKg);
                         feedforward = new ArmFeedforward(0, m_armKg, 0);
                 }
+        }
+
+        public double getAngle(){
+                return m_armSetpointDegrees;
         }
 }

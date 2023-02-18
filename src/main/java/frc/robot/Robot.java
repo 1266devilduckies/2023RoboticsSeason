@@ -137,6 +137,7 @@ public class Robot extends TimedRobot {
     }
 
     m_robotContainer.getArmSubsystem().loadPreferences();
+    m_robotContainer.getDrivetrainSubsystem().loadPreferences();
   }
 
   /** This function is called once each time the robot enters Disabled mode. */
