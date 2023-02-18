@@ -64,14 +64,14 @@ public final class Constants {
                 }
 
                 public static class Arm {
-                        public static final int arm = 90;
+                        public static final int armMotor = 90;
                 }
         }
 
         public static class Arm {
-                public static final double gearing = 100;
-                public static final double armMassKg = 10;
-                public static final double armLengthMeters = 1;
+                public static final double gearing = 80.;
+                public static final double armMassKg = 10.;
+                public static final double armLengthMeters = 1.;
                 public static final String kArmPositionKey = "arm position";
                 public static final String kArmPKey = "arm kp";
                 public static final String kArmGKey = "arm kg";

@@ -4,6 +4,11 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.TalonFXSensorCollection;
 import com.ctre.phoenix.motorcontrol.TalonFXSimCollection;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
+import com.revrobotics.CANSparkMax;
+import com.revrobotics.RelativeEncoder;
+import com.revrobotics.SparkMaxRelativeEncoder;
+import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+import com.revrobotics.SparkMaxRelativeEncoder.Type;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.ArmFeedforward;
@@ -29,9 +34,9 @@ public class ArmSubsystem extends SubsystemBase{
         
         private double m_armKp = 0;
         private double m_armKg = 0;
-        public WPI_TalonFX armMotor = new WPI_TalonFX(Constants.CAN.Arm.arm); 
-        public TalonFXSimCollection armMotorSim;
-        SingleJointedArmSim armSim = new SingleJointedArmSim(DCMotor.getFalcon500(1), 
+        public CANSparkMax armMotor = new CANSparkMax(Constants.CAN.Arm.armMotor, MotorType.kBrushless); 
+        public RelativeEncoder armEncoder = armMotor.getEncoder(); //in terms of revolutions
+        SingleJointedArmSim armSim = new SingleJointedArmSim(DCMotor.getNEO(1), 
                 Constants.Arm.gearing, SingleJointedArmSim.estimateMOI(Constants.Arm.armLengthMeters, Constants.Arm.armMassKg), 
                 Constants.Arm.armLengthMeters, -628, 628, true);
 
@@ -56,7 +61,6 @@ public class ArmSubsystem extends SubsystemBase{
         public ArmSubsystem(){
                 SmartDashboard.putData("Arm Sim", m_mech2d);
                 m_armTower.setColor(new Color8Bit(Color.kBlue));
-                armMotorSim = armMotor.getSimCollection();
 
                 Preferences.initDouble(Constants.Arm.kArmPositionKey, m_armSetpointDegrees);
                 Preferences.initDouble(Constants.Arm.kArmPKey, m_armKp);
@@ -66,12 +70,13 @@ public class ArmSubsystem extends SubsystemBase{
         @Override
         public void periodic() {
                 double effort = feedforward.calculate(Units.degreesToRadians(m_armSetpointDegrees), 0) + m_controller.calculate(
-                        ((armMotor.getSelectedSensorPosition() / 2048.0) / Constants.Arm.gearing) * 360.0,
+                        (armEncoder.getPosition() / Constants.Arm.gearing) * 360.0,
                         m_armSetpointDegrees
                 );
+                SmartDashboard.putNumber("current target", armEncoder.getPosition());
                 effort = MathUtil.clamp(effort, -1, 1);
                 currentMotorEffort = effort;
-                armMotor.set(ControlMode.PercentOutput, effort);
+                armMotor.set(effort);
         }
         public void commandAngle(double angle) {
                 angle %= 360.;
@@ -88,7 +93,7 @@ public class ArmSubsystem extends SubsystemBase{
                 armSim.update(0.020);
             
                 // Finally, we set our simulated encoder's readings and simulated battery voltage
-                armMotorSim.setIntegratedSensorRawPosition((int) ((armSim.getAngleRads() / 6.28) * Constants.Arm.gearing * 2048.0));
+                armEncoder.setPosition((int) ((armSim.getAngleRads() / 6.28) * Constants.Arm.gearing));
                 // SimBattery estimates loaded battery voltages
                 RoboRioSim.setVInVoltage(
                     BatterySim.calculateDefaultBatteryLoadedVoltage(armSim.getCurrentDrawAmps()));

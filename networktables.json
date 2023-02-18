@@ -10,7 +10,7 @@
   {
     "name": "/Preferences/arm kp",
     "type": "double",
-    "value": 0.02,
+    "value": 0.01,
     "properties": {
       "persistent": true
     }
@@ -18,7 +18,7 @@
   {
     "name": "/Preferences/arm kg",
     "type": "double",
-    "value": 0.109,
+    "value": 0.246,
     "properties": {
       "persistent": true
     }
