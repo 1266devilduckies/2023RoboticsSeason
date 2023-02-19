@@ -36,8 +36,8 @@ public final class Constants {
                 public static final int port = 0;
                 public static final double deadbandLeftJoystick = 0.05;
                 public static final double deadbandRightJoystick = deadbandLeftJoystick;
-                public static final int ForwardDriveAxis = 1;
-                public static final int TurningDriveAxis = 0;
+                public static final int ForwardDriveAxis = 3;
+                public static final int TurningDriveAxis = 2;
         }
 
         public static class CAN {
@@ -84,10 +84,11 @@ public final class Constants {
 
         public static class DrivetrainCharacteristics {
                 public static final double trackWidthMeters = Units.inchesToMeters(24.75);
-                public static final double gearing = 25 / 3.;
-                public static final double wheelRadiusMeters = Units.inchesToMeters(3);
+                public static final double gearing = 6.4;
+                public static final double wheelRadiusMeters = Units.inchesToMeters(2);
                 public static final double rampPGain = 0.1;
                 public static final String gyroPitchPGainKey = "gyro pitch kP";
+                public static final String movementPGainKey = "movement kP";
                 public static double kS = 0.073213;// 0.607;
                 public static double kV = 1.91111;// 1.42;
                 public static double kA = 0.30399;// 0.68;
@@ -96,7 +97,8 @@ public final class Constants {
                 public static double maxAutoAccelerationMeters = 3;
                 public static double kD = 0.0;
                 public static double speedScale = 1.0;
-                public static double turnSpeedScale = 1.0;
+                public static double turnSpeedScale = 0.5;
+                public static double deadband = 0.1;
         }
 
         public static class CameraCharacteristics {

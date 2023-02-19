@@ -63,7 +63,9 @@ public class ArmSubsystem extends SubsystemBase{
                 m_armTower.setColor(new Color8Bit(Color.kBlue));
 
                 armMotor.clearFaults();
+                armMotor.restoreFactoryDefaults();
                 armMotor.disableVoltageCompensation();
+                
                 
                 // armMotor.configForwardSoftLimitEnable(true);
                 // armMotor.configForwardSoftLimitThreshold(Constants.Arm.maxAngle * Constants.Arm.gearing * 2048.0);

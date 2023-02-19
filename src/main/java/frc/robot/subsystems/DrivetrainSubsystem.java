@@ -77,7 +77,9 @@ public class DrivetrainSubsystem extends SubsystemBase {
   PhotonPoseEstimator photonPoseEstimator;
   public boolean isCurrentLimited = false;
   private double gyroPitchkP = 0.0;
+  private double forwardMovementkP = 0.00005;
   public PIDController pidGyroPitch = new PIDController(gyroPitchkP, 0.0, 0.0);
+  public PIDController pidMovement = new PIDController(forwardMovementkP, 0.0, 0.0);
 
   public DrivetrainSubsystem() {
     //constructor gets ran at robotInit()
@@ -102,6 +104,9 @@ public class DrivetrainSubsystem extends SubsystemBase {
     // Setup the integrated sensor
     MainLeftMotorBack.configSelectedFeedbackSensor(TalonFXFeedbackDevice.IntegratedSensor, 0, 100);
     MainRightMotorBack.configSelectedFeedbackSensor(TalonFXFeedbackDevice.IntegratedSensor, 0, 100);
+
+    MainLeftMotorBack.config_kP(0, 0.2);
+    MainRightMotorBack.config_kP(0, 0.2);
 
     // Slave the front motors to their respective back motors
     MainLeftMotorFront.follow(MainLeftMotorBack);
@@ -153,6 +158,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
         new Pose2d()); //will add vision measurements once auton starts;
     leftMotorSim = MainLeftMotorBack.getSimCollection();
     rightMotorSim = MainRightMotorBack.getSimCollection();
+    robotDrive.setDeadband(Constants.DrivetrainCharacteristics.deadband);
     Preferences.initDouble(Constants.DrivetrainCharacteristics.gyroPitchPGainKey, 0.0);
   }
 
@@ -239,6 +245,10 @@ public class DrivetrainSubsystem extends SubsystemBase {
                 gyroPitchkP = Preferences.getDouble(Constants.DrivetrainCharacteristics.gyroPitchPGainKey, gyroPitchkP);
                 pidGyroPitch.setP(gyroPitchkP);
         }
+        if (forwardMovementkP != Preferences.getDouble(Constants.DrivetrainCharacteristics.movementPGainKey, forwardMovementkP)) {
+                forwardMovementkP = Preferences.getDouble(Constants.DrivetrainCharacteristics.movementPGainKey, forwardMovementkP);
+                pidMovement.setP(forwardMovementkP);
+        }
   }
 
   public void resetEncoders() {
@@ -248,6 +258,9 @@ public class DrivetrainSubsystem extends SubsystemBase {
 
   public double[] getEncoderPositions() {
     return new double[]{MainLeftMotorBack.getSelectedSensorPosition(0), MainRightMotorBack.getSelectedSensorPosition(0)};
+  }
+  public double getAvgEncoderPosition() {
+        return (MainLeftMotorBack.getSelectedSensorPosition() + MainRightMotorBack.getSelectedSensorPosition())/2.;
   }
 
   public PhotonCamera getCamera(){

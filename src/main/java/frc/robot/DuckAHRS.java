@@ -3,7 +3,7 @@ package frc.robot;
 import com.kauailabs.navx.frc.AHRS;
 
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.SerialPort;
+import edu.wpi.first.wpilibj.SPI;
 
 
 public class DuckAHRS {
@@ -13,8 +13,7 @@ public class DuckAHRS {
                         /* Communicate w/navX-MXP via the MXP SPI Bus.                                     */
                         /* Alternatively:  I2C.Port.kMXP, SerialPort.Port.kMXP or SerialPort.Port.kUSB     */
                         /* See http://navx-mxp.kauailabs.com/guidance/selecting-an-interface/ for details. */
-                        actualGyro = new AHRS(SerialPort.Port.kMXP);
-                        System.out.println("fjdshafklssadfsad");
+                        actualGyro = new AHRS(SPI.Port.kMXP);
                     } catch (RuntimeException ex ) {
                         DriverStation.reportError("Error instantiating navX-MXP:  " + ex.getMessage(), true);
                     }
@@ -23,7 +22,7 @@ public class DuckAHRS {
         public double getAngle() {
                 //yaw (relative to robot)
                 if (actualGyro != null) {
-                        return (double)actualGyro.getPitch();
+                        return (double)(Math.floor(actualGyro.getYaw() * 100.0)/100.0);
                 } else {
                         return 0.0;
                 }
@@ -35,7 +34,7 @@ public class DuckAHRS {
         }
         public double getPitch() {
                 if (actualGyro != null) {
-                        return (double)actualGyro.getYaw();
+                        return (double)(Math.floor(actualGyro.getPitch() * 100.0)/100.0);
                 } else {
                         return 0.0;
                 }

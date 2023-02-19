@@ -1,7 +1,10 @@
 package frc.robot.commands;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.NeutralMode;
 
+import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
@@ -13,7 +16,10 @@ public class DriveToPosition extends CommandBase {
         DrivetrainSubsystem drivetrainSubsystem;
         double leftPosition;
         double rightPosition;
+        double avgPosition;
         double relativePositionTicks;
+        double originalPitch;
+        boolean startedGoingUp = false;
         public DriveToPosition(DrivetrainSubsystem drivetrain, double relativePositionMeters) {
                 relativePositionTicks = DuckGearUtil.metersToEncoderTicks(
                         relativePositionMeters, 
@@ -28,19 +34,36 @@ public class DriveToPosition extends CommandBase {
         public void initialize(){
                 leftPosition = drivetrainSubsystem.MainLeftMotorBack.getSelectedSensorPosition() + relativePositionTicks;
                 rightPosition = drivetrainSubsystem.MainRightMotorBack.getSelectedSensorPosition() + relativePositionTicks;
+                avgPosition = (leftPosition + rightPosition)/2.;
+                drivetrainSubsystem.MainLeftMotorBack.setNeutralMode(NeutralMode.Coast);
+                drivetrainSubsystem.MainRightMotorBack.setNeutralMode(NeutralMode.Coast);
+                drivetrainSubsystem.MainLeftMotorFront.setNeutralMode(NeutralMode.Coast);
+                drivetrainSubsystem.MainRightMotorFront.setNeutralMode(NeutralMode.Coast);
+                drivetrainSubsystem.leftTopMotor.setNeutralMode(NeutralMode.Coast);
+                drivetrainSubsystem.rightTopMotor.setNeutralMode(NeutralMode.Coast);
+                originalPitch = drivetrainSubsystem.gyro.getPitch();
         }
 
         public void execute() {
-                drivetrainSubsystem.MainLeftMotorBack.set(ControlMode.Position, leftPosition);
-                drivetrainSubsystem.MainRightMotorBack.set(ControlMode.Position, rightPosition);
+                SmartDashboard.putNumber("is moving position", Timer.getFPGATimestamp());
+                if (drivetrainSubsystem.gyro.getPitch()-originalPitch > 1.0 && !startedGoingUp) {
+                        startedGoingUp = true;
+                }
+                double controlEffortForward = drivetrainSubsystem.pidMovement.calculate(drivetrainSubsystem.getAvgEncoderPosition(), leftPosition);
+                controlEffortForward = MathUtil.clamp(controlEffortForward, -.5, .5);
+                drivetrainSubsystem.robotDrive.arcadeDrive(.5, 0.);
         }
 
         public boolean isFinished() {
-                return Math.abs(drivetrainSubsystem.MainLeftMotorBack.getSelectedSensorPosition() - leftPosition) < 500.0 &&
-                Math.abs(drivetrainSubsystem.MainRightMotorBack.getSelectedSensorPosition() - rightPosition) < 500.0;
+                return  startedGoingUp && Math.abs(drivetrainSubsystem.gyro.getPitch()-originalPitch) < 1.0;
         }
 
         public void end(boolean gotInterrupted) {
-                drivetrainSubsystem.tankDriveVolts(0, 0);
+                drivetrainSubsystem.MainLeftMotorBack.setNeutralMode(NeutralMode.Brake);
+                drivetrainSubsystem.MainRightMotorBack.setNeutralMode(NeutralMode.Brake);
+                drivetrainSubsystem.MainLeftMotorFront.setNeutralMode(NeutralMode.Brake);
+                drivetrainSubsystem.MainRightMotorFront.setNeutralMode(NeutralMode.Brake);
+                drivetrainSubsystem.leftTopMotor.setNeutralMode(NeutralMode.Brake);
+                drivetrainSubsystem.rightTopMotor.setNeutralMode(NeutralMode.Brake);
         }
 }

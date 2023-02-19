@@ -74,19 +74,9 @@ public class RobotContainer {
     // // cancelling on release.
     // driverJoystick.square().whileTrue(m_exampleSubsystem.exampleMethodCommand());
 
-    operatorJoystick.a().whileTrue(new InstantCommand( () -> {
-      elevatorSubsystem.idxLevel = 0;
-    }));
-
-    operatorJoystick.b().whileTrue(new InstantCommand( () -> {
-      elevatorSubsystem.idxLevel = 1;
-    }));
-
-    operatorJoystick.y().whileTrue(new InstantCommand( () -> {
-      elevatorSubsystem.idxLevel = 2;
-    }));
+    operatorJoystick.a().whileTrue(new Balance(drivetrainSubsystem));
     operatorJoystick.x().whileTrue(new SequentialCommandGroup(
-        new DriveToPosition(drivetrainSubsystem, 1),
+        new DriveToPosition(drivetrainSubsystem, 2),
         new Balance(drivetrainSubsystem)));
     operatorJoystick.rightBumper().whileTrue(new RotateToAngle(drivetrainSubsystem, 3.0));
 

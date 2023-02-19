@@ -1,6 +1,7 @@
 package frc.robot.commands;
 
 import edu.wpi.first.math.filter.SlewRateLimiter;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
@@ -10,7 +11,7 @@ import frc.robot.subsystems.DrivetrainSubsystem;
 public class DriveCommand extends CommandBase{
 
     DrivetrainSubsystem drivetrainSubsystem;
-    private final SlewRateLimiter accelerationLimiter = new SlewRateLimiter(1.0/0.5); //accelerate to 100% in half a second
+    private final SlewRateLimiter accelerationLimiter = new SlewRateLimiter(1.0/0.25); //accelerate to 100% in half a second
     public DriveCommand(DrivetrainSubsystem subsystem){
         drivetrainSubsystem = subsystem;
         addRequirements(drivetrainSubsystem);
@@ -22,15 +23,14 @@ public class DriveCommand extends CommandBase{
         double y = -RobotContainer.driverJoystick.getRawAxis(Constants.DriverConstants.ForwardDriveAxis);
         y = accelerationLimiter.calculate(y);
         double x = RobotContainer.driverJoystick.getRawAxis(Constants.DriverConstants.TurningDriveAxis);
-        
-        if (y != 0) {
+        SmartDashboard.putBoolean("is not turning", Math.abs(y) >= Constants.DrivetrainCharacteristics.deadband);
+        if (Math.abs(y) >= Constants.DrivetrainCharacteristics.deadband) {
             drivetrainSubsystem.robotDrive.setMaxOutput(Constants.DrivetrainCharacteristics.speedScale);
             drivetrainSubsystem.robotDrive.arcadeDrive(y,-x);
         } else {
-            drivetrainSubsystem.robotDrive.setMaxOutput(1);
-            //map turn speed scale from 0 to 1 to 0.5 to 1
-            double mappedTurnScale = 0.5 + 0.5*(Constants.DrivetrainCharacteristics.turnSpeedScale);
-            drivetrainSubsystem.robotDrive.tankDrive(x * mappedTurnScale, -x * mappedTurnScale);
+            drivetrainSubsystem.robotDrive.setMaxOutput(1.0);
+                double controlEFfort = x * Constants.DrivetrainCharacteristics.turnSpeedScale;
+            drivetrainSubsystem.robotDrive.tankDrive(controlEFfort, -controlEFfort);
         }
     }
 
