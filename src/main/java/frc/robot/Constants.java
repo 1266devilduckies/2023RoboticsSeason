@@ -89,6 +89,8 @@ public final class Constants {
                 public static final double rampPGain = 0.1;
                 public static final String gyroPitchPGainKey = "gyro pitch kP";
                 public static final String movementPGainKey = "movement kP";
+                public static final String globalRotationPGainKey = "global rotation kP";
+                public static final double kSAngular = 0.2;
                 public static double kS = 0.073213;// 0.607;
                 public static double kV = 1.91111;// 1.42;
                 public static double kA = 0.30399;// 0.68;

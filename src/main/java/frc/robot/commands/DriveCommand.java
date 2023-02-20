@@ -29,7 +29,7 @@ public class DriveCommand extends CommandBase{
             drivetrainSubsystem.robotDrive.arcadeDrive(y,-x);
         } else {
             drivetrainSubsystem.robotDrive.setMaxOutput(1.0);
-                double controlEFfort = x * Constants.DrivetrainCharacteristics.turnSpeedScale;
+            double controlEFfort = x * Constants.DrivetrainCharacteristics.turnSpeedScale;
             drivetrainSubsystem.robotDrive.tankDrive(controlEFfort, -controlEFfort);
         }
     }
