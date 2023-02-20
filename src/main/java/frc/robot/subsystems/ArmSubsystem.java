@@ -7,6 +7,7 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxRelativeEncoder;
+import com.revrobotics.CANSparkMax.SoftLimitDirection;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.SparkMaxRelativeEncoder.Type;
 
@@ -65,12 +66,8 @@ public class ArmSubsystem extends SubsystemBase{
                 armMotor.clearFaults();
                 armMotor.restoreFactoryDefaults();
                 armMotor.disableVoltageCompensation();
-                
-                
-                // armMotor.configForwardSoftLimitEnable(true);
-                // armMotor.configForwardSoftLimitThreshold(Constants.Arm.maxAngle * Constants.Arm.gearing * 2048.0);
-                // armMotor.configReverseSoftLimitEnable(false);
-                // armMotor.configReverseSoftLimitThreshold(Constants.Arm.minAngle * Constants.Arm.gearing * 2048.0);
+                armMotor.setSoftLimit(SoftLimitDirection.kForward, (float)(Constants.Arm.maxAngle * Constants.Arm.gearing));
+                armMotor.setSoftLimit(SoftLimitDirection.kReverse, (float)(Constants.Arm.minAngle * Constants.Arm.gearing));
 
                 Preferences.initDouble(Constants.Arm.kArmPositionKey, m_armSetpointDegrees);
                 Preferences.initDouble(Constants.Arm.kArmPKey, m_armKp);
