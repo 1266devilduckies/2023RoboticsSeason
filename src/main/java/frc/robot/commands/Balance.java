@@ -25,12 +25,12 @@ public class Balance extends CommandBase{
         @Override
         public void initialize(){
                 drivetrainSubsystem.pidGyroPitch.setSetpoint(0.0);
-                drivetrainSubsystem.MainLeftMotorBack.setNeutralMode(NeutralMode.Coast);
-                drivetrainSubsystem.MainRightMotorBack.setNeutralMode(NeutralMode.Coast);
-                drivetrainSubsystem.MainLeftMotorFront.setNeutralMode(NeutralMode.Coast);
-                drivetrainSubsystem.MainRightMotorFront.setNeutralMode(NeutralMode.Coast);
-                drivetrainSubsystem.leftTopMotor.setNeutralMode(NeutralMode.Coast);
-                drivetrainSubsystem.rightTopMotor.setNeutralMode(NeutralMode.Coast);
+                drivetrainSubsystem.MainLeftMotorBack.setNeutralMode(NeutralMode.Brake);
+                drivetrainSubsystem.MainRightMotorBack.setNeutralMode(NeutralMode.Brake);
+                drivetrainSubsystem.MainLeftMotorFront.setNeutralMode(NeutralMode.Brake);
+                drivetrainSubsystem.MainRightMotorFront.setNeutralMode(NeutralMode.Brake);
+                drivetrainSubsystem.leftTopMotor.setNeutralMode(NeutralMode.Brake);
+                drivetrainSubsystem.rightTopMotor.setNeutralMode(NeutralMode.Brake);
         }
         @Override
         public void execute() {
@@ -41,7 +41,7 @@ public class Balance extends CommandBase{
         }
 
         public boolean isFinished() {
-                return drivetrainSubsystem.pidGyroPitch.atSetpoint();
+                return false;
         }
 
         public void end(boolean gotInterrupted) {

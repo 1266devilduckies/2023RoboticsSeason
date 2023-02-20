@@ -76,7 +76,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
   public AprilTagFieldLayout aprilTagFieldLayout;
   PhotonPoseEstimator photonPoseEstimator;
   public boolean isCurrentLimited = false;
-  private double gyroPitchkP = 0.0;
+  private double gyroPitchkP = 0.037;
   private double forwardMovementkP = 0.00005;
   public PIDController pidGyroPitch = new PIDController(gyroPitchkP, 0.0, 0.0);
   public PIDController pidMovement = new PIDController(forwardMovementkP, 0.0, 0.0);
@@ -171,10 +171,10 @@ public class DrivetrainSubsystem extends SubsystemBase {
 
     odometry.update(Rotation2d.fromDegrees(-gyro.getAngle()), leftDistanceMeters, rightDistanceMeters);
     photonPoseEstimator.setReferencePose(odometry.getEstimatedPosition());
-
-    SmartDashboard.putString("orientation", gyro.getAngle() + ", " + gyro.getPitch());
     double currentTime = Timer.getFPGATimestamp();
     Optional<EstimatedRobotPose> result = photonPoseEstimator.update();
+    SmartDashboard.putBoolean("has result", result.isPresent());
+    SmartDashboard.putBoolean("not null", result.get() != null);
     if (result.isPresent() && result.get() != null) {
         Pose2d estimatedPoseMeters = result.get().estimatedPose.toPose2d();
         SmartDashboard.putString("estimated pose meters", estimatedPoseMeters.toString());

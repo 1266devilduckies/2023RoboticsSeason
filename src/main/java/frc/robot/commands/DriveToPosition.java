@@ -42,20 +42,21 @@ public class DriveToPosition extends CommandBase {
                 drivetrainSubsystem.leftTopMotor.setNeutralMode(NeutralMode.Coast);
                 drivetrainSubsystem.rightTopMotor.setNeutralMode(NeutralMode.Coast);
                 originalPitch = drivetrainSubsystem.gyro.getPitch();
+                startedGoingUp = false;
         }
 
         public void execute() {
                 SmartDashboard.putNumber("is moving position", Timer.getFPGATimestamp());
-                if (drivetrainSubsystem.gyro.getPitch()-originalPitch > 1.0 && !startedGoingUp) {
+                if (drivetrainSubsystem.gyro.getPitch()-originalPitch > 11.5 && !startedGoingUp) {
                         startedGoingUp = true;
                 }
                 double controlEffortForward = drivetrainSubsystem.pidMovement.calculate(drivetrainSubsystem.getAvgEncoderPosition(), leftPosition);
-                controlEffortForward = MathUtil.clamp(controlEffortForward, -.5, .5);
+                controlEffortForward = MathUtil.clamp(controlEffortForward, -.75, .75);
                 drivetrainSubsystem.robotDrive.arcadeDrive(.5, 0.);
         }
 
         public boolean isFinished() {
-                return  startedGoingUp && Math.abs(drivetrainSubsystem.gyro.getPitch()-originalPitch) < 1.0;
+                return  startedGoingUp;/*&& drivetrainSubsystem.gyro.getPitch()-originalPitch < 6.0;*/
         }
 
         public void end(boolean gotInterrupted) {
