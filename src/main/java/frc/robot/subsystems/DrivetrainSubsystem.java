@@ -17,6 +17,7 @@ import com.ctre.phoenix.motorcontrol.TalonFXSimCollection;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
+import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.math.Pair;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.RamseteController;
@@ -84,7 +85,6 @@ public class DrivetrainSubsystem extends SubsystemBase {
   public DrivetrainSubsystem() {
     //constructor gets ran at robotInit()
     this.setDefaultCommand(new DriveCommand(this));
-    photonPoseEstimator = new PhotonPoseEstimator(aprilTagFieldLayout, PoseStrategy.CLOSEST_TO_REFERENCE_POSE, camera, Constants.CameraCharacteristics.robotToCamMeters);
     try {
       aprilTagFieldLayout = new AprilTagFieldLayout(
         Filesystem.getDeployDirectory().getAbsolutePath() + "/2023-chargedup.json"
@@ -92,6 +92,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
     } catch(IOException e) {
       System.out.println("couldnt load field image :(");
     }
+    photonPoseEstimator = new PhotonPoseEstimator(aprilTagFieldLayout, PoseStrategy.CLOSEST_TO_REFERENCE_POSE, camera, Constants.CameraCharacteristics.robotToCamMeters);
 
     // Reset settings
     MainLeftMotorBack.configFactoryDefault();
