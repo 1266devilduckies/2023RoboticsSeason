@@ -67,8 +67,6 @@ public class DrivetrainSubsystem extends SubsystemBase {
   PhotonPoseEstimator photonPoseEstimator;
   public boolean isCurrentLimited = false;
   private double gyroPitchkP = 0.037;
-
-  private double gyroPitchkP = 0.037;
   private double forwardMovementkP = 0.00005;
   private double globalRotationkP = 0.0493;
 
@@ -169,9 +167,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
     photonPoseEstimator.setReferencePose(odometry.getEstimatedPosition());
     double currentTime = Timer.getFPGATimestamp();
     Optional<EstimatedRobotPose> result = photonPoseEstimator.update();
-    SmartDashboard.putBoolean("has result", result.isPresent());
-    SmartDashboard.putBoolean("not null", result.get() != null);
-    if (result.isPresent() && result.get() != null) {
+    if (result.isPresent()) {
         Pose2d estimatedPoseMeters = result.get().estimatedPose.toPose2d();
         SmartDashboard.putString("estimated pose meters", estimatedPoseMeters.toString());
         odometry.addVisionMeasurement(estimatedPoseMeters, currentTime);

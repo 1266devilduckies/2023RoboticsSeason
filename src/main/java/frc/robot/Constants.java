@@ -91,10 +91,10 @@ public final class Constants {
                 public static final String movementPGainKey = "movement kP";
                 public static final String globalRotationPGainKey = "global rotation kP";
                 public static final double kSAngular = 0.2;
-                public static double kS = 0.073213;// 0.607;
-                public static double kV = 1.91111;// 1.42;
-                public static double kA = 0.30399;// 0.68;
-                public static double kP = 3.4369; // 0.274
+                public static double kS = 0.081988;
+                public static double kV = 2.2124;
+                public static double kA = 0.13414;
+                public static double kP = 2.9076;
                 public static double maxAutoVelocityMeters = 4;
                 public static double maxAutoAccelerationMeters = 3;
                 public static double kD = 0.0;
@@ -107,7 +107,7 @@ public final class Constants {
                 public static final String photonVisionName = "HD_Pro_Webcam_C920";
                 public static final Transform3d robotToCamMeters = new Transform3d(
                                 new Translation3d(-Units.inchesToMeters(8.5), 0.0, Units.inchesToMeters(15.5)),
-                                new Rotation3d(0, Units.degreesToRadians(13), 0));
+                                new Rotation3d(0, Units.degreesToRadians(12), 0));
         }
 
         public static class ElevatorCharacteristics {
