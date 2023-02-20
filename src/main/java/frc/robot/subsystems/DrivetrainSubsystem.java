@@ -1,7 +1,6 @@
 package frc.robot.subsystems;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Optional;
 
 import org.photonvision.EstimatedRobotPose;
@@ -17,26 +16,18 @@ import com.ctre.phoenix.motorcontrol.TalonFXSimCollection;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
-import edu.wpi.first.apriltag.AprilTagFields;
-import edu.wpi.first.math.Pair;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.RamseteController;
 import edu.wpi.first.math.estimator.DifferentialDrivePoseEstimator;
-import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
 import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.math.system.plant.DCMotor;
-import edu.wpi.first.wpilibj.ADXRS450_Gyro;
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.SPI.Port;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.simulation.DifferentialDrivetrainSim;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
@@ -46,8 +37,6 @@ import frc.robot.Constants;
 import frc.robot.DuckAHRS;
 import frc.robot.DuckGearUtil;
 import frc.robot.commands.DriveCommand;
-import com.kauailabs.navx.frc.AHRS;
-import com.pathplanner.lib.auto.PIDConstants;
 
 public class DrivetrainSubsystem extends SubsystemBase {
   public final DifferentialDrive robotDrive;
@@ -77,10 +66,15 @@ public class DrivetrainSubsystem extends SubsystemBase {
   public AprilTagFieldLayout aprilTagFieldLayout;
   PhotonPoseEstimator photonPoseEstimator;
   public boolean isCurrentLimited = false;
-  private double gyroPitchkP = 0.0;
+
+  private double gyroPitchkP = 0.037;
   private double forwardMovementkP = 0.00005;
+  private double globalRotationkP = 0.0493;
+
+  //proportional controllers only gang uwu
   public PIDController pidGyroPitch = new PIDController(gyroPitchkP, 0.0, 0.0);
   public PIDController pidMovement = new PIDController(forwardMovementkP, 0.0, 0.0);
+  public PIDController pidGlobalRotation = new PIDController(globalRotationkP, 0.0, 0.0);
 
   public DrivetrainSubsystem() {
     //constructor gets ran at robotInit()
@@ -186,7 +180,6 @@ public class DrivetrainSubsystem extends SubsystemBase {
 
   @Override
   public void simulationPeriodic() {
-    Pose2d robotPose = odometry.getEstimatedPosition();
     // For the motor master which is inverted, you'll need to invert it manually (ie
     // with a negative sign) here when fetching any data
     // CTRE doesn't support setInverted() for simulation
@@ -249,6 +242,10 @@ public class DrivetrainSubsystem extends SubsystemBase {
         if (forwardMovementkP != Preferences.getDouble(Constants.DrivetrainCharacteristics.movementPGainKey, forwardMovementkP)) {
                 forwardMovementkP = Preferences.getDouble(Constants.DrivetrainCharacteristics.movementPGainKey, forwardMovementkP);
                 pidMovement.setP(forwardMovementkP);
+        }
+        if (globalRotationkP != Preferences.getDouble(Constants.DrivetrainCharacteristics.globalRotationPGainKey, globalRotationkP)) {
+          globalRotationkP = Preferences.getDouble(Constants.DrivetrainCharacteristics.globalRotationPGainKey, forwardMovementkP);
+          pidGlobalRotation.setP(globalRotationkP);
         }
   }
 

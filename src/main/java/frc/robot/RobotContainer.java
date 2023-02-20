@@ -6,15 +6,13 @@ package frc.robot;
 
 import frc.robot.Constants.DriverConstants;
 import frc.robot.Constants.OperatorConstants;
-import frc.robot.commands.AlignSequence;
 import frc.robot.commands.Autos;
 import frc.robot.commands.Balance;
 import frc.robot.commands.DriveToPosition;
-import frc.robot.commands.ManuallyMoveRelativeToCurrentLevel;
 import frc.robot.commands.RotateToAngle;
 import frc.robot.subsystems.ArmSubsystem;
+import frc.robot.subsystems.ClawSubsystem;
 import frc.robot.subsystems.DrivetrainSubsystem;
-import frc.robot.subsystems.ElevatorSubsystem;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
@@ -36,9 +34,9 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   private final DrivetrainSubsystem drivetrainSubsystem = new DrivetrainSubsystem();
-  private final ElevatorSubsystem elevatorSubsystem = new ElevatorSubsystem();
   private final ArmSubsystem armSubsystem = new ArmSubsystem();
-  private boolean startedBalance = false;
+  private final ClawSubsystem clawSubsystem = new ClawSubsystem();
+  
   SendableChooser<DuckAutoProfile> autonomousMode = new SendableChooser<DuckAutoProfile>();
 
   public final static CommandPS4Controller driverJoystick =
@@ -66,19 +64,12 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
-    // // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
-    // new Trigger(m_exampleSubsystem::exampleCondition)
-    //     .onTrue(new ExampleCommand(m_exampleSubsystem));
 
-    // // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
-    // // cancelling on release.
-    // driverJoystick.square().whileTrue(m_exampleSubsystem.exampleMethodCommand());
-
-    operatorJoystick.a().whileTrue(new Balance(drivetrainSubsystem));
     operatorJoystick.x().whileTrue(new SequentialCommandGroup(
         new DriveToPosition(drivetrainSubsystem, 2),
         new Balance(drivetrainSubsystem)));
-    operatorJoystick.rightBumper().whileTrue(new RotateToAngle(drivetrainSubsystem, 3.0));
+
+    operatorJoystick.rightBumper().whileTrue(new RotateToAngle(drivetrainSubsystem, 0.0)); //global rotation
 
     operatorJoystick.povUp().whileTrue(new RunCommand( () -> {
         armSubsystem.commandAngle(armSubsystem.getAngle() + 2);
@@ -88,7 +79,6 @@ public class RobotContainer {
         armSubsystem.commandAngle(armSubsystem.getAngle() - 2);
     }));
 
-    operatorJoystick.leftBumper().whileTrue(new ManuallyMoveRelativeToCurrentLevel(elevatorSubsystem));
   }
 
   private void configureMarkers() {
