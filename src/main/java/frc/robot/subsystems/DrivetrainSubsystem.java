@@ -85,7 +85,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
     } catch(IOException e) {
       System.out.println("couldnt load field image :(");
     }
-    photonPoseEstimator = new PhotonPoseEstimator(aprilTagFieldLayout, PoseStrategy.CLOSEST_TO_REFERENCE_POSE, camera, Constants.CameraCharacteristics.robotToCamMeters);
+    photonPoseEstimator = new PhotonPoseEstimator(aprilTagFieldLayout, PoseStrategy.CLOSEST_TO_LAST_POSE, camera, Constants.CameraCharacteristics.robotToCamMeters);
 
     // Reset settings
     MainLeftMotorBack.configFactoryDefault();
