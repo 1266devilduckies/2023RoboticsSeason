@@ -79,6 +79,10 @@ public class RobotContainer {
         armSubsystem.commandAngle(armSubsystem.getAngle() - 2);
     }));
 
+    operatorJoystick.leftBumper().whileTrue(new InstantCommand( () -> {
+        clawSubsystem.toggleSolenoid();
+    }));
+
   }
 
   private void configureMarkers() {
