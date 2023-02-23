@@ -86,7 +86,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
       System.out.println("couldnt load field image :(");
     }
     camera = new PhotonCamera(Constants.CameraCharacteristics.photonVisionName);
-    photonPoseEstimator = new PhotonPoseEstimator(aprilTagFieldLayout, PoseStrategy.CLOSEST_TO_LAST_POSE, camera, Constants.CameraCharacteristics.robotToCamMeters);
+    photonPoseEstimator = new PhotonPoseEstimator(aprilTagFieldLayout, PoseStrategy.CLOSEST_TO_REFERENCE_POSE, camera, Constants.CameraCharacteristics.robotToCamMeters);
 
     // Reset settings
     MainLeftMotorBack.configFactoryDefault();
@@ -165,7 +165,9 @@ public class DrivetrainSubsystem extends SubsystemBase {
     Constants.DrivetrainCharacteristics.gearing, 2048.0, Constants.DrivetrainCharacteristics.wheelRadiusMeters);
 
     odometry.update(Rotation2d.fromDegrees(-gyro.getAngle()), leftDistanceMeters, rightDistanceMeters);
-    photonPoseEstimator.setReferencePose(odometry.getEstimatedPosition());
+    Pose2d previousPose = odometry.getEstimatedPosition();
+    if (previousPose != null) {
+        photonPoseEstimator.setReferencePose(previousPose);
     double currentTime = Timer.getFPGATimestamp();
     Optional<EstimatedRobotPose> result = photonPoseEstimator.update();
     if (result.isPresent()) {
@@ -173,7 +175,8 @@ public class DrivetrainSubsystem extends SubsystemBase {
         SmartDashboard.putString("estimated pose meters", estimatedPoseMeters.toString());
         odometry.addVisionMeasurement(estimatedPoseMeters, currentTime);
     }
-    field.setRobotPose(odometry.getEstimatedPosition());
+    }
+    field.setRobotPose(previousPose);
   }
 
   @Override
