@@ -62,7 +62,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
   private final DifferentialDrivePoseEstimator odometry;
 
   public static final Field2d field = new Field2d();
-  private final PhotonCamera camera = new PhotonCamera(Constants.CameraCharacteristics.photonVisionName);
+  private final PhotonCamera camera;
   public AprilTagFieldLayout aprilTagFieldLayout;
   PhotonPoseEstimator photonPoseEstimator;
   public boolean isCurrentLimited = false;
@@ -85,6 +85,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
     } catch(IOException e) {
       System.out.println("couldnt load field image :(");
     }
+    camera = new PhotonCamera(Constants.CameraCharacteristics.photonVisionName);
     photonPoseEstimator = new PhotonPoseEstimator(aprilTagFieldLayout, PoseStrategy.CLOSEST_TO_LAST_POSE, camera, Constants.CameraCharacteristics.robotToCamMeters);
 
     // Reset settings
@@ -145,7 +146,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
     );
     SmartDashboard.putData("Field", field);
     
-    odometry =  new DifferentialDrivePoseEstimator(
+    odometry = new DifferentialDrivePoseEstimator(
         drivetrainKinematics, 
         Rotation2d.fromDegrees(-gyro.getAngle()), 
         0,0,

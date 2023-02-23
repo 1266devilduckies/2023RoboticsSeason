@@ -104,7 +104,7 @@ public final class Constants {
         }
 
         public static class CameraCharacteristics {
-                public static final String photonVisionName = "HD_Pro_Webcam_C920";
+                public static final String photonVisionName = "camera";
                 public static final Transform3d robotToCamMeters = new Transform3d(
                                 new Translation3d(-Units.inchesToMeters(8.5), 0.0, Units.inchesToMeters(15.5)),
                                 new Rotation3d(0, Units.degreesToRadians(12), 0));
