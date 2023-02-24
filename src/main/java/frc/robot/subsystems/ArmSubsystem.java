@@ -1,15 +1,9 @@
 package frc.robot.subsystems;
 
-import com.ctre.phoenix.motorcontrol.ControlMode;
-import com.ctre.phoenix.motorcontrol.TalonFXSensorCollection;
-import com.ctre.phoenix.motorcontrol.TalonFXSimCollection;
-import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
-import com.revrobotics.SparkMaxRelativeEncoder;
 import com.revrobotics.CANSparkMax.SoftLimitDirection;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
-import com.revrobotics.SparkMaxRelativeEncoder.Type;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.ArmFeedforward;
@@ -29,7 +23,7 @@ import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj.util.Color8Bit;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
-import frc.robot.RobotContainer;
+import frc.robot.commands.DriveArm;
 
 public class ArmSubsystem extends SubsystemBase{
         
@@ -61,12 +55,15 @@ public class ArmSubsystem extends SubsystemBase{
                         new Color8Bit(Color.kYellow)));
         double currentMotorEffort = 0.0;
         public ArmSubsystem(){
+                this.setDefaultCommand(new DriveArm(this));
+                Preferences.setDouble(Constants.Arm.kArmPositionKey, 0.0);
                 SmartDashboard.putData("Arm Sim", m_mech2d);
                 m_armTower.setColor(new Color8Bit(Color.kBlue));
 
                 armMotor.clearFaults();
                 armMotor.restoreFactoryDefaults();
                 armMotor.disableVoltageCompensation();
+                armMotor.setInverted(true);
                 armMotor.setSoftLimit(SoftLimitDirection.kForward, (float)(Constants.Arm.maxAngle * Constants.Arm.gearing));
                 armMotor.setSoftLimit(SoftLimitDirection.kReverse, (float)(Constants.Arm.minAngle * Constants.Arm.gearing));
                 armMotor.burnFlash();
@@ -76,7 +73,6 @@ public class ArmSubsystem extends SubsystemBase{
                 Preferences.initDouble(Constants.Arm.kArmPositionKey, m_armSetpointDegrees);
                 Preferences.initDouble(Constants.Arm.kArmPKey, m_armKp);
                 Preferences.initDouble(Constants.Arm.kArmGKey, m_armKg);
-                Preferences.initDouble("motorSpeed", motorSpeed);
         }
 
         @Override
@@ -86,11 +82,11 @@ public class ArmSubsystem extends SubsystemBase{
                         (armEncoder.getPosition() / Constants.Arm.gearing) * 360.0,
                         m_armSetpointDegrees
                 );
-                SmartDashboard.putNumber("current target", armEncoder.getPosition());
+                SmartDashboard.putNumber("current target", effort);
                 SmartDashboard.putNumber("encoder position", armEncoder.getPosition());
                 effort = MathUtil.clamp(effort, -1, 1);
                 currentMotorEffort = effort;
-                armMotor.set(motorSpeed); //used to be effort
+                armMotor.set(effort); //used to be effort
         }
         public void commandAngle(double angle) {
                 angle %= 360.;
@@ -118,7 +114,6 @@ public class ArmSubsystem extends SubsystemBase{
         }     
 
         public void loadPreferences() {
-                // Read Preferences for Arm setpoint and kP on entering Teleop
                 m_armSetpointDegrees = Preferences.getDouble(Constants.Arm.kArmPositionKey, m_armSetpointDegrees);
                 if (m_armKp != Preferences.getDouble(Constants.Arm.kArmPKey, m_armKp)) {
                   m_armKp = Preferences.getDouble(Constants.Arm.kArmPKey, m_armKp);
@@ -127,9 +122,6 @@ public class ArmSubsystem extends SubsystemBase{
                 if(m_armKg != Preferences.getDouble(Constants.Arm.kArmGKey, m_armKg)){
                         m_armKg = Preferences.getDouble(Constants.Arm.kArmGKey, m_armKg);
                         feedforward = new ArmFeedforward(0, m_armKg, 0);
-                }
-                if(motorSpeed != Preferences.getDouble("motorSpeed",  motorSpeed)){
-                        motorSpeed = Preferences.getDouble("motorSpeed",  motorSpeed);
                 }
         }
 

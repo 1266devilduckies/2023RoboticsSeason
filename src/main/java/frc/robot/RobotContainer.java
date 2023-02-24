@@ -10,6 +10,8 @@ import frc.robot.commands.Autos;
 import frc.robot.commands.Balance;
 import frc.robot.commands.DriveToPosition;
 import frc.robot.commands.RotateToAngle;
+import frc.robot.commands.SpinClawBackwards;
+import frc.robot.commands.SpinClawForward;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.ClawSubsystem;
 import frc.robot.subsystems.DrivetrainSubsystem;
@@ -65,26 +67,13 @@ public class RobotContainer {
    */
   private void configureBindings() {
 
-    operatorJoystick.x().whileTrue(new SequentialCommandGroup(
+        operatorJoystick.y().whileTrue(new SequentialCommandGroup(
         new DriveToPosition(drivetrainSubsystem, 2),
         new Balance(drivetrainSubsystem)));
 
-    operatorJoystick.rightBumper().whileTrue(new RotateToAngle(drivetrainSubsystem, 0.0)); //global rotation
-
-    operatorJoystick.povUp().whileTrue(new RunCommand( () -> {
-        armSubsystem.commandAngle(armSubsystem.getAngle() + 2);
-    }));
-
-    operatorJoystick.povDown().whileTrue(new RunCommand( () -> {
-        armSubsystem.commandAngle(armSubsystem.getAngle() - 2);
-    }));
-
-    operatorJoystick.leftBumper().whileTrue(new InstantCommand( () -> {
-        clawSubsystem.toggleSolenoid();
-    }));
-
+        operatorJoystick.x().whileTrue(new SpinClawBackwards(clawSubsystem));
+        operatorJoystick.a().whileTrue(new SpinClawForward(clawSubsystem));
   }
-
   private void configureMarkers() {
     Constants.eventMap.put("marker1", new PrintCommand("passed marker 1"));
     Constants.eventMap.put("sayHi", new PrintCommand("hiiii!!!"));

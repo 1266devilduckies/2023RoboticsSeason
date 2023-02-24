@@ -30,6 +30,8 @@ public final class Constants {
 
         public static class OperatorConstants {
                 public static final int port = 1;
+                public static final int movementAxis = 1;
+                public static final double movementDeadband = 0.5;
         }
 
         public static class DriverConstants {
@@ -55,7 +57,7 @@ public final class Constants {
                         public static final int armMotor = 8;
                 }
                 public static class Claw {
-                        public static final int motor = 91;
+                        public static final int motor = 9;
                 }
         }
 
@@ -98,19 +100,6 @@ public final class Constants {
                                 new Rotation3d(0, Units.degreesToRadians(12), 0));
         }
 
-        public static class ElevatorCharacteristics {
-                public static final double kP = 0.25;
-                public static double[] elevatorLevels = {
-                                // in terms of encoder ticks
-                                0,
-                                25000,
-                                50000
-                };
-                public static final double elevatorBottomLimit = 0; // in terms of ticks from reset
-                public static final double elevatorTopLimit = Constants.ElevatorCharacteristics.elevatorLevels[Constants.ElevatorCharacteristics.elevatorLevels.length
-                                - 1];
-        }
-
         public static class AutoTrajectoryFileNames {
                 public static final String HIGH_DOCKHIGH = "HighDockingHighPath";
                 public static final String HIGH_DOCKLOW = "HighDockingLowPath";
@@ -125,6 +114,7 @@ public final class Constants {
         }
 
         public static class ClawCharacteristics {
+                public static final String clawSpeedKey = "claw speed";
                 public static int forwardChannel = 0;
                 public static int reverseChannel = 1;
         }
