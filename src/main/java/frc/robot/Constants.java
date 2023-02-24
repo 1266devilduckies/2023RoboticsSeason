@@ -49,22 +49,10 @@ public final class Constants {
                         public static final int FR = 7;
                         public static final int TL = 2;
                         public static final int TR = 6;
-                        // configured for ducktails
-                        // public static final int BL = 2;
-                        // public static final int BR = 3;
-                        // public static final int FL = 4;
-                        // public static final int FR = 5;
-                        // public static final int TL = 20; // out of bounds
-                        // public static final int TR = 60; // out of bounds
-                }
-
-                public static class Elevator {
-                        public static final int leftClimber = 10;
-                        public static final int rightClimber = 9;
                 }
 
                 public static class Arm {
-                        public static final int armMotor = 90;
+                        public static final int armMotor = 8;
                 }
                 public static class Claw {
                         public static final int motor = 91;
@@ -72,7 +60,7 @@ public final class Constants {
         }
 
         public static class Arm {
-                public static final double gearing = 80.;
+                public static final double gearing = 3.67*3.67*3.67;
                 public static final double armMassKg = 10.;
                 public static final double armLengthMeters = 1.;
                 public static final String kArmPositionKey = "arm position";

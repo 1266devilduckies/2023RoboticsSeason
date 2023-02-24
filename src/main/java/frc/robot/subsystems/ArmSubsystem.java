@@ -35,6 +35,7 @@ public class ArmSubsystem extends SubsystemBase{
         
         private double m_armKp = 0;
         private double m_armKg = 0;
+        private double motorSpeed = 0;
         public CANSparkMax armMotor = new CANSparkMax(Constants.CAN.Arm.armMotor, MotorType.kBrushless); 
         public RelativeEncoder armEncoder = armMotor.getEncoder(); //in terms of revolutions
         SingleJointedArmSim armSim = new SingleJointedArmSim(DCMotor.getNEO(1), 
@@ -68,10 +69,14 @@ public class ArmSubsystem extends SubsystemBase{
                 armMotor.disableVoltageCompensation();
                 armMotor.setSoftLimit(SoftLimitDirection.kForward, (float)(Constants.Arm.maxAngle * Constants.Arm.gearing));
                 armMotor.setSoftLimit(SoftLimitDirection.kReverse, (float)(Constants.Arm.minAngle * Constants.Arm.gearing));
+                armMotor.burnFlash();
+
+                armEncoder.setPosition(0);
 
                 Preferences.initDouble(Constants.Arm.kArmPositionKey, m_armSetpointDegrees);
                 Preferences.initDouble(Constants.Arm.kArmPKey, m_armKp);
                 Preferences.initDouble(Constants.Arm.kArmGKey, m_armKg);
+                Preferences.initDouble("motorSpeed", motorSpeed);
         }
 
         @Override
@@ -82,9 +87,10 @@ public class ArmSubsystem extends SubsystemBase{
                         m_armSetpointDegrees
                 );
                 SmartDashboard.putNumber("current target", armEncoder.getPosition());
+                SmartDashboard.putNumber("encoder position", armEncoder.getPosition());
                 effort = MathUtil.clamp(effort, -1, 1);
                 currentMotorEffort = effort;
-                armMotor.set(effort);
+                armMotor.set(motorSpeed); //used to be effort
         }
         public void commandAngle(double angle) {
                 angle %= 360.;
@@ -121,6 +127,9 @@ public class ArmSubsystem extends SubsystemBase{
                 if(m_armKg != Preferences.getDouble(Constants.Arm.kArmGKey, m_armKg)){
                         m_armKg = Preferences.getDouble(Constants.Arm.kArmGKey, m_armKg);
                         feedforward = new ArmFeedforward(0, m_armKg, 0);
+                }
+                if(motorSpeed != Preferences.getDouble("motorSpeed",  motorSpeed)){
+                        motorSpeed = Preferences.getDouble("motorSpeed",  motorSpeed);
                 }
         }
 
