@@ -21,30 +21,28 @@ import frc.robot.subsystems.DrivetrainSubsystem;
 
 public final class Autos {
 
-  private static DuckAutoProfile midDockLowAuto(DrivetrainSubsystem drivetrainSubsystem){
-    String backPathName = Constants.AutoTrajectoryFileNames.MID_DOCKLOW;
-    String forwardPathName = Constants.AutoTrajectoryFileNames.MID_FORWARD;
-    PathPlannerTrajectory backPathTrajectory = PathPlanner.loadPath(backPathName, new PathConstraints(
-      Constants.DrivetrainCharacteristics.maxAutoVelocityMeters, 
-      Constants.DrivetrainCharacteristics.maxAutoAccelerationMeters), true);
-    PathPlannerTrajectory forwardPathTrajectory = PathPlanner.loadPath(forwardPathName, new PathConstraints(
+  private static DuckAutoProfile midDockPath(DrivetrainSubsystem drivetrainSubsystem){
+    String pathName = Constants.AutoTrajectoryFileNames.MID_DOCK;
+    PathPlannerTrajectory pathTrajectory = PathPlanner.loadPath(pathName, new PathConstraints(
       Constants.DrivetrainCharacteristics.maxAutoVelocityMeters, 
       Constants.DrivetrainCharacteristics.maxAutoAccelerationMeters));
-    SequentialCommandGroup command = new SequentialCommandGroup(runPath(drivetrainSubsystem, forwardPathTrajectory), runPath(drivetrainSubsystem, backPathTrajectory));
-    Pose2d startPosition = forwardPathTrajectory.getInitialPose();
+    SequentialCommandGroup command = new SequentialCommandGroup(
+        runPath(drivetrainSubsystem, pathTrajectory));
+    Pose2d startPosition = pathTrajectory.getInitialPose();
     return new DuckAutoProfile(command, startPosition);
   }  
-  private static DuckAutoProfile lowDockLowAuto(DrivetrainSubsystem drivetrainSubsystem){
-    String pathName = Constants.AutoTrajectoryFileNames.LOW_DOCKLOW;
+  private static DuckAutoProfile lowDockPath(DrivetrainSubsystem drivetrainSubsystem){
+    String pathName = Constants.AutoTrajectoryFileNames.LOW_DOCK;
     PathPlannerTrajectory pathTrajectory = PathPlanner.loadPath(pathName, new PathConstraints(
       Constants.DrivetrainCharacteristics.maxAutoVelocityMeters, 
     Constants.DrivetrainCharacteristics.maxAutoAccelerationMeters));
-    SequentialCommandGroup command = new SequentialCommandGroup(runPath(drivetrainSubsystem, pathTrajectory));
+    SequentialCommandGroup command = new SequentialCommandGroup(
+        runPath(drivetrainSubsystem, pathTrajectory));
     Pose2d startPosition = pathTrajectory.getInitialPose();
     return new DuckAutoProfile(command, startPosition);
   }
 
-  private static DuckAutoProfile forwardAuto(DrivetrainSubsystem drivetrainSubsystem){
+  /*private static DuckAutoProfile forwardAuto(DrivetrainSubsystem drivetrainSubsystem){
     String pathName = Constants.AutoTrajectoryFileNames.LOW_FORWARD;
     PathPlannerTrajectory pathTrajectory = PathPlanner.loadPath(pathName, new PathConstraints(
       Constants.DrivetrainCharacteristics.maxAutoVelocityMeters, 
@@ -53,7 +51,7 @@ public final class Autos {
     Pose2d startPosition = pathTrajectory.getInitialPose();
 
     return new DuckAutoProfile(command, startPosition);
-  }
+  }*/
 
   //auto factory
   private static CommandBase runPath(DrivetrainSubsystem drivetrainSubsystem, PathPlannerTrajectory pathTrajectory) {
@@ -82,8 +80,8 @@ public final class Autos {
 
     autonomousMode.setDefaultOption("Do nothing", new DuckAutoProfile());
     
-    autonomousMode.addOption("forward auto", forwardAuto(drivetrainSubsystem));
-    autonomousMode.addOption("low dock low auto", lowDockLowAuto(drivetrainSubsystem));
-    autonomousMode.addOption("mid dock low auto", midDockLowAuto(drivetrainSubsystem));
+    //autonomousMode.addOption("forward auto", forwardAuto(drivetrainSubsystem));
+    autonomousMode.addOption("low dock auto", lowDockPath(drivetrainSubsystem));
+    autonomousMode.addOption("mid dock auto", midDockPath(drivetrainSubsystem));
   }
 }

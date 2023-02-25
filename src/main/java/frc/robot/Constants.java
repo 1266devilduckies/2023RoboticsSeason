@@ -101,20 +101,14 @@ public final class Constants {
         }
 
         public static class AutoTrajectoryFileNames {
-                public static final String HIGH_DOCKHIGH = "HighDockingHighPath";
-                public static final String HIGH_DOCKLOW = "HighDockingLowPath";
-                public static final String HIGH_FORWARD = "HighForwardPath";
-                public static final String LOW_DOCKHIGH = "LowDockingHighPath";
-                public static final String LOW_DOCKLOW = "LowDockingLowPath";
-                public static final String LOW_FORWARD = "LowForwardPath";
-                public static final String MID_FORWARD = "MidDockingForwardPath";
-                public static final String MID_DOCKHIGH = "MidDockingHighPath";
-                public static final String MID_DOCKLOW = "MidDockingLowPath";
-
+                public static final String HIGH_DOCK= "HighDockingPath";
+                public static final String MID_DOCK = "MidDockingPath";
+                public static final String LOW_DOCK = "LowDockingPath";
         }
 
         public static class ClawCharacteristics {
                 public static final String clawSpeedKey = "claw speed";
+                public static final String clawTimeKey = "claw time";
                 public static int forwardChannel = 0;
                 public static int reverseChannel = 1;
         }

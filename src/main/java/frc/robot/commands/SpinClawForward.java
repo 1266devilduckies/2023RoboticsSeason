@@ -19,11 +19,13 @@ public class SpinClawForward extends CommandBase {
                 double controlEffort = Preferences.getDouble(Constants.ClawCharacteristics.clawSpeedKey, this.clawSubsystem.getClawSpeed());
                 this.clawSubsystem.motor.set(ControlMode.PercentOutput, controlEffort);
         }
+
         public boolean isFinished() {
-                return false;
+                return true;
         }
-        public void end() {
-                SmartDashboard.putNumber("was activated", Timer.getFPGATimestamp());
-                this.clawSubsystem.motor.set(ControlMode.PercentOutput, 0.0);
+
+        @Override
+        public void end(boolean interrupted) {
+                
         }
 }

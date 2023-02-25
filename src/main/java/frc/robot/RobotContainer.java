@@ -8,6 +8,8 @@ import frc.robot.Constants.DriverConstants;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.Autos;
 import frc.robot.commands.Balance;
+import frc.robot.commands.BalanceComplexCommand;
+import frc.robot.commands.ClawWait;
 import frc.robot.commands.DriveToPosition;
 import frc.robot.commands.RotateToAngle;
 import frc.robot.commands.SpinClawBackwards;
@@ -15,6 +17,9 @@ import frc.robot.commands.SpinClawForward;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.ClawSubsystem;
 import frc.robot.subsystems.DrivetrainSubsystem;
+
+import com.ctre.phoenix.motorcontrol.ControlMode;
+
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
@@ -23,6 +28,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandPS4Controller;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -67,16 +73,20 @@ public class RobotContainer {
    */
   private void configureBindings() {
 
-        operatorJoystick.y().whileTrue(new SequentialCommandGroup(
-        new DriveToPosition(drivetrainSubsystem, 2),
-        new Balance(drivetrainSubsystem)));
+        driverJoystick.square().whileTrue(new Balance(drivetrainSubsystem));
 
-        operatorJoystick.x().whileTrue(new SpinClawBackwards(clawSubsystem));
-        operatorJoystick.a().whileTrue(new SpinClawForward(clawSubsystem));
+        operatorJoystick.x().onTrue(new SequentialCommandGroup(new SpinClawBackwards(clawSubsystem), new ClawWait(clawSubsystem), 
+        new InstantCommand( () -> {
+                clawSubsystem.motor.set(ControlMode.PercentOutput, 0.0);
+        })));
+        operatorJoystick.a().onTrue(new SequentialCommandGroup(new SpinClawForward(clawSubsystem), new ClawWait(clawSubsystem), 
+                new InstantCommand( () -> {
+                        clawSubsystem.motor.set(ControlMode.PercentOutput, 0.0);
+                })));
   }
   private void configureMarkers() {
     Constants.eventMap.put("marker1", new PrintCommand("passed marker 1"));
-    Constants.eventMap.put("sayHi", new PrintCommand("hiiii!!!"));
+    Constants.eventMap.put("StartBalance", new BalanceComplexCommand(drivetrainSubsystem));
   }
 
   public DuckAutoProfile getAutonomousProfile() {
@@ -91,4 +101,8 @@ public class RobotContainer {
   public ArmSubsystem getArmSubsystem(){
         return armSubsystem;
       }
+
+public ClawSubsystem getClawSubsystem() {
+        return clawSubsystem;
+}
 }
