@@ -105,6 +105,7 @@ public final class Constants {
                 public static final String MID_DOCK = "MidDockingPath";
                 public static final String LOW_DOCK = "LowDockingPath";
                 public static final String MID_BALANCE = "MidBalance";
+                public static final String CONE_TAXI = "ConeTaxi";
         }
 
         public static class ClawCharacteristics {

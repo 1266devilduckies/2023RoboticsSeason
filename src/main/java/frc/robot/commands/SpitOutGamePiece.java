@@ -4,6 +4,7 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 
 import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
 import frc.robot.subsystems.ClawSubsystem;
@@ -16,14 +17,19 @@ public class SpitOutGamePiece extends CommandBase {
         addRequirements(this.clawSubsystem);
     }
     public void initialize() {
-        this.clawSubsystem.isClosing = false;
+        SmartDashboard.putNumber("started", startTime);
         startTime = Timer.getFPGATimestamp();
     }
     public void execute() {
         double controlEffort = Preferences.getDouble(Constants.ClawCharacteristics.clawSpeedKey, this.clawSubsystem.getClawSpeed());
         this.clawSubsystem.motor.set(ControlMode.PercentOutput, controlEffort);
     }
-    public boolean isFinished(boolean interrupted) {
-        return this.clawSubsystem.getDisabledState();
+    @Override
+    public boolean isFinished() {
+        return !(this.clawSubsystem.sonarSensor.get()) || (Timer.getFPGATimestamp() - startTime) > 5.;
+    }
+    public void end(boolean interrupted) {
+        SmartDashboard.putNumber("ended", Timer.getFPGATimestamp());
+        this.clawSubsystem.motor.set(ControlMode.PercentOutput, 0.0);
     }
 }

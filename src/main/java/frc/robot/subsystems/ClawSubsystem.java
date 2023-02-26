@@ -15,8 +15,7 @@ public class ClawSubsystem extends SubsystemBase {
         private double clawTime = 0.5; //for increment based movement
         public boolean isClosing = false;
         private boolean disabled = false;
-        private DigitalInput limitSwitch = new DigitalInput(0); //put it at back to prevent breaking when opening
-        private DigitalInput sonarSensor = new DigitalInput(1); //put it somewhere between the end of the claw to see when the game piece is possesed
+        public DigitalInput sonarSensor = new DigitalInput(4);
         public ClawSubsystem() {
                 motor.configFactoryDefault();
                 motor.setNeutralMode(NeutralMode.Brake);
@@ -25,11 +24,7 @@ public class ClawSubsystem extends SubsystemBase {
         }
 
         public void periodic(){
-                if (isClosing == true) {
-                        disabled = sonarSensor.get();
-                } else {
-                        disabled = limitSwitch.get();
-                }
+                SmartDashboard.putBoolean("sonar sensor state", sonarSensor.get());
                 SmartDashboard.putNumber("claw time", clawTime);
         }
 

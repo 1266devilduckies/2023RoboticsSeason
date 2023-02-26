@@ -16,7 +16,6 @@ import frc.robot.commands.SpinClawBackwards;
 import frc.robot.commands.SpinClawForward;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.ClawSubsystem;
-import frc.robot.subsystems.ColorSensor;
 import frc.robot.subsystems.DrivetrainSubsystem;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
@@ -45,7 +44,6 @@ public class RobotContainer {
   private final DrivetrainSubsystem drivetrainSubsystem = new DrivetrainSubsystem();
   private final ArmSubsystem armSubsystem = new ArmSubsystem();
   private final ClawSubsystem clawSubsystem = new ClawSubsystem();
-  private final ColorSensor colorSensor = new ColorSensor();
   
   SendableChooser<DuckAutoProfile> autonomousMode = new SendableChooser<DuckAutoProfile>();
 
@@ -56,7 +54,7 @@ public class RobotContainer {
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
-    Autos.pushAutosToDashboard(autonomousMode, drivetrainSubsystem);
+    Autos.pushAutosToDashboard(autonomousMode, drivetrainSubsystem, clawSubsystem);
     SmartDashboard.putData(autonomousMode);
     // Configure the trigger bindings
     configureBindings();
@@ -85,6 +83,12 @@ public class RobotContainer {
                 new InstantCommand( () -> {
                         clawSubsystem.motor.set(ControlMode.PercentOutput, 0.0);
                 })));
+        operatorJoystick.y().onTrue(new InstantCommand(()->{
+          armSubsystem.resetAngle(45.0);
+        }));
+        operatorJoystick.b().onTrue(new InstantCommand(()->{
+          armSubsystem.resetAngle(90.0);
+        }));
   }
   private void configureMarkers() {
     Constants.eventMap.put("marker1", new PrintCommand("passed marker 1"));

@@ -142,7 +142,7 @@ public class Robot extends TimedRobot {
       Constants.DrivetrainCharacteristics.speedScale = maxSpeedEntry.get();
       Constants.DrivetrainCharacteristics.turnSpeedScale = maxTurnSpeedEntry.get();
 
-      Autos.pushAutosToDashboard(m_robotContainer.autonomousMode, (m_robotContainer.getDrivetrainSubsystem()));
+      Autos.pushAutosToDashboard(m_robotContainer.autonomousMode, m_robotContainer.getDrivetrainSubsystem(), m_robotContainer.getClawSubsystem());
     }
 
     m_robotContainer.getArmSubsystem().loadPreferences();

@@ -130,4 +130,8 @@ public class ArmSubsystem extends SubsystemBase{
         public double getAngle(){
                 return m_armSetpointDegrees;
         }
+
+	public void resetAngle(double angle) {
+                Preferences.setDouble(Constants.Arm.kArmPositionKey, angle);
+	}
 }

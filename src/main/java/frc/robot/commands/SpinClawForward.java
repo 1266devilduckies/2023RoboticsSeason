@@ -20,7 +20,7 @@ public class SpinClawForward extends CommandBase {
                 if (clawSubsystem.getDisabledState() == true) {
                         this.clawSubsystem.motor.set(ControlMode.PercentOutput, 0.0);
                 } else {
-                        this.clawSubsystem.motor.set(ControlMode.PercentOutput, -controlEffort);
+                        this.clawSubsystem.motor.set(ControlMode.PercentOutput, controlEffort);
                 }
         }
 

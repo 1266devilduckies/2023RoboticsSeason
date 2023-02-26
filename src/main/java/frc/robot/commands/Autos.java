@@ -19,6 +19,7 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants;
 import frc.robot.DuckAutoProfile;
+import frc.robot.subsystems.ClawSubsystem;
 import frc.robot.subsystems.DrivetrainSubsystem;
 
 public final class Autos {
@@ -59,6 +60,16 @@ public final class Autos {
     Pose2d startPosition = pathTrajectory.getInitialPose();
     return new DuckAutoProfile(command, startPosition);
   }
+  private static DuckAutoProfile coneTaxi(DrivetrainSubsystem drivetrainSubsystem, ClawSubsystem clawSubsystem){
+    String pathName = Constants.AutoTrajectoryFileNames.CONE_TAXI;
+    PathPlannerTrajectory pathTrajectory = PathPlanner.loadPath(pathName, new PathConstraints(
+      Constants.DrivetrainCharacteristics.maxAutoVelocityMeters, 
+    Constants.DrivetrainCharacteristics.maxAutoAccelerationMeters));
+    SequentialCommandGroup command = new SequentialCommandGroup(new SpitOutGamePiece(clawSubsystem),
+        runPath(drivetrainSubsystem, pathTrajectory));
+    Pose2d startPosition = pathTrajectory.getInitialPose();
+    return new DuckAutoProfile(command, startPosition);
+  }
 
   /*private static DuckAutoProfile forwardAuto(DrivetrainSubsystem drivetrainSubsystem){
     String pathName = Constants.AutoTrajectoryFileNames.LOW_FORWARD;
@@ -94,7 +105,7 @@ public final class Autos {
   }
 
   public static void pushAutosToDashboard(SendableChooser<DuckAutoProfile> autonomousMode,
-      DrivetrainSubsystem drivetrainSubsystem) {
+      DrivetrainSubsystem drivetrainSubsystem, ClawSubsystem clawSubsystem) {
 
     autonomousMode.setDefaultOption("Do nothing", new DuckAutoProfile());
     
@@ -102,5 +113,6 @@ public final class Autos {
     autonomousMode.addOption("low dock auto", lowDockPath(drivetrainSubsystem));
     autonomousMode.addOption("mid dock auto", midDockPath(drivetrainSubsystem));
     autonomousMode.addOption("mid balance auto", midBalance(drivetrainSubsystem));
+    autonomousMode.addOption("cone taxi auto", coneTaxi(drivetrainSubsystem, clawSubsystem));
   }
 }
