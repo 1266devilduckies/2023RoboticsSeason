@@ -104,11 +104,13 @@ public final class Constants {
                 public static final String HIGH_DOCK= "HighDockingPath";
                 public static final String MID_DOCK = "MidDockingPath";
                 public static final String LOW_DOCK = "LowDockingPath";
+                public static final String MID_BALANCE = "MidBalance";
         }
 
         public static class ClawCharacteristics {
                 public static final String clawSpeedKey = "claw speed";
                 public static final String clawTimeKey = "claw time";
+                public static final String clawTimeoutTimeKey = "claw timeout time";
                 public static int forwardChannel = 0;
                 public static int reverseChannel = 1;
         }

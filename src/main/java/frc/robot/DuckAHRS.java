@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj.SPI;
 
 public class DuckAHRS {
         private AHRS actualGyro;
+        double pitchOffset = 0;
         public DuckAHRS() {
                 try {
                         /* Communicate w/navX-MXP via the MXP SPI Bus.                                     */
@@ -34,9 +35,14 @@ public class DuckAHRS {
         }
         public double getPitch() {
                 if (actualGyro != null) {
-                        return (double)(Math.floor(actualGyro.getPitch() * 100.0)/100.0);
+                        return (double)(Math.floor(actualGyro.getPitch() * 100.0)/100.0) - pitchOffset;
                 } else {
                         return 0.0;
+                }
+        }
+        public void resetPitch() {
+                if (actualGyro != null) {
+                        pitchOffset = getPitch();
                 }
         }
 }

@@ -14,7 +14,9 @@ import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants;
 import frc.robot.DuckAutoProfile;
 import frc.robot.subsystems.DrivetrainSubsystem;
@@ -38,6 +40,22 @@ public final class Autos {
     Constants.DrivetrainCharacteristics.maxAutoAccelerationMeters));
     SequentialCommandGroup command = new SequentialCommandGroup(
         runPath(drivetrainSubsystem, pathTrajectory));
+    Pose2d startPosition = pathTrajectory.getInitialPose();
+    return new DuckAutoProfile(command, startPosition);
+  }
+  private static DuckAutoProfile midBalance(DrivetrainSubsystem drivetrainSubsystem){
+    String pathName = Constants.AutoTrajectoryFileNames.MID_BALANCE;
+    PathPlannerTrajectory pathTrajectory = PathPlanner.loadPath(pathName, new PathConstraints(
+      Constants.DrivetrainCharacteristics.maxAutoVelocityMeters, 
+    Constants.DrivetrainCharacteristics.maxAutoAccelerationMeters), true);
+    SequentialCommandGroup command = new SequentialCommandGroup(
+        runPath(drivetrainSubsystem, pathTrajectory), 
+        new WaitCommand(1), 
+        new InstantCommand(()->{
+          drivetrainSubsystem.gyro.resetPitch();
+        }), 
+        new BalanceComplexCommand(drivetrainSubsystem, false)
+      );
     Pose2d startPosition = pathTrajectory.getInitialPose();
     return new DuckAutoProfile(command, startPosition);
   }
@@ -83,5 +101,6 @@ public final class Autos {
     //autonomousMode.addOption("forward auto", forwardAuto(drivetrainSubsystem));
     autonomousMode.addOption("low dock auto", lowDockPath(drivetrainSubsystem));
     autonomousMode.addOption("mid dock auto", midDockPath(drivetrainSubsystem));
+    autonomousMode.addOption("mid balance auto", midBalance(drivetrainSubsystem));
   }
 }

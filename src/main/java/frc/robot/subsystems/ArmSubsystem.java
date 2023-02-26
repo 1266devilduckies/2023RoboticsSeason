@@ -2,6 +2,7 @@ package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
+import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMax.SoftLimitDirection;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
@@ -64,6 +65,7 @@ public class ArmSubsystem extends SubsystemBase{
                 armMotor.restoreFactoryDefaults();
                 armMotor.disableVoltageCompensation();
                 armMotor.setInverted(true);
+                armMotor.setIdleMode(IdleMode.kBrake);
                 armMotor.setSoftLimit(SoftLimitDirection.kForward, (float)(Constants.Arm.maxAngle * Constants.Arm.gearing));
                 armMotor.setSoftLimit(SoftLimitDirection.kReverse, (float)(Constants.Arm.minAngle * Constants.Arm.gearing));
                 armMotor.burnFlash();

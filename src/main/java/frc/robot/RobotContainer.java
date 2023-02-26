@@ -88,7 +88,7 @@ public class RobotContainer {
   }
   private void configureMarkers() {
     Constants.eventMap.put("marker1", new PrintCommand("passed marker 1"));
-    Constants.eventMap.put("StartBalance", new BalanceComplexCommand(drivetrainSubsystem));
+    Constants.eventMap.put("StartBalance", new BalanceComplexCommand(drivetrainSubsystem, false));
   }
 
   public DuckAutoProfile getAutonomousProfile() {

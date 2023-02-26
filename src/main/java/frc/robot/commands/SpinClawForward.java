@@ -17,7 +17,11 @@ public class SpinClawForward extends CommandBase {
         }
         public void execute() {
                 double controlEffort = Preferences.getDouble(Constants.ClawCharacteristics.clawSpeedKey, this.clawSubsystem.getClawSpeed());
-                this.clawSubsystem.motor.set(ControlMode.PercentOutput, controlEffort);
+                if (clawSubsystem.getDisabledState() == true) {
+                        this.clawSubsystem.motor.set(ControlMode.PercentOutput, 0.0);
+                } else {
+                        this.clawSubsystem.motor.set(ControlMode.PercentOutput, -controlEffort);
+                }
         }
 
         public boolean isFinished() {
