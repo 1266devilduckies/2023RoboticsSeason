@@ -16,6 +16,7 @@ import frc.robot.commands.SpinClawBackwards;
 import frc.robot.commands.SpinClawForward;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.ClawSubsystem;
+import frc.robot.subsystems.ColorSensor;
 import frc.robot.subsystems.DrivetrainSubsystem;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
@@ -44,6 +45,7 @@ public class RobotContainer {
   private final DrivetrainSubsystem drivetrainSubsystem = new DrivetrainSubsystem();
   private final ArmSubsystem armSubsystem = new ArmSubsystem();
   private final ClawSubsystem clawSubsystem = new ClawSubsystem();
+  private final ColorSensor colorSensor = new ColorSensor();
   
   SendableChooser<DuckAutoProfile> autonomousMode = new SendableChooser<DuckAutoProfile>();
 
