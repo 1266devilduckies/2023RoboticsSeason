@@ -30,7 +30,7 @@ public class ArmSubsystem extends SubsystemBase{
         
         private double m_armKp = 0;
         private double m_armKg = 0;
-        private double motorSpeed = 0;
+        //private double motorSpeed = 0;
         public CANSparkMax armMotor = new CANSparkMax(Constants.CAN.Arm.armMotor, MotorType.kBrushless); 
         public RelativeEncoder armEncoder = armMotor.getEncoder(); //in terms of revolutions
         SingleJointedArmSim armSim = new SingleJointedArmSim(DCMotor.getNEO(1), 
