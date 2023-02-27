@@ -7,7 +7,7 @@ public class BalanceComplexCommand extends SequentialCommandGroup {
 
         public BalanceComplexCommand(DrivetrainSubsystem drivetrainSubsystem, boolean reversed){
                 addCommands(
-                        new DriveToPosition(drivetrainSubsystem, 2 * (reversed ? -1 : 1)), //2
+                        new DriveToPosition(drivetrainSubsystem, 2 * (reversed ? -1 : 1)),
                         new Balance(drivetrainSubsystem)
                 );
         }
