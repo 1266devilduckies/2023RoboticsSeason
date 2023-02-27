@@ -36,6 +36,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.DuckAHRS;
 import frc.robot.DuckGearUtil;
+import frc.robot.Robot;
 import frc.robot.commands.DriveCommand;
 
 public class DrivetrainSubsystem extends SubsystemBase {
@@ -164,7 +165,11 @@ public class DrivetrainSubsystem extends SubsystemBase {
     double rightDistanceMeters = DuckGearUtil.encoderTicksToMeters(MainRightMotorBack.getSelectedSensorPosition(),
     Constants.DrivetrainCharacteristics.gearing, 2048.0, Constants.DrivetrainCharacteristics.wheelRadiusMeters);
 
-    odometry.update(Rotation2d.fromDegrees(-gyro.getAngle()), leftDistanceMeters, rightDistanceMeters);
+    if (Robot.isReal()) {
+      odometry.update(Rotation2d.fromDegrees(-gyro.getAngle()), leftDistanceMeters, rightDistanceMeters);
+    } else {
+      odometry.update(Rotation2d.fromDegrees(-robotDriveSim.getHeading().getDegrees()), leftDistanceMeters, rightDistanceMeters); //since no native support from nav x
+    }
     Pose2d previousPose = odometry.getEstimatedPosition();
     if (previousPose != null) {
         photonPoseEstimator.setReferencePose(previousPose);
@@ -206,9 +211,6 @@ public class DrivetrainSubsystem extends SubsystemBase {
     rightMotorSim.setIntegratedSensorVelocity(
         (int) DuckGearUtil.metersPerSecondToEncoderTicksPer100ms(-robotDriveSim.getRightVelocityMetersPerSecond(),
         Constants.DrivetrainCharacteristics.gearing, 2048.0, Constants.DrivetrainCharacteristics.wheelRadiusMeters));
-
-//     // Update simulation gyro, it's detached from the actual gyro
-//     gyroSim.setAngle(robotDriveSim.getHeading().getDegrees());
   }
   public DifferentialDriveWheelSpeeds getWheelSpeeds() {
     return new DifferentialDriveWheelSpeeds(

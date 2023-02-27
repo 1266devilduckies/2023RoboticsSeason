@@ -30,5 +30,21 @@
     "properties": {
       "persistent": true
     }
+  },
+  {
+    "name": "/Preferences/claw speed",
+    "type": "double",
+    "value": 0.5,
+    "properties": {
+      "persistent": true
+    }
+  },
+  {
+    "name": "/Preferences/claw time",
+    "type": "double",
+    "value": 0.5,
+    "properties": {
+      "persistent": true
+    }
   }
 ]

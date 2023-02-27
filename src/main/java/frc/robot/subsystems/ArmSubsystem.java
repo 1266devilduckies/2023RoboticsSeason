@@ -41,16 +41,16 @@ public class ArmSubsystem extends SubsystemBase{
         private ArmFeedforward feedforward = new ArmFeedforward(0.0, m_armKg, 0.0); //0.109 works well for kG in sim
         private double m_armSetpointDegrees = 0;
 
-        private final Mechanism2d m_mech2d = new Mechanism2d(60, 60);
+        private final Mechanism2d m_mech2d = new Mechanism2d(2, 2);
         
-        private final MechanismRoot2d m_armPivot = m_mech2d.getRoot("ArmPivot", 30, 30);
+        private final MechanismRoot2d m_armPivot = m_mech2d.getRoot("ArmPivot", 1, 1);
         private final MechanismLigament2d m_armTower =
-                m_armPivot.append(new MechanismLigament2d("ArmTower", 30, -90));
+                m_armPivot.append(new MechanismLigament2d("ArmTower", 1, -90));
         private final MechanismLigament2d m_arm =
                 m_armPivot.append(
                 new MechanismLigament2d(
                         "Arm",
-                        30,
+                        1,
                         Units.radiansToDegrees(armSim.getAngleRads()),
                         6,
                         new Color8Bit(Color.kYellow)));
