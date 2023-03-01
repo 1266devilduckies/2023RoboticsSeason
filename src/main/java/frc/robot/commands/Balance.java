@@ -27,9 +27,9 @@ public class Balance extends CommandBase{
         }
         @Override
         public void execute() {
-                SmartDashboard.putNumber("is moving gyro", Timer.getFPGATimestamp());
                 double controlEffort = drivetrainSubsystem.pidGyroPitch.calculate(-drivetrainSubsystem.gyro.getPitch(), 0.0);
                 controlEffort = MathUtil.clamp(controlEffort, -.5, .5);
+                SmartDashboard.putNumber("is moving gyro", controlEffort);
                 drivetrainSubsystem.robotDrive.arcadeDrive(controlEffort, 0.);
         }
 

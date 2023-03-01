@@ -155,7 +155,8 @@ public class DrivetrainSubsystem extends SubsystemBase {
     leftMotorSim = MainLeftMotorBack.getSimCollection();
     rightMotorSim = MainRightMotorBack.getSimCollection();
     robotDrive.setDeadband(Constants.DrivetrainCharacteristics.deadband);
-    Preferences.initDouble(Constants.DrivetrainCharacteristics.gyroPitchPGainKey, 0.0);
+    Preferences.setDouble(Constants.DrivetrainCharacteristics.gyroPitchPGainKey, gyroPitchkP);
+    Preferences.setDouble(Constants.DrivetrainCharacteristics.movementPGainKey, forwardMovementkP);
   }
 
   @Override

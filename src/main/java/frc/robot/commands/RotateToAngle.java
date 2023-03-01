@@ -17,11 +17,11 @@ public class RotateToAngle extends CommandBase {
         }
         
         public void initialize() {
-                m_drivetrainSubsystem.pidGlobalRotation.setTolerance(0.5, 2); //0.5 degree tolerance, changing at a rate of 2 degrees per second
+                m_drivetrainSubsystem.pidGlobalRotation.setTolerance(3, 2); //3                                                                   rm$e degree tolerance, changing at a rate of 2 degrees per second
                 m_drivetrainSubsystem.pidGlobalRotation.setSetpoint(m_angle);
         }
         public void execute() {
-                double controlEffort = m_drivetrainSubsystem.pidGlobalRotation.calculate(m_drivetrainSubsystem.getPose().getRotation().getDegrees(), m_angle);
+                double controlEffort = m_drivetrainSubsystem.pidGlobalRotation.calculate(m_drivetrainSubsystem.gyro.getAngle(), m_angle);
                 SmartDashboard.putNumber("error", m_drivetrainSubsystem.pidGlobalRotation.getPositionError());
                 m_drivetrainSubsystem.robotDrive.tankDrive(controlEffort + Math.signum(controlEffort)*Constants.DrivetrainCharacteristics.kSAngular, -controlEffort - Math.signum(controlEffort)*Constants.DrivetrainCharacteristics.kSAngular);
         }

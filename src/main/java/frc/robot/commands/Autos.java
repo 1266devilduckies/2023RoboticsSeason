@@ -50,12 +50,15 @@ public final class Autos {
       Constants.DrivetrainCharacteristics.maxAutoVelocityMeters, 
     Constants.DrivetrainCharacteristics.maxAutoAccelerationMeters), true);
     SequentialCommandGroup command = new SequentialCommandGroup(
-        runPath(drivetrainSubsystem, pathTrajectory), 
-        new WaitCommand(1), 
+        //runPath(drivetrainSubsystem, pathTrajectory), 
+        //new WaitCommand(1), 
         new InstantCommand(()->{
           drivetrainSubsystem.gyro.resetPitch();
-        }), 
-        new BalanceComplexCommand(drivetrainSubsystem, false)
+          drivetrainSubsystem.MainLeftMotorBack.setSelectedSensorPosition(0);
+          drivetrainSubsystem.MainRightMotorBack.setSelectedSensorPosition(0);
+        })
+        //,new RotateToAngle(drivetrainSubsystem, 0)
+        ,new BalanceComplexCommand(drivetrainSubsystem, false)
       );
     Pose2d startPosition = pathTrajectory.getInitialPose();
     return new DuckAutoProfile(command, startPosition);

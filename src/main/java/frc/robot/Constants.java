@@ -80,10 +80,10 @@ public final class Constants {
                 public static final String movementPGainKey = "movement kP";
                 public static final String globalRotationPGainKey = "global rotation kP";
                 public static final double kSAngular = 0.2;
-                public static double kS = 0.081988;
-                public static double kV = 2.2124;
-                public static double kA = 0.13414;
-                public static double kP = 2.9076;
+                public static double kS = 0.11429;
+                public static double kV = 2.2146;
+                public static double kA = 0.18994;
+                public static double kP = 0.37182;//2.9076;
                 public static double maxAutoVelocityMeters = 4;
                 public static double maxAutoAccelerationMeters = 3;
                 public static double kD = 0.0;
