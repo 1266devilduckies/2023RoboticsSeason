@@ -47,8 +47,8 @@ public final class Autos {
   private static DuckAutoProfile midBalance(DrivetrainSubsystem drivetrainSubsystem){
     String pathName = Constants.AutoTrajectoryFileNames.MID_BALANCE;
     PathPlannerTrajectory pathTrajectory = PathPlanner.loadPath(pathName, new PathConstraints(
-      Constants.DrivetrainCharacteristics.maxAutoVelocityMeters, 
-    Constants.DrivetrainCharacteristics.maxAutoAccelerationMeters), true);
+      1, 
+    0.75), true);
     SequentialCommandGroup command = new SequentialCommandGroup(
         //runPath(drivetrainSubsystem, pathTrajectory), 
         //new WaitCommand(1), 

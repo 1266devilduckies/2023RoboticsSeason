@@ -35,11 +35,11 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
  */
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
-  private final DrivetrainSubsystem drivetrainSubsystem = new DrivetrainSubsystem();
+  private final DrivetrainSubsystem drivetrainSubsystem = new DrivetrainSubsystem(this);
   private final ArmSubsystem armSubsystem = new ArmSubsystem();
   private final ClawSubsystem clawSubsystem = new ClawSubsystem();
   
-  SendableChooser<DuckAutoProfile> autonomousMode = new SendableChooser<DuckAutoProfile>();
+  public SendableChooser<DuckAutoProfile> autonomousMode = new SendableChooser<DuckAutoProfile>();
 
   public final static CommandPS4Controller driverJoystick =
       new CommandPS4Controller(DriverConstants.port);

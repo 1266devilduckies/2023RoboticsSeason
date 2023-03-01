@@ -37,11 +37,14 @@ import frc.robot.Constants;
 import frc.robot.DuckAHRS;
 import frc.robot.DuckGearUtil;
 import frc.robot.Robot;
+import frc.robot.RobotContainer;
+import frc.robot.commands.Autos;
 import frc.robot.commands.DriveCommand;
 
 public class DrivetrainSubsystem extends SubsystemBase {
   public final DifferentialDrive robotDrive;
   private final DifferentialDrivetrainSim robotDriveSim;
+  private RobotContainer m_robotContainer;
 
   // CAN devices
   public final WPI_TalonFX MainLeftMotorBack = new WPI_TalonFX(Constants.CAN.Drivetrain.BL);
@@ -76,9 +79,10 @@ public class DrivetrainSubsystem extends SubsystemBase {
   public PIDController pidMovement = new PIDController(forwardMovementkP, 0.0, 0.0);
   public PIDController pidGlobalRotation = new PIDController(globalRotationkP, 0.0, 0.0);
 
-  public DrivetrainSubsystem() {
+  public DrivetrainSubsystem(RobotContainer robotContainer) {
     //constructor gets ran at robotInit()
     this.setDefaultCommand(new DriveCommand(this));
+    this.m_robotContainer = robotContainer;
     try {
       aprilTagFieldLayout = new AprilTagFieldLayout(
         Filesystem.getDeployDirectory().getAbsolutePath() + "/2023-chargedup.json"
@@ -157,6 +161,11 @@ public class DrivetrainSubsystem extends SubsystemBase {
     robotDrive.setDeadband(Constants.DrivetrainCharacteristics.deadband);
     Preferences.setDouble(Constants.DrivetrainCharacteristics.gyroPitchPGainKey, gyroPitchkP);
     Preferences.setDouble(Constants.DrivetrainCharacteristics.movementPGainKey, forwardMovementkP);
+    Preferences.setDouble(Constants.DrivetrainCharacteristics.speedScaleKey, Constants.DrivetrainCharacteristics.speedScale);
+    Preferences.setDouble(Constants.DrivetrainCharacteristics.turnSpeedKey, Constants.DrivetrainCharacteristics.turnSpeedScale);
+    Preferences.setDouble(Constants.DrivetrainCharacteristics.maxAutoVelocityMetersKey, Constants.DrivetrainCharacteristics.maxAutoVelocityMeters);
+    Preferences.setDouble(Constants.DrivetrainCharacteristics.maxAutoAccelerationMetersKey, Constants.DrivetrainCharacteristics.maxAutoAccelerationMeters);
+    Preferences.setDouble(Constants.DrivetrainCharacteristics.kPKey, Constants.DrivetrainCharacteristics.kP);
   }
 
   @Override
@@ -251,6 +260,15 @@ public class DrivetrainSubsystem extends SubsystemBase {
           globalRotationkP = Preferences.getDouble(Constants.DrivetrainCharacteristics.globalRotationPGainKey, forwardMovementkP);
           pidGlobalRotation.setP(globalRotationkP);
         }
+        if(Constants.DrivetrainCharacteristics.kP != Preferences.getDouble(Constants.DrivetrainCharacteristics.kPKey, Constants.DrivetrainCharacteristics.kP)){
+          Constants.DrivetrainCharacteristics.kP = Preferences.getDouble(Constants.DrivetrainCharacteristics.kPKey, Constants.DrivetrainCharacteristics.kP);      
+          Autos.pushAutosToDashboard(m_robotContainer.autonomousMode, m_robotContainer.getDrivetrainSubsystem(), m_robotContainer.getClawSubsystem());
+        }
+
+        Constants.DrivetrainCharacteristics.speedScale = Preferences.getDouble(Constants.DrivetrainCharacteristics.speedScaleKey, Constants.DrivetrainCharacteristics.speedScale);
+        Constants.DrivetrainCharacteristics.turnSpeedScale = Preferences.getDouble(Constants.DrivetrainCharacteristics.turnSpeedKey, Constants.DrivetrainCharacteristics.turnSpeedScale);
+        Constants.DrivetrainCharacteristics.maxAutoVelocityMeters = Preferences.getDouble(Constants.DrivetrainCharacteristics.maxAutoVelocityMetersKey, Constants.DrivetrainCharacteristics.maxAutoVelocityMeters);
+        Constants.DrivetrainCharacteristics.maxAutoAccelerationMeters = Preferences.getDouble(Constants.DrivetrainCharacteristics.maxAutoAccelerationMetersKey, Constants.DrivetrainCharacteristics.maxAutoAccelerationMeters);
   }
 
   public void resetEncoders() {

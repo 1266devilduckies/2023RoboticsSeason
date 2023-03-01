@@ -83,11 +83,16 @@ public final class Constants {
                 public static double kS = 0.11429;
                 public static double kV = 2.2146;
                 public static double kA = 0.18994;
+                public static String kPKey = "drive kP";
                 public static double kP = 0.37182;//2.9076;
-                public static double maxAutoVelocityMeters = 4;
-                public static double maxAutoAccelerationMeters = 3;
+                public static String maxAutoVelocityMetersKey = "max auto velocity (meters)";
+                public static double maxAutoVelocityMeters = 1;
+                public static String maxAutoAccelerationMetersKey = "max auto acceleration (meters)";
+                public static double maxAutoAccelerationMeters = 0.75;
                 public static double kD = 0.0;
+                public static String speedScaleKey = "drivetrain speed";
                 public static double speedScale = 1.0;
+                public static String turnSpeedKey = "drivetrain turn speed";
                 public static double turnSpeedScale = 0.5;
                 public static double deadband = 0.1;
         }
