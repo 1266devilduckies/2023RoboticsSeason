@@ -66,8 +66,7 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
-
-        driverJoystick.square().whileTrue(new Balance(drivetrainSubsystem));
+        driverJoystick.R1().whileTrue(new Balance(drivetrainSubsystem));
 
         operatorJoystick.x().onTrue(new SequentialCommandGroup(new SpinClawBackwards(clawSubsystem), new ClawWait(clawSubsystem), 
         new InstantCommand( () -> {
