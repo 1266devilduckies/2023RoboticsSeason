@@ -10,6 +10,7 @@ import frc.robot.commands.Autos;
 import frc.robot.commands.Balance;
 import frc.robot.commands.BalanceComplexCommand;
 import frc.robot.commands.ClawWait;
+import frc.robot.commands.RotateToAngle;
 import frc.robot.commands.SpinClawBackwards;
 import frc.robot.commands.SpinClawForward;
 import frc.robot.subsystems.ArmSubsystem;
@@ -82,6 +83,8 @@ public class RobotContainer {
         operatorJoystick.b().onTrue(new InstantCommand(()->{
           armSubsystem.resetAngle(90.0);
         }));
+
+        driverJoystick.square().onTrue(new RotateToAngle(drivetrainSubsystem, 180));
   }
   private void configureMarkers() {
     Constants.eventMap.put("marker1", new PrintCommand("passed marker 1"));

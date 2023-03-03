@@ -166,6 +166,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
     Preferences.setDouble(Constants.DrivetrainCharacteristics.maxAutoVelocityMetersKey, Constants.DrivetrainCharacteristics.maxAutoVelocityMeters);
     Preferences.setDouble(Constants.DrivetrainCharacteristics.maxAutoAccelerationMetersKey, Constants.DrivetrainCharacteristics.maxAutoAccelerationMeters);
     Preferences.setDouble(Constants.DrivetrainCharacteristics.kPKey, Constants.DrivetrainCharacteristics.kP);
+    Preferences.setDouble(Constants.DrivetrainCharacteristics.ksAngularKey, Constants.DrivetrainCharacteristics.kSAngular);
   }
 
   @Override
@@ -264,7 +265,8 @@ public class DrivetrainSubsystem extends SubsystemBase {
           Constants.DrivetrainCharacteristics.kP = Preferences.getDouble(Constants.DrivetrainCharacteristics.kPKey, Constants.DrivetrainCharacteristics.kP);      
           Autos.pushAutosToDashboard(m_robotContainer.autonomousMode, m_robotContainer.getDrivetrainSubsystem(), m_robotContainer.getClawSubsystem());
         }
-
+      
+        Constants.DrivetrainCharacteristics.kSAngular = Preferences.getDouble(Constants.DrivetrainCharacteristics.ksAngularKey, Constants.DrivetrainCharacteristics.kSAngular);
         Constants.DrivetrainCharacteristics.speedScale = Preferences.getDouble(Constants.DrivetrainCharacteristics.speedScaleKey, Constants.DrivetrainCharacteristics.speedScale);
         Constants.DrivetrainCharacteristics.turnSpeedScale = Preferences.getDouble(Constants.DrivetrainCharacteristics.turnSpeedKey, Constants.DrivetrainCharacteristics.turnSpeedScale);
         Constants.DrivetrainCharacteristics.maxAutoVelocityMeters = Preferences.getDouble(Constants.DrivetrainCharacteristics.maxAutoVelocityMetersKey, Constants.DrivetrainCharacteristics.maxAutoVelocityMeters);
