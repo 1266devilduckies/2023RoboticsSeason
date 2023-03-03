@@ -84,7 +84,7 @@ public class RobotContainer {
           armSubsystem.resetAngle(90.0);
         }));
 
-        driverJoystick.square().onTrue(new RotateToAngle(drivetrainSubsystem, 180));
+        driverJoystick.square().whileTrue(new RotateToAngle(drivetrainSubsystem, 180));
   }
   private void configureMarkers() {
     Constants.eventMap.put("marker1", new PrintCommand("passed marker 1"));
