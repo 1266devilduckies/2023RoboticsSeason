@@ -29,14 +29,15 @@ public class RotateToAngle extends CommandBase {
         public void execute() {
                 double odometryRotation = m_drivetrainSubsystem.getPose().getRotation().getDegrees();
                 odometryRotation = odometryRotation % 360.;
-                //double controlEffort = m_drivetrainSubsystem.pidGlobalRotation.calculate(odometryRotation, m_angle);
-                //controlEffort = MathUtil.clamp(controlEffort, -0.5, 0.5);
+                double controlEffort = m_drivetrainSubsystem.pidGlobalRotation.calculate(-odometryRotation, m_angle);
+                controlEffort = MathUtil.clamp(controlEffort, -0.25, 0.25);
                 SmartDashboard.putNumber("error", m_drivetrainSubsystem.pidGlobalRotation.getPositionError());
                 //m_drivetrainSubsystem.robotDrive.tankDrive(/*controlEffort + */Math.signum(controlEffort)*Constants.DrivetrainCharacteristics.kSAngular, /*-controlEffort*/ - Math.signum(controlEffort)*Constants.DrivetrainCharacteristics.kSAngular);
 
                 m_drivetrainSubsystem.robotDrive.setMaxOutput(1.0);
-                double controlEffort = Constants.DrivetrainCharacteristics.kSAngular;
-                m_drivetrainSubsystem.robotDrive.tankDrive(controlEffort, -controlEffort);
+                //m_drivetrainSubsystem.robotDrive.tankDrive(controlEffort, -controlEffort);
+                m_drivetrainSubsystem.MainLeftMotorBack.set(ControlMode.PercentOutput, controlEffort + Math.signum(controlEffort)*Constants.DrivetrainCharacteristics.kSAngular);
+                m_drivetrainSubsystem.MainRightMotorBack.set(ControlMode.PercentOutput, -controlEffort - Math.signum(controlEffort)*Constants.DrivetrainCharacteristics.kSAngular);
         }
 
         @Override

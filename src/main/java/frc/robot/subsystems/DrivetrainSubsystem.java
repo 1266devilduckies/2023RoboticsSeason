@@ -72,7 +72,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
   public boolean isCurrentLimited = false;
   private double gyroPitchkP = 0.037;
   private double forwardMovementkP = 0.00005;
-  private double globalRotationkP = 0.0493;
+  private double globalRotationkP = 0.0005;
 
   //proportional controllers only gang uwu
   public PIDController pidGyroPitch = new PIDController(gyroPitchkP, 0.0, 0.0);
@@ -161,6 +161,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
     robotDrive.setDeadband(Constants.DrivetrainCharacteristics.deadband);
     Preferences.setDouble(Constants.DrivetrainCharacteristics.gyroPitchPGainKey, gyroPitchkP);
     Preferences.setDouble(Constants.DrivetrainCharacteristics.movementPGainKey, forwardMovementkP);
+    Preferences.setDouble(Constants.DrivetrainCharacteristics.globalRotationPGainKey, globalRotationkP);
     Preferences.setDouble(Constants.DrivetrainCharacteristics.speedScaleKey, Constants.DrivetrainCharacteristics.speedScale);
     Preferences.setDouble(Constants.DrivetrainCharacteristics.turnSpeedKey, Constants.DrivetrainCharacteristics.turnSpeedScale);
     Preferences.setDouble(Constants.DrivetrainCharacteristics.maxAutoVelocityMetersKey, Constants.DrivetrainCharacteristics.maxAutoVelocityMeters);
