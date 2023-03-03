@@ -72,7 +72,7 @@ public final class Constants {
         }
 
         public static class DrivetrainCharacteristics {
-                public static final double trackWidthMeters = Units.inchesToMeters(24.75);
+                public static final double trackWidthMeters = Units.inchesToMeters(18);
                 public static final double gearing = 6.4;
                 public static final double wheelRadiusMeters = Units.inchesToMeters(2);
                 public static final double rampPGain = 0.1;
@@ -111,6 +111,7 @@ public final class Constants {
                 public static final String LOW_TAXI = "LowTaxiPath";
                 public static final String MID_BALANCE = "MidBalance";
                 public static final String CONE_TAXI = "ConeTaxi";
+                public static final String DOCK = "DockPath";
         }
 
         public static class ClawCharacteristics {

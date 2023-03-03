@@ -28,6 +28,13 @@
       "/SmartDashboard/Field": "Field2d",
       "/SmartDashboard/PPRamseteCommand_field": "Field2d",
       "/SmartDashboard/SendableChooser[0]": "String Chooser"
+    },
+    "windows": {
+      "/SmartDashboard/Field": {
+        "window": {
+          "visible": true
+        }
+      }
     }
   },
   "NetworkTables Info": {

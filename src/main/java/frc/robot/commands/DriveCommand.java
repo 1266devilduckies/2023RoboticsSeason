@@ -32,8 +32,6 @@ public class DriveCommand extends CommandBase{
             double controlEFfort = x * Constants.DrivetrainCharacteristics.turnSpeedScale;
             drivetrainSubsystem.robotDrive.tankDrive(controlEFfort, -controlEFfort);
         }
-
-        SmartDashboard.putNumber("DriveCommand", Timer.getFPGATimestamp());
     }
 
     // Make this return true when this Command no longer needs to run execute()

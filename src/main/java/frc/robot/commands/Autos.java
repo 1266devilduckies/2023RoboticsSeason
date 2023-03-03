@@ -59,8 +59,8 @@ public final class Autos {
   private static DuckAutoProfile midBalance(DrivetrainSubsystem drivetrainSubsystem){
     String pathName = Constants.AutoTrajectoryFileNames.MID_BALANCE;
     PathPlannerTrajectory pathTrajectory = PathPlanner.loadPath(pathName, new PathConstraints(
-      1, 
-    0.75), true);
+      Constants.DrivetrainCharacteristics.maxAutoVelocityMeters, 
+      Constants.DrivetrainCharacteristics.maxAutoAccelerationMeters), true);
     SequentialCommandGroup command = new SequentialCommandGroup(
         runPath(drivetrainSubsystem, pathTrajectory), 
         new WaitCommand(1), 
@@ -92,6 +92,17 @@ public final class Autos {
     0.75), true);
     Pose2d startPosition = pathTrajectory.getInitialPose();
     return new DuckAutoProfile(new BalanceComplexCommand(drivetrainSubsystem, false), startPosition);
+  }
+
+  private static DuckAutoProfile justTouch(DrivetrainSubsystem drivetrainSubsystem){
+    String pathName = Constants.AutoTrajectoryFileNames.DOCK;
+    PathPlannerTrajectory pathTrajectory = PathPlanner.loadPath(pathName, new PathConstraints(
+      Constants.DrivetrainCharacteristics.maxAutoVelocityMeters, 
+    Constants.DrivetrainCharacteristics.maxAutoAccelerationMeters));
+    SequentialCommandGroup command = new SequentialCommandGroup(
+        runPath(drivetrainSubsystem, pathTrajectory));
+    Pose2d startPosition = pathTrajectory.getInitialPose();
+    return new DuckAutoProfile(command, startPosition);
   }
 
   /*private static DuckAutoProfile forwardAuto(DrivetrainSubsystem drivetrainSubsystem){
@@ -139,5 +150,6 @@ public final class Autos {
     autonomousMode.addOption("mid balance auto", midBalance(drivetrainSubsystem));
     autonomousMode.addOption("cone taxi auto", coneTaxi(drivetrainSubsystem, clawSubsystem));
     autonomousMode.addOption("just balance", justBalance(drivetrainSubsystem));
+    autonomousMode.addOption("just touch", justTouch(drivetrainSubsystem));
   }
 }

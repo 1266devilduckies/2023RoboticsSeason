@@ -101,8 +101,8 @@ public class Robot extends TimedRobot {
     // and running subsystem periodic() methods.  This must be called from the robot's periodic
     // block in order for anything in the Command-based framework to work.
     CommandScheduler.getInstance().run();
-    SmartDashboard.putNumber("0.478 metersPerSecond target",
-    m_robotContainer.getDrivetrainSubsystem().getWheelSpeeds().leftMetersPerSecond);
+    //SmartDashboard.putNumber("0.478 metersPerSecond target",
+    //m_robotContainer.getDrivetrainSubsystem().getWheelSpeeds().leftMetersPerSecond);
 
     if (currentLimitDriveEntry.get() != m_robotContainer.getDrivetrainSubsystem().isCurrentLimited) {
       m_robotContainer.getDrivetrainSubsystem().isCurrentLimited = currentLimitDriveEntry.get();

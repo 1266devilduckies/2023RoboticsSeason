@@ -84,8 +84,8 @@ public class ArmSubsystem extends SubsystemBase{
                         (armEncoder.getPosition() / Constants.Arm.gearing) * 360.0,
                         m_armSetpointDegrees
                 );
-                SmartDashboard.putNumber("current target", effort);
-                SmartDashboard.putNumber("encoder position", armEncoder.getPosition());
+                //SmartDashboard.putNumber("current target", effort);
+                //SmartDashboard.putNumber("encoder position", armEncoder.getPosition());
                 effort = MathUtil.clamp(effort, -1, 1);
                 currentMotorEffort = effort;
                 armMotor.set(effort); //used to be effort

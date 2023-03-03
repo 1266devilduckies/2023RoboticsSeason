@@ -24,8 +24,8 @@ public class ClawSubsystem extends SubsystemBase {
         }
 
         public void periodic(){
-                SmartDashboard.putBoolean("sonar sensor state", sonarSensor.get());
-                SmartDashboard.putNumber("claw time", clawTime);
+                //SmartDashboard.putBoolean("sonar sensor state", sonarSensor.get());
+                //SmartDashboard.putNumber("claw time", clawTime);
         }
 
         public void loadPreferences() {
