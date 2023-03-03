@@ -105,9 +105,9 @@ public final class Constants {
         }
 
         public static class AutoTrajectoryFileNames {
-                public static final String HIGH_DOCK= "HighDockingPath";
-                public static final String MID_DOCK = "MidDockingPath";
-                public static final String LOW_DOCK = "LowDockingPath";
+                public static final String HIGH_TAXI = "HighTaxiPath";
+                public static final String MID_TAXI = "MidTaxiPath";
+                public static final String LOW_TAXI = "LowTaxiPath";
                 public static final String MID_BALANCE = "MidBalance";
                 public static final String CONE_TAXI = "ConeTaxi";
         }

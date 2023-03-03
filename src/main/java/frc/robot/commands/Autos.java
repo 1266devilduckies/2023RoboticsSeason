@@ -24,8 +24,18 @@ import frc.robot.subsystems.DrivetrainSubsystem;
 
 public final class Autos {
 
-  private static DuckAutoProfile midDockPath(DrivetrainSubsystem drivetrainSubsystem){
-    String pathName = Constants.AutoTrajectoryFileNames.MID_DOCK;
+  private static DuckAutoProfile highTaxiPath(DrivetrainSubsystem drivetrainSubsystem){
+    String pathName = Constants.AutoTrajectoryFileNames.HIGH_TAXI;
+    PathPlannerTrajectory pathTrajectory = PathPlanner.loadPath(pathName, new PathConstraints(
+      Constants.DrivetrainCharacteristics.maxAutoVelocityMeters, 
+      Constants.DrivetrainCharacteristics.maxAutoAccelerationMeters));
+    SequentialCommandGroup command = new SequentialCommandGroup(
+        runPath(drivetrainSubsystem, pathTrajectory));
+    Pose2d startPosition = pathTrajectory.getInitialPose();
+    return new DuckAutoProfile(command, startPosition);
+  }
+  private static DuckAutoProfile midTaxiPath(DrivetrainSubsystem drivetrainSubsystem){
+    String pathName = Constants.AutoTrajectoryFileNames.MID_TAXI;
     PathPlannerTrajectory pathTrajectory = PathPlanner.loadPath(pathName, new PathConstraints(
       Constants.DrivetrainCharacteristics.maxAutoVelocityMeters, 
       Constants.DrivetrainCharacteristics.maxAutoAccelerationMeters));
@@ -34,8 +44,8 @@ public final class Autos {
     Pose2d startPosition = pathTrajectory.getInitialPose();
     return new DuckAutoProfile(command, startPosition);
   }  
-  private static DuckAutoProfile lowDockPath(DrivetrainSubsystem drivetrainSubsystem){
-    String pathName = Constants.AutoTrajectoryFileNames.LOW_DOCK;
+  private static DuckAutoProfile lowTaxiPath(DrivetrainSubsystem drivetrainSubsystem){
+    String pathName = Constants.AutoTrajectoryFileNames.LOW_TAXI;
     PathPlannerTrajectory pathTrajectory = PathPlanner.loadPath(pathName, new PathConstraints(
       Constants.DrivetrainCharacteristics.maxAutoVelocityMeters, 
     Constants.DrivetrainCharacteristics.maxAutoAccelerationMeters));
@@ -44,20 +54,21 @@ public final class Autos {
     Pose2d startPosition = pathTrajectory.getInitialPose();
     return new DuckAutoProfile(command, startPosition);
   }
+
+
   private static DuckAutoProfile midBalance(DrivetrainSubsystem drivetrainSubsystem){
     String pathName = Constants.AutoTrajectoryFileNames.MID_BALANCE;
     PathPlannerTrajectory pathTrajectory = PathPlanner.loadPath(pathName, new PathConstraints(
       1, 
     0.75), true);
     SequentialCommandGroup command = new SequentialCommandGroup(
-        //runPath(drivetrainSubsystem, pathTrajectory), 
-        //new WaitCommand(1), 
+        runPath(drivetrainSubsystem, pathTrajectory), 
+        new WaitCommand(1), 
         new InstantCommand(()->{
           drivetrainSubsystem.gyro.resetPitch();
           drivetrainSubsystem.MainLeftMotorBack.setSelectedSensorPosition(0);
           drivetrainSubsystem.MainRightMotorBack.setSelectedSensorPosition(0);
         })
-        //,new RotateToAngle(drivetrainSubsystem, 0)
         ,new BalanceComplexCommand(drivetrainSubsystem, false)
       );
     Pose2d startPosition = pathTrajectory.getInitialPose();
@@ -72,6 +83,15 @@ public final class Autos {
         runPath(drivetrainSubsystem, pathTrajectory));
     Pose2d startPosition = pathTrajectory.getInitialPose();
     return new DuckAutoProfile(command, startPosition);
+  }
+
+  private static DuckAutoProfile justBalance(DrivetrainSubsystem drivetrainSubsystem){
+    String pathName = Constants.AutoTrajectoryFileNames.MID_BALANCE;
+    PathPlannerTrajectory pathTrajectory = PathPlanner.loadPath(pathName, new PathConstraints(
+      1, 
+    0.75), true);
+    Pose2d startPosition = pathTrajectory.getInitialPose();
+    return new DuckAutoProfile(new BalanceComplexCommand(drivetrainSubsystem, false), startPosition);
   }
 
   /*private static DuckAutoProfile forwardAuto(DrivetrainSubsystem drivetrainSubsystem){
@@ -113,9 +133,11 @@ public final class Autos {
     autonomousMode.setDefaultOption("Do nothing", new DuckAutoProfile());
     
     //autonomousMode.addOption("forward auto", forwardAuto(drivetrainSubsystem));
-    autonomousMode.addOption("low dock auto", lowDockPath(drivetrainSubsystem));
-    autonomousMode.addOption("mid dock auto", midDockPath(drivetrainSubsystem));
+    autonomousMode.addOption("low taxi auto", lowTaxiPath(drivetrainSubsystem));
+    autonomousMode.addOption("mid taxi auto", midTaxiPath(drivetrainSubsystem));
+    autonomousMode.addOption("high taxi auto", highTaxiPath(drivetrainSubsystem));
     autonomousMode.addOption("mid balance auto", midBalance(drivetrainSubsystem));
     autonomousMode.addOption("cone taxi auto", coneTaxi(drivetrainSubsystem, clawSubsystem));
+    autonomousMode.addOption("just balance", justBalance(drivetrainSubsystem));
   }
 }
