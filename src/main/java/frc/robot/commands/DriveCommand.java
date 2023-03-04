@@ -9,7 +9,6 @@ import frc.robot.subsystems.DrivetrainSubsystem;
 public class DriveCommand extends CommandBase{
 
     DrivetrainSubsystem drivetrainSubsystem;
-    private final SlewRateLimiter accelerationLimiter = new SlewRateLimiter(1.0/0.25); //accelerate to 100% in half a second
     public DriveCommand(DrivetrainSubsystem subsystem){
         drivetrainSubsystem = subsystem;
         addRequirements(drivetrainSubsystem);
@@ -19,7 +18,6 @@ public class DriveCommand extends CommandBase{
     @Override
     public void execute() {
         double y = -RobotContainer.driverJoystick.getRawAxis(Constants.DriverConstants.ForwardDriveAxis);
-        y = accelerationLimiter.calculate(y);
         double x = RobotContainer.driverJoystick.getRawAxis(Constants.DriverConstants.TurningDriveAxis);
         //SmartDashboard.putBoolean("is not turning", Math.abs(y) >= Constants.DrivetrainCharacteristics.deadband);
         if (Math.abs(y) >= Constants.DrivetrainCharacteristics.deadband) {

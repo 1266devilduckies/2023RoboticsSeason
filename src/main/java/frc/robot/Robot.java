@@ -82,8 +82,8 @@ public class Robot extends TimedRobot {
     accelerationAutoEntry = accelerationAutoTopic.getEntry(0.0);
     accelerationAutoEntry.setDefault(Constants.DrivetrainCharacteristics.maxAutoAccelerationMeters);
     BooleanTopic enableCurrentLimitingDrivetrainTopic = new BooleanTopic(nt.getTopic("/SmartDashboard/Enable Current Limiting On Drivetrain"));
-    currentLimitDriveEntry = enableCurrentLimitingDrivetrainTopic.getEntry(false);
-    currentLimitDriveEntry.setDefault(false);
+    currentLimitDriveEntry = enableCurrentLimitingDrivetrainTopic.getEntry(true);
+    currentLimitDriveEntry.setDefault(true);
   }
 
   /**

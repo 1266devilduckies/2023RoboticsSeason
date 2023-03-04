@@ -116,6 +116,13 @@ public class DrivetrainSubsystem extends SubsystemBase {
 
     // Disable voltage compensation, it's bad to be compensating voltage for a
     // system which draws loads of amps
+
+    MainLeftMotorBack.configOpenloopRamp(0.25);
+    MainRightMotorBack.configOpenloopRamp(0.25);
+    MainLeftMotorFront.configOpenloopRamp(0.25);
+    MainRightMotorFront.configOpenloopRamp(0.25);
+    leftTopMotor.configOpenloopRamp(0.25);
+    rightTopMotor.configOpenloopRamp(0.25);
     MainLeftMotorBack.enableVoltageCompensation(false);
     MainLeftMotorFront.enableVoltageCompensation(false);
     MainRightMotorBack.enableVoltageCompensation(false);
