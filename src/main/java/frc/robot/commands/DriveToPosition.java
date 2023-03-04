@@ -50,7 +50,7 @@ public class DriveToPosition extends CommandBase {
                 }
                 double controlEffortForward = drivetrainSubsystem.pidMovement.calculate(drivetrainSubsystem.getAvgEncoderPosition(), leftPosition);
                 controlEffortForward = MathUtil.clamp(controlEffortForward, -.75, .75);
-                drivetrainSubsystem.robotDrive.arcadeDrive(.5, 0.);
+                drivetrainSubsystem.robotDrive.arcadeDrive(.8, 0.);
         }
 
         public boolean isFinished() {

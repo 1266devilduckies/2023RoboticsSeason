@@ -298,7 +298,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
   }
 
   public void setCurrentLimit(boolean isCurrentLimited) {
-    int currentLimitAmp = 40;
+    int currentLimitAmp = 20;
     int thresholdAmp = 2;
     SupplyCurrentLimitConfiguration supplyLimit = new SupplyCurrentLimitConfiguration(isCurrentLimited, currentLimitAmp, currentLimitAmp+thresholdAmp, 0.5);
     
