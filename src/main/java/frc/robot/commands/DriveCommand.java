@@ -1,5 +1,7 @@
 package frc.robot.commands;
 
+import com.ctre.phoenix.motorcontrol.ControlMode;
+
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
@@ -19,15 +21,9 @@ public class DriveCommand extends CommandBase{
     public void execute() {
         double y = -RobotContainer.driverJoystick.getRawAxis(Constants.DriverConstants.ForwardDriveAxis);
         double x = RobotContainer.driverJoystick.getRawAxis(Constants.DriverConstants.TurningDriveAxis);
-        //SmartDashboard.putBoolean("is not turning", Math.abs(y) >= Constants.DrivetrainCharacteristics.deadband);
-        if (Math.abs(y) >= Constants.DrivetrainCharacteristics.deadband) {
-            drivetrainSubsystem.robotDrive.setMaxOutput(Constants.DrivetrainCharacteristics.speedScale);
-            drivetrainSubsystem.robotDrive.arcadeDrive(y,-x);
-        } else {
-            drivetrainSubsystem.robotDrive.setMaxOutput(1.0);
-            double controlEFfort = x * Constants.DrivetrainCharacteristics.turnSpeedScale;
-            drivetrainSubsystem.robotDrive.tankDrive(controlEFfort, -controlEFfort);
-        }
+        
+        drivetrainSubsystem.robotDrive.setMaxOutput(Constants.DrivetrainCharacteristics.speedScale);
+        drivetrainSubsystem.robotDrive.arcadeDrive(y,-x);
     }
 
     // Make this return true when this Command no longer needs to run execute()

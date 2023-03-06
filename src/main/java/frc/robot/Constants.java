@@ -92,9 +92,9 @@ public final class Constants {
                 public static double maxAutoAccelerationMeters = 3;
                 public static double kD = 0.0;
                 public static String speedScaleKey = "drivetrain speed";
-                public static double speedScale = 1.0;
+                public static double speedScale = 0.8;
                 public static String turnSpeedKey = "drivetrain turn speed";
-                public static double turnSpeedScale = 0.8;
+                public static double turnSpeedScale = 0.85;
                 public static double deadband = 0.1;
         }
 

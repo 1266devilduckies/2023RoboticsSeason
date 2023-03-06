@@ -103,10 +103,6 @@ public class Robot extends TimedRobot {
     //SmartDashboard.putNumber("0.478 metersPerSecond target",
     //m_robotContainer.getDrivetrainSubsystem().getWheelSpeeds().leftMetersPerSecond);
 
-    if (currentLimitDriveEntry.get() != m_robotContainer.getDrivetrainSubsystem().isCurrentLimited) {
-      m_robotContainer.getDrivetrainSubsystem().isCurrentLimited = currentLimitDriveEntry.get();
-      m_robotContainer.getDrivetrainSubsystem().setCurrentLimit(m_robotContainer.getDrivetrainSubsystem().isCurrentLimited);
-    }
     if (waitDelayEntry.get() != waitDelay) {
       waitDelay = waitDelayEntry.get();
       

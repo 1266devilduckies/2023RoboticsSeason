@@ -166,6 +166,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
     leftMotorSim = MainLeftMotorBack.getSimCollection();
     rightMotorSim = MainRightMotorBack.getSimCollection();
     robotDrive.setDeadband(Constants.DrivetrainCharacteristics.deadband);
+    setCurrentLimit(true);
     Preferences.setDouble(Constants.DrivetrainCharacteristics.gyroPitchPGainKey, gyroPitchkP);
     Preferences.setDouble(Constants.DrivetrainCharacteristics.movementPGainKey, forwardMovementkP);
     Preferences.setDouble(Constants.DrivetrainCharacteristics.globalRotationPGainKey, globalRotationkP);
@@ -298,9 +299,8 @@ public class DrivetrainSubsystem extends SubsystemBase {
   }
 
   public void setCurrentLimit(boolean isCurrentLimited) {
-    int currentLimitAmp = 20;
-    int thresholdAmp = 2;
-    SupplyCurrentLimitConfiguration supplyLimit = new SupplyCurrentLimitConfiguration(isCurrentLimited, currentLimitAmp, currentLimitAmp+thresholdAmp, 0.5);
+    int currentLimitAmp = 30;
+    SupplyCurrentLimitConfiguration supplyLimit = new SupplyCurrentLimitConfiguration(isCurrentLimited, currentLimitAmp, 60, 1.0);
     
     MainLeftMotorBack.configSupplyCurrentLimit(supplyLimit, 100);
     MainRightMotorBack.configSupplyCurrentLimit(supplyLimit, 100);
