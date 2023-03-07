@@ -3,8 +3,6 @@ package frc.robot.commands;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 
 import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.DrivetrainSubsystem;
 
@@ -29,7 +27,6 @@ public class Balance extends CommandBase{
         public void execute() {
                 double controlEffort = drivetrainSubsystem.pidGyroPitch.calculate(-drivetrainSubsystem.gyro.getPitch(), 0.0);
                 controlEffort = MathUtil.clamp(controlEffort, -.5, .5);
-                SmartDashboard.putNumber("is moving gyro", controlEffort);
                 drivetrainSubsystem.robotDrive.arcadeDrive(controlEffort, 0.);
         }
 

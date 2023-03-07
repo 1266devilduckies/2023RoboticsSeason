@@ -5,9 +5,9 @@ import frc.robot.subsystems.DrivetrainSubsystem;
 
 public class BalanceComplexCommand extends SequentialCommandGroup {
 
-        public BalanceComplexCommand(DrivetrainSubsystem drivetrainSubsystem, boolean reversed){
+        public BalanceComplexCommand(DrivetrainSubsystem drivetrainSubsystem){
                 addCommands(
-                        new DriveToPosition(drivetrainSubsystem, 5 * (reversed ? -1 : 1)),
+                        new DriveToPosition(drivetrainSubsystem),
                         new Balance(drivetrainSubsystem)
                 );
         }

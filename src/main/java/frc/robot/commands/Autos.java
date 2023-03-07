@@ -19,7 +19,6 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants;
 import frc.robot.DuckAutoProfile;
-import frc.robot.subsystems.ClawSubsystem;
 import frc.robot.subsystems.DrivetrainSubsystem;
 
 public final class Autos {
@@ -33,17 +32,7 @@ public final class Autos {
         runPath(drivetrainSubsystem, pathTrajectory));
     Pose2d startPosition = pathTrajectory.getInitialPose();
     return new DuckAutoProfile(command, startPosition);
-  }
-  private static DuckAutoProfile midTaxiPath(DrivetrainSubsystem drivetrainSubsystem){
-    String pathName = Constants.AutoTrajectoryFileNames.MID_TAXI;
-    PathPlannerTrajectory pathTrajectory = PathPlanner.loadPath(pathName, new PathConstraints(
-      Constants.DrivetrainCharacteristics.maxAutoVelocityMeters, 
-      Constants.DrivetrainCharacteristics.maxAutoAccelerationMeters));
-    SequentialCommandGroup command = new SequentialCommandGroup(
-        runPath(drivetrainSubsystem, pathTrajectory));
-    Pose2d startPosition = pathTrajectory.getInitialPose();
-    return new DuckAutoProfile(command, startPosition);
-  }  
+  } 
   private static DuckAutoProfile lowTaxiPath(DrivetrainSubsystem drivetrainSubsystem){
     String pathName = Constants.AutoTrajectoryFileNames.LOW_TAXI;
     PathPlannerTrajectory pathTrajectory = PathPlanner.loadPath(pathName, new PathConstraints(
@@ -69,18 +58,8 @@ public final class Autos {
           drivetrainSubsystem.MainLeftMotorBack.setSelectedSensorPosition(0);
           drivetrainSubsystem.MainRightMotorBack.setSelectedSensorPosition(0);
         })
-        ,new BalanceComplexCommand(drivetrainSubsystem, false)
+        ,new BalanceComplexCommand(drivetrainSubsystem)
       );
-    Pose2d startPosition = pathTrajectory.getInitialPose();
-    return new DuckAutoProfile(command, startPosition);
-  }
-  private static DuckAutoProfile coneTaxi(DrivetrainSubsystem drivetrainSubsystem, ClawSubsystem clawSubsystem){
-    String pathName = Constants.AutoTrajectoryFileNames.CONE_TAXI;
-    PathPlannerTrajectory pathTrajectory = PathPlanner.loadPath(pathName, new PathConstraints(
-      Constants.DrivetrainCharacteristics.maxAutoVelocityMeters, 
-    Constants.DrivetrainCharacteristics.maxAutoAccelerationMeters));
-    SequentialCommandGroup command = new SequentialCommandGroup(new SpitOutGamePiece(clawSubsystem),
-        runPath(drivetrainSubsystem, pathTrajectory));
     Pose2d startPosition = pathTrajectory.getInitialPose();
     return new DuckAutoProfile(command, startPosition);
   }
@@ -91,18 +70,7 @@ public final class Autos {
       1, 
     0.75), true);
     Pose2d startPosition = pathTrajectory.getInitialPose();
-    return new DuckAutoProfile(new BalanceComplexCommand(drivetrainSubsystem, false), startPosition);
-  }
-
-  private static DuckAutoProfile justTouch(DrivetrainSubsystem drivetrainSubsystem){
-    String pathName = Constants.AutoTrajectoryFileNames.DOCK;
-    PathPlannerTrajectory pathTrajectory = PathPlanner.loadPath(pathName, new PathConstraints(
-      Constants.DrivetrainCharacteristics.maxAutoVelocityMeters, 
-    Constants.DrivetrainCharacteristics.maxAutoAccelerationMeters));
-    SequentialCommandGroup command = new SequentialCommandGroup(
-        runPath(drivetrainSubsystem, pathTrajectory));
-    Pose2d startPosition = pathTrajectory.getInitialPose();
-    return new DuckAutoProfile(command, startPosition);
+    return new DuckAutoProfile(new BalanceComplexCommand(drivetrainSubsystem), startPosition);
   }
 
   /*private static DuckAutoProfile forwardAuto(DrivetrainSubsystem drivetrainSubsystem){
@@ -126,7 +94,7 @@ public final class Autos {
     drivetrainSubsystem.drivetrainKinematics, 
     new SimpleMotorFeedforward(Constants.DrivetrainCharacteristics.kS, Constants.DrivetrainCharacteristics.kV,Constants.DrivetrainCharacteristics.kA),
     drivetrainSubsystem::getWheelSpeeds, 
-    new PIDConstants(Constants.DrivetrainCharacteristics.kP, 0.0, Constants.DrivetrainCharacteristics.kD),
+    new PIDConstants(Constants.DrivetrainCharacteristics.kP, 0.0, 0.0),
     drivetrainSubsystem::tankDriveVolts,
     Constants.eventMap,  
     true,
@@ -139,17 +107,12 @@ public final class Autos {
   }
 
   public static void pushAutosToDashboard(SendableChooser<DuckAutoProfile> autonomousMode,
-      DrivetrainSubsystem drivetrainSubsystem, ClawSubsystem clawSubsystem) {
+      DrivetrainSubsystem drivetrainSubsystem) {
 
-    autonomousMode.setDefaultOption("Do nothing", new DuckAutoProfile());
-    
-    //autonomousMode.addOption("forward auto", forwardAuto(drivetrainSubsystem));
-    autonomousMode.addOption("low taxi auto", lowTaxiPath(drivetrainSubsystem));
-    autonomousMode.addOption("mid taxi auto", midTaxiPath(drivetrainSubsystem));
-    autonomousMode.addOption("high taxi auto", highTaxiPath(drivetrainSubsystem));
+        autonomousMode.setDefaultOption("low taxi auto", lowTaxiPath(drivetrainSubsystem));
     autonomousMode.addOption("mid balance auto", midBalance(drivetrainSubsystem));
-    autonomousMode.addOption("cone taxi auto", coneTaxi(drivetrainSubsystem, clawSubsystem));
-    autonomousMode.addOption("just balance", justBalance(drivetrainSubsystem));
-    autonomousMode.addOption("just touch", justTouch(drivetrainSubsystem));
+    autonomousMode.addOption("high taxi auto", highTaxiPath(drivetrainSubsystem));
+    autonomousMode.addOption("do nothing", new DuckAutoProfile());
+    autonomousMode.addOption("just balance auto", justBalance(drivetrainSubsystem));
   }
 }

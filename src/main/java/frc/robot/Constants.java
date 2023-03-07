@@ -80,22 +80,15 @@ public final class Constants {
                 public static final String movementPGainKey = "movement kP";
                 public static final String globalRotationPGainKey = "global rotation kP";
                 public static final String ksAngularKey = "rotation voltage min";
-                public static double kSAngular = -0.1;
-                public static double kS = 0.17825;
-                public static double kV = 2.2146;
-                public static double kA = 0.278;
-                public static String kPKey = "drive kP";
-                public static double kP = 2.8153;//0.37182;
-                public static String maxAutoVelocityMetersKey = "max auto velocity (meters)";
-                public static double maxAutoVelocityMeters = 4;
-                public static String maxAutoAccelerationMetersKey = "max auto acceleration (meters)";
-                public static double maxAutoAccelerationMeters = 3;
-                public static double kD = 0.0;
-                public static String speedScaleKey = "drivetrain speed";
-                public static double speedScale = 0.8;
-                public static String turnSpeedKey = "drivetrain turn speed";
-                public static double turnSpeedScale = 0.85;
-                public static double deadband = 0.1;
+                public static final double kSAngular = -0.1;
+                public static final double kS = 0.17825;
+                public static final double kV = 2.2146;
+                public static final double kA = 0.278;
+                public static final double kP = 0.37182;
+                public static final double maxAutoVelocityMeters = 4;
+                public static final double maxAutoAccelerationMeters = 3;
+                public static final double speedScale = 0.8;
+                public static final double deadband = 0.1;
         }
 
         public static class CameraCharacteristics {

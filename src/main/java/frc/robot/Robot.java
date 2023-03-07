@@ -1,20 +1,13 @@
 // Copyright (c) FIRST and other WPILib contributors.
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
-
 package frc.robot;
-
-import edu.wpi.first.apriltag.AprilTagFieldLayout.OriginPosition;
-import edu.wpi.first.networktables.BooleanEntry;
-import edu.wpi.first.networktables.BooleanTopic;
 import edu.wpi.first.networktables.DoubleEntry;
 import edu.wpi.first.networktables.DoubleTopic;
 import edu.wpi.first.networktables.NetworkTableInstance;
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.PneumaticHub;
 import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.TimedRobot;
-import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
@@ -30,16 +23,8 @@ public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
 
   private RobotContainer m_robotContainer;
-  private DoubleEntry kPEntry;
-  private DoubleEntry kSEntry;
-  private DoubleEntry kVEntry;
-  private DoubleEntry kDEntry;
-  private DoubleEntry kAEntry;
   private DoubleEntry waitDelayEntry;
   private double waitDelay = 0.0;
-  private DoubleEntry velocityAutoEntry;
-  private DoubleEntry accelerationAutoEntry;
-  private BooleanEntry currentLimitDriveEntry;
   private PowerDistribution powerBoard;
   private PneumaticHub pneumaticHub;
 
@@ -57,33 +42,9 @@ public class Robot extends TimedRobot {
     pneumaticHub = new PneumaticHub(9);
     pneumaticHub.clearStickyFaults();
     NetworkTableInstance nt = NetworkTableInstance.getDefault();
-    DoubleTopic kPTopic = new DoubleTopic(nt.getTopic("/SmartDashboard/kP"));
-    kPEntry = kPTopic.getEntry(0.0);
-    kPEntry.setDefault(Constants.DrivetrainCharacteristics.kP);
-    DoubleTopic kSTopic = new DoubleTopic(nt.getTopic("/SmartDashboard/kS"));
-    kSEntry = kSTopic.getEntry(0.0);
-    DoubleTopic kVTopic = new DoubleTopic(nt.getTopic("/SmartDashboard/kV"));
-    kVEntry = kVTopic.getEntry(0.0);
-    DoubleTopic kDTopic = new DoubleTopic(nt.getTopic("/SmartDashboard/kD"));
-    kDEntry = kDTopic.getEntry(0.0);
-    DoubleTopic kATopic = new DoubleTopic(nt.getTopic("/SmartDashboard/kA"));
-    kAEntry = kATopic.getEntry(0.0);
-    kSEntry.setDefault(Constants.DrivetrainCharacteristics.kS);
-    kVEntry.setDefault(Constants.DrivetrainCharacteristics.kV);
-    kDEntry.setDefault(Constants.DrivetrainCharacteristics.kD);
-    kAEntry.setDefault(Constants.DrivetrainCharacteristics.kA);
     DoubleTopic waitDelayTopic = new DoubleTopic(nt.getTopic("/SmartDashboard/Wait Delay (Seconds)"));
     waitDelayEntry = waitDelayTopic.getEntry(0.0);
     waitDelayEntry.setDefault(waitDelay);
-    DoubleTopic velocityAutoTopic = new DoubleTopic(nt.getTopic("/SmartDashboard/Velocity Auto ms"));
-    velocityAutoEntry = velocityAutoTopic.getEntry(0.0);
-    velocityAutoEntry.setDefault(Constants.DrivetrainCharacteristics.maxAutoVelocityMeters);
-    DoubleTopic accelerationAutoTopic = new DoubleTopic(nt.getTopic("/SmartDashboard/Acceleration Auto ms2"));
-    accelerationAutoEntry = accelerationAutoTopic.getEntry(0.0);
-    accelerationAutoEntry.setDefault(Constants.DrivetrainCharacteristics.maxAutoAccelerationMeters);
-    BooleanTopic enableCurrentLimitingDrivetrainTopic = new BooleanTopic(nt.getTopic("/SmartDashboard/Enable Current Limiting On Drivetrain"));
-    currentLimitDriveEntry = enableCurrentLimitingDrivetrainTopic.getEntry(true);
-    currentLimitDriveEntry.setDefault(true);
   }
 
   /**
@@ -100,18 +61,12 @@ public class Robot extends TimedRobot {
     // and running subsystem periodic() methods.  This must be called from the robot's periodic
     // block in order for anything in the Command-based framework to work.
     CommandScheduler.getInstance().run();
-    //SmartDashboard.putNumber("0.478 metersPerSecond target",
-    //m_robotContainer.getDrivetrainSubsystem().getWheelSpeeds().leftMetersPerSecond);
 
     if (waitDelayEntry.get() != waitDelay) {
       waitDelay = waitDelayEntry.get();
       
-      Autos.pushAutosToDashboard(m_robotContainer.autonomousMode, m_robotContainer.getDrivetrainSubsystem(), m_robotContainer.getClawSubsystem());
+      Autos.pushAutosToDashboard(m_robotContainer.autonomousMode, m_robotContainer.getDrivetrainSubsystem());
     }
-
-    m_robotContainer.getArmSubsystem().loadPreferences();
-    m_robotContainer.getDrivetrainSubsystem().loadPreferences();
-    m_robotContainer.getClawSubsystem().loadPreferences();
   }
 
   /** This function is called once each time the robot enters Disabled mode. */
@@ -124,11 +79,6 @@ public class Robot extends TimedRobot {
   /** This autonomous runs the autonomous command selected by your {@link RobotContainer} class. */
   @Override
   public void autonomousInit() {
-    m_robotContainer.getDrivetrainSubsystem().aprilTagFieldLayout.setOrigin(
-                    DriverStation.getAlliance() == Alliance.Red
-                            ? OriginPosition.kRedAllianceWallRightSide
-                            : OriginPosition.kBlueAllianceWallRightSide);
-
     DuckAutoProfile autoProfile = m_robotContainer.getAutonomousProfile();
     autoProfile.addDelay(waitDelay);
     m_autonomousCommand = autoProfile.getAutoCommand();
