@@ -5,6 +5,7 @@ import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
 import com.ctre.phoenix.motorcontrol.TalonFXFeedbackDevice;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
+
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.RamseteController;
 import edu.wpi.first.math.estimator.DifferentialDrivePoseEstimator;
@@ -129,6 +130,10 @@ public class DrivetrainSubsystem extends SubsystemBase {
 
   public Pose2d getPose() {
     return odometry.getEstimatedPosition();
+  }
+
+  public void addApriltagMeasurement(Pose2d guessPoseMeters, double timeStamp) {
+        odometry.addVisionMeasurement(guessPoseMeters, timeStamp);
   }
 
   public void tankDriveVolts(double leftVolts, double rightVolts) {

@@ -9,7 +9,7 @@ import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.Autos;
 import frc.robot.commands.Balance;
 import frc.robot.subsystems.DrivetrainSubsystem;
-
+import frc.robot.subsystems.VisionSubsystem;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.button.CommandPS4Controller;
@@ -25,6 +25,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   private final DrivetrainSubsystem drivetrainSubsystem = new DrivetrainSubsystem(this);
+  private final VisionSubsystem visionSubsystem = new VisionSubsystem(drivetrainSubsystem);
   
   public SendableChooser<DuckAutoProfile> autonomousMode = new SendableChooser<DuckAutoProfile>();
 
