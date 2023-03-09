@@ -88,6 +88,7 @@ public final class Constants {
                 public static final double maxAutoVelocityMeters = 4;
                 public static final double maxAutoAccelerationMeters = 3;
                 public static final double speedScale = 0.8;
+                public static final double maxSpeedTicks = 21500 * speedScale;
                 public static final double deadband = 0.1;
         }
 

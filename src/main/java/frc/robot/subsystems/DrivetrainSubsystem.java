@@ -1,10 +1,12 @@
 package frc.robot.subsystems;
 
+import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.InvertType;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
 import com.ctre.phoenix.motorcontrol.TalonFXFeedbackDevice;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
+
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.RamseteController;
 import edu.wpi.first.math.estimator.DifferentialDrivePoseEstimator;
@@ -67,13 +69,6 @@ public class DrivetrainSubsystem extends SubsystemBase {
     leftTopMotor.follow(MainLeftMotorBack);
     rightTopMotor.follow(MainRightMotorBack);
     
-    MainLeftMotorBack.configClosedloopRamp(0.15);
-    MainRightMotorBack.configClosedloopRamp(0.15);
-    MainLeftMotorFront.configClosedloopRamp(0.15);
-    MainRightMotorFront.configClosedloopRamp(0.15);
-    leftTopMotor.configClosedloopRamp(0.15);
-    rightTopMotor.configClosedloopRamp(0.15);
-
     MainLeftMotorBack.enableVoltageCompensation(false);
     MainLeftMotorFront.enableVoltageCompensation(false);
     MainRightMotorBack.enableVoltageCompensation(false);
@@ -131,11 +126,21 @@ public class DrivetrainSubsystem extends SubsystemBase {
     return odometry.getEstimatedPosition();
   }
 
+  public void addApriltagMeasurement(Pose2d guessPoseMeters, double timeStamp) {
+        odometry.addVisionMeasurement(guessPoseMeters, timeStamp);
+  }
+
   public void tankDriveVolts(double leftVolts, double rightVolts) {
     //flipping voltage for some reason, it works better???
     MainLeftMotorBack.setVoltage(leftVolts);
     MainRightMotorBack.setVoltage(rightVolts);
     robotDrive.feed(); // feed watchdog to prevent error from clogging can bus
+  }
+
+  public void encoderBasedDrive(double leftMotorPercentage, double rightMotorPercentage){
+    MainLeftMotorBack.set(ControlMode.Velocity, Constants.DrivetrainCharacteristics.maxSpeedTicks * leftMotorPercentage);
+    MainRightMotorBack.set(ControlMode.Velocity, Constants.DrivetrainCharacteristics.maxSpeedTicks * rightMotorPercentage);
+    robotDrive.feed();
   }
 
   public void resetOdometry(Pose2d pose) {
