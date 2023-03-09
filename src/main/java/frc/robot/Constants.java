@@ -106,6 +106,10 @@ public final class Constants {
                 public static final String MID_BALANCE = "MidBalance";
                 public static final String CONE_TAXI = "ConeTaxi";
                 public static final String DOCK = "DockPath";
+                public static final String UPPER_COMMUNITY_TO_LOADING = "UpperCommunityToLoading";
+                public static final String LOWER_COMMUNITY_TO_LOADING = "LowerCommunityToLoading";
+                public static final String LOADING_COMMUNITY_TO_LOWER = "LoadingToUpperCommunity";
+                public static final String LOADING_COMMUNITY_TO_UPPER = "LoadingToLowerCommunity";
         }
 
         public static class ClawCharacteristics {

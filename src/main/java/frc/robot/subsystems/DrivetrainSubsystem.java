@@ -1,6 +1,7 @@
 package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.DemandType;
 import com.ctre.phoenix.motorcontrol.InvertType;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
@@ -9,11 +10,13 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.RamseteController;
+import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.estimator.DifferentialDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
 import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
+import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -44,6 +47,8 @@ public class DrivetrainSubsystem extends SubsystemBase {
   public boolean isCurrentLimited = false;
   private double gyroPitchkP = 0.033;
 
+  private SimpleMotorFeedforward feedforward = new SimpleMotorFeedforward(Constants.DrivetrainCharacteristics.kS, Constants.DrivetrainCharacteristics.kV, Constants.DrivetrainCharacteristics.kA);
+  
   //proportional controllers only gang uwu
   public PIDController pidGyroPitch = new PIDController(gyroPitchkP, 0.0, 0.0);
 
@@ -92,6 +97,10 @@ public class DrivetrainSubsystem extends SubsystemBase {
     leftTopMotor.setInverted(InvertType.FollowMaster);
     rightTopMotor.setInverted(InvertType.FollowMaster);
 
+    //configure PIDF values
+    MainLeftMotorBack.config_kP(0, 0.0);
+    MainRightMotorBack.config_kP(0, 0.0);
+
     robotDrive = new DifferentialDrive(MainLeftMotorBack, MainRightMotorBack);
     
     odometry = new DifferentialDrivePoseEstimator(
@@ -138,8 +147,18 @@ public class DrivetrainSubsystem extends SubsystemBase {
   }
 
   public void encoderBasedDrive(double leftMotorPercentage, double rightMotorPercentage){
-    MainLeftMotorBack.set(ControlMode.Velocity, Constants.DrivetrainCharacteristics.maxSpeedTicks * leftMotorPercentage);
-    MainRightMotorBack.set(ControlMode.Velocity, Constants.DrivetrainCharacteristics.maxSpeedTicks * rightMotorPercentage);
+
+    double leftTickSpeed = Constants.DrivetrainCharacteristics.maxSpeedTicks * leftMotorPercentage;
+    double rightTickSpeed = Constants.DrivetrainCharacteristics.maxSpeedTicks * rightMotorPercentage;
+
+    double leftSpeedMeters = DuckGearUtil.EncoderTicksPer100msToMetersPerSecond(leftTickSpeed, 
+        Constants.DrivetrainCharacteristics.gearing, 2048.0, Constants.DrivetrainCharacteristics.wheelRadiusMeters);
+
+    double rightSpeedMeters = DuckGearUtil.EncoderTicksPer100msToMetersPerSecond(rightTickSpeed, 
+        Constants.DrivetrainCharacteristics.gearing, 2048.0, Constants.DrivetrainCharacteristics.wheelRadiusMeters);
+
+    MainLeftMotorBack.set(ControlMode.Velocity, leftTickSpeed, DemandType.ArbitraryFeedForward, feedforward.calculate(leftSpeedMeters) / RobotController.getBatteryVoltage());
+    MainRightMotorBack.set(ControlMode.Velocity, rightTickSpeed, DemandType.ArbitraryFeedForward, feedforward.calculate(rightSpeedMeters) / RobotController.getBatteryVoltage());
     robotDrive.feed();
   }
 
