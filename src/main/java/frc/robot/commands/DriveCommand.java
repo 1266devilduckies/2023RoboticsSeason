@@ -22,15 +22,15 @@ public class DriveCommand extends CommandBase{
         double y = -RobotContainer.driverJoystick.getRawAxis(Constants.DriverConstants.ForwardDriveAxis);
         double x = RobotContainer.driverJoystick.getRawAxis(Constants.DriverConstants.TurningDriveAxis);
         
-        drivetrainSubsystem.robotDrive.setMaxOutput(Constants.DrivetrainCharacteristics.speedScale);
-        //drivetrainSubsystem.robotDrive.arcadeDrive(y,-x);
+        //drivetrainSubsystem.robotDrive.setMaxOutput(Constants.DrivetrainCharacteristics.speedScale);
+        drivetrainSubsystem.robotDrive.arcadeDrive(y,-x);
 
-        double xSpeed = MathUtil.applyDeadband(y, Constants.DrivetrainCharacteristics.deadband);
+        /*double xSpeed = MathUtil.applyDeadband(y, Constants.DrivetrainCharacteristics.deadband);
         double zRotation = MathUtil.applyDeadband(x, Constants.DrivetrainCharacteristics.deadband);
 
         WheelSpeeds wheelSpeeds = DifferentialDrive.arcadeDriveIK(xSpeed, zRotation, true);
 
-        drivetrainSubsystem.encoderBasedDrive(wheelSpeeds.left, wheelSpeeds.right);
+        drivetrainSubsystem.encoderBasedDrive(wheelSpeeds.left, wheelSpeeds.right);*/
     }
 
     // Make this return true when this Command no longer needs to run execute()
