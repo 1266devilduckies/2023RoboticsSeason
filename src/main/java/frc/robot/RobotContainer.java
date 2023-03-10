@@ -10,10 +10,15 @@ import frc.robot.commands.Autos;
 import frc.robot.commands.Balance;
 import frc.robot.subsystems.DrivetrainSubsystem;
 import frc.robot.subsystems.VisionSubsystem;
+import edu.wpi.first.wpilibj.GenericHID;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandPS4Controller;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 /**
@@ -33,6 +38,8 @@ public class RobotContainer {
       new CommandPS4Controller(DriverConstants.port);
   public final static CommandXboxController operatorJoystick =
       new CommandXboxController(OperatorConstants.port);
+  public final static GenericHID operatorPanel = new GenericHID(2);
+  JoystickButton operatorPanelBtn1 = new JoystickButton(operatorPanel, 1);
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -55,6 +62,12 @@ public class RobotContainer {
    */
   private void configureBindings() {
         driverJoystick.R1().whileTrue(new Balance(drivetrainSubsystem));
+        operatorPanelBtn1.whileTrue(new InstantCommand(() -> {
+                SmartDashboard.putBoolean("being pressed", true);
+        }));
+        operatorPanelBtn1.whileFalse(new InstantCommand(() -> {
+                SmartDashboard.putBoolean("being pressed", false);
+        }));
   }
   private void configureMarkers() {
 
