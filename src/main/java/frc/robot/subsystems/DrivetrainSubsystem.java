@@ -40,11 +40,18 @@ import frc.robot.Robot;
 import frc.robot.RobotContainer;
 import frc.robot.commands.Autos;
 import frc.robot.commands.DriveCommand;
+import frc.robot.commands.cyclecommands.RunBottomChargeStation;
+import frc.robot.commands.cyclecommands.RunEnum;
+import frc.robot.commands.cyclecommands.RunLoadingZone;
+import frc.robot.commands.cyclecommands.RunTopChargeStation;
 
 public class DrivetrainSubsystem extends SubsystemBase {
   public final DifferentialDrive robotDrive;
   private final DifferentialDrivetrainSim robotDriveSim;
   private RobotContainer m_robotContainer;
+
+  public boolean autoEngaged = false;
+  public RunEnum autoCycleState = RunEnum.RunLoadingZone;
 
   // CAN devices
   public final WPI_TalonFX MainLeftMotorBack = new WPI_TalonFX(Constants.CAN.Drivetrain.BL);
@@ -185,6 +192,11 @@ public class DrivetrainSubsystem extends SubsystemBase {
     double rightDistanceMeters = DuckGearUtil.encoderTicksToMeters(MainRightMotorBack.getSelectedSensorPosition(),
     Constants.DrivetrainCharacteristics.gearing, 2048.0, Constants.DrivetrainCharacteristics.wheelRadiusMeters);
 
+    SmartDashboard.putNumber("Pose x", getPose().getX());
+    SmartDashboard.putNumber("Pose y", getPose().getY());
+
+    runAutoCycle();
+
     if (Robot.isReal()) {
       odometry.update(Rotation2d.fromDegrees(-gyro.getAngle()), leftDistanceMeters, rightDistanceMeters);
     } else {
@@ -204,8 +216,30 @@ public class DrivetrainSubsystem extends SubsystemBase {
     field.setRobotPose(previousPose);
   }
 
+  private void runAutoCycle(){
+        if(!autoEngaged) return;
+        autoEngaged = false;
+
+        switch(autoCycleState){
+                case RunBottomChargeStation:
+                        new RunBottomChargeStation(this).schedule();
+                        break;
+                case RunTopChargeStation:
+                        new RunTopChargeStation(this).schedule();;
+                        break;
+                case RunLoadingZone:
+                        new RunLoadingZone(this).schedule();
+                        break;
+                default:
+                        return;
+        }
+  }
+
   @Override
   public void simulationPeriodic() {
+
+    runAutoCycle();
+
     // For the motor master which is inverted, you'll need to invert it manually (ie
     // with a negative sign) here when fetching any data
     // CTRE doesn't support setInverted() for simulation

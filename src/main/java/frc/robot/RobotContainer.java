@@ -13,6 +13,7 @@ import frc.robot.commands.ClawWait;
 import frc.robot.commands.RotateToAngle;
 import frc.robot.commands.SpinClawBackwards;
 import frc.robot.commands.SpinClawForward;
+import frc.robot.commands.cyclecommands.RunEnum;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.ClawSubsystem;
 import frc.robot.subsystems.DrivetrainSubsystem;
@@ -69,7 +70,7 @@ public class RobotContainer {
   private void configureBindings() {
         driverJoystick.R1().whileTrue(new Balance(drivetrainSubsystem));
 
-        operatorJoystick.x().onTrue(new SequentialCommandGroup(new SpinClawBackwards(clawSubsystem), new ClawWait(clawSubsystem), 
+        /*operatorJoystick.x().onTrue(new SequentialCommandGroup(new SpinClawBackwards(clawSubsystem), new ClawWait(clawSubsystem), 
         new InstantCommand( () -> {
                 clawSubsystem.motor.set(ControlMode.PercentOutput, 0.0);
         })));
@@ -82,6 +83,22 @@ public class RobotContainer {
         }));
         operatorJoystick.b().onTrue(new InstantCommand(()->{
           armSubsystem.resetAngle(90.0);
+        }));*/
+
+        operatorJoystick.x().onTrue(new InstantCommand( () -> {
+                drivetrainSubsystem.autoCycleState = RunEnum.RunLoadingZone;
+        }));
+
+        operatorJoystick.y().onTrue(new InstantCommand( () -> {
+                drivetrainSubsystem.autoCycleState = RunEnum.RunTopChargeStation;
+        }));
+
+        operatorJoystick.b().onTrue(new InstantCommand( () -> {
+                drivetrainSubsystem.autoCycleState = RunEnum.RunBottomChargeStation;
+        }));
+
+        operatorJoystick.a().onTrue(new InstantCommand( () -> {
+                drivetrainSubsystem.autoEngaged = true;
         }));
 
         driverJoystick.square().whileTrue(new RotateToAngle(drivetrainSubsystem, 180));

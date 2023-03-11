@@ -94,8 +94,11 @@ public final class Constants {
                 public static String speedScaleKey = "drivetrain speed";
                 public static double speedScale = 0.8;
                 public static String turnSpeedKey = "drivetrain turn speed";
-                public static double turnSpeedScale = 0.85;
+                public static double turnSpeedScale = 0.5;
                 public static double deadband = 0.1;
+
+                public static double cycleSpeed = 4;
+                public static double cycleAcceleration = 3;
         }
 
         public static class CameraCharacteristics {
