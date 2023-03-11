@@ -32,6 +32,7 @@ import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.simulation.DifferentialDrivetrainSim;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.DuckAHRS;
@@ -86,6 +87,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
   public PIDController pidMovement = new PIDController(forwardMovementkP, 0.0, 0.0);
   public PIDController pidGlobalRotation = new PIDController(globalRotationkP, 0.0, 0.0);
 
+  public CommandBase currentCmd;
   public DrivetrainSubsystem(RobotContainer robotContainer) {
     //constructor gets ran at robotInit()
     this.setDefaultCommand(new DriveCommand(this));
@@ -222,13 +224,16 @@ public class DrivetrainSubsystem extends SubsystemBase {
 
         switch(autoCycleState){
                 case RunBottomChargeStation:
-                        new RunBottomChargeStation(this).schedule();
+                        currentCmd = new RunBottomChargeStation(this);
+                        currentCmd.schedule();
                         break;
                 case RunTopChargeStation:
-                        new RunTopChargeStation(this).schedule();;
+                        currentCmd = new RunTopChargeStation(this);
+                        currentCmd.schedule();
                         break;
                 case RunLoadingZone:
-                        new RunLoadingZone(this).schedule();
+                        currentCmd = new RunLoadingZone(this);
+                        currentCmd.schedule();
                         break;
                 default:
                         return;
