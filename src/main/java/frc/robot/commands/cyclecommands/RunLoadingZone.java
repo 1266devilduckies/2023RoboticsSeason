@@ -35,7 +35,7 @@ public class RunLoadingZone extends CommandBase{
                 Constants.DrivetrainCharacteristics.cycleSpeed,
               Constants.DrivetrainCharacteristics.cycleAcceleration));
 
-              PathPlannerTrajectory trajectoryFromMiddle= PathPlanner.loadPath(Constants.CycleTrajectoryFileNames.MID_TO_LOAD, new PathConstraints(
+        PathPlannerTrajectory trajectoryFromMiddle= PathPlanner.loadPath(Constants.CycleTrajectoryFileNames.MID_TO_LOAD, new PathConstraints(
                 Constants.DrivetrainCharacteristics.cycleSpeed,
               Constants.DrivetrainCharacteristics.cycleAcceleration));
 
