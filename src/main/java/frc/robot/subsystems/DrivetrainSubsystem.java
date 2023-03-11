@@ -52,6 +52,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
   private RobotContainer m_robotContainer;
 
   public boolean autoEngaged = false;
+  public boolean autoInterrupted = false;
   public RunEnum autoCycleState = RunEnum.RunLoadingZone;
 
   // CAN devices
@@ -126,12 +127,6 @@ public class DrivetrainSubsystem extends SubsystemBase {
     // Disable voltage compensation, it's bad to be compensating voltage for a
     // system which draws loads of amps
 
-    MainLeftMotorBack.configOpenloopRamp(0.25);
-    MainRightMotorBack.configOpenloopRamp(0.25);
-    MainLeftMotorFront.configOpenloopRamp(0.25);
-    MainRightMotorFront.configOpenloopRamp(0.25);
-    leftTopMotor.configOpenloopRamp(0.25);
-    rightTopMotor.configOpenloopRamp(0.25);
     MainLeftMotorBack.enableVoltageCompensation(false);
     MainLeftMotorFront.enableVoltageCompensation(false);
     MainRightMotorBack.enableVoltageCompensation(false);
@@ -222,21 +217,29 @@ public class DrivetrainSubsystem extends SubsystemBase {
         if(!autoEngaged) return;
         autoEngaged = false;
 
+        autoInterrupted = false;
+        
         switch(autoCycleState){
                 case RunBottomChargeStation:
-                        currentCmd = new RunBottomChargeStation(this);
-                        currentCmd.schedule();
+                        new RunBottomChargeStation(this).schedule();
                         break;
                 case RunTopChargeStation:
-                        currentCmd = new RunTopChargeStation(this);
-                        currentCmd.schedule();
+                        new RunTopChargeStation(this).schedule();
                         break;
                 case RunLoadingZone:
-                        currentCmd = new RunLoadingZone(this);
-                        currentCmd.schedule();
+                        new RunLoadingZone(this).schedule();
                         break;
                 default:
                         return;
+        }
+  }
+
+  private void autoOverride(){
+        double y = -RobotContainer.driverJoystick.getRawAxis(Constants.DriverConstants.ForwardDriveAxis);
+        double x = RobotContainer.driverJoystick.getRawAxis(Constants.DriverConstants.TurningDriveAxis);
+        
+        if ((Math.abs(y) > Constants.DriverConstants.deadbandLeftJoystick || Math.abs(x) > Constants.DriverConstants.deadbandRightJoystick) && !autoInterrupted) {
+                autoInterrupted = true;
         }
   }
 
@@ -244,6 +247,8 @@ public class DrivetrainSubsystem extends SubsystemBase {
   public void simulationPeriodic() {
 
     runAutoCycle();
+
+    autoOverride();
 
     // For the motor master which is inverted, you'll need to invert it manually (ie
     // with a negative sign) here when fetching any data

@@ -99,6 +99,7 @@ public final class Constants {
 
                 public static double cycleSpeed = 4;
                 public static double cycleAcceleration = 3;
+                public static double maxCycleErrorDistanceMeters = 2;
         }
 
         public static class CameraCharacteristics {
@@ -115,6 +116,14 @@ public final class Constants {
                 public static final String MID_BALANCE = "MidBalance";
                 public static final String CONE_TAXI = "ConeTaxi";
                 public static final String DOCK = "DockPath";
+        }
+
+        public static class CycleTrajectoryFileNames {
+                public static final String BOTTOM_TO_LOAD = "BottomChargeStationToLoading";
+                public static final String MID_TO_LOAD = "MiddleChargeStationToLoading";
+                public static final String TOP_TO_LOAD = "TopChargeStationToLoading";
+                public static final String LOAD_TO_BOTTOM = "LoadingToBottomChargeStation";
+                public static final String LOAD_TO_TOP = "LoadingToTopChargeStation";
         }
 
         public static class ClawCharacteristics {

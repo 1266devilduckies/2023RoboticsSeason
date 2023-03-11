@@ -3,6 +3,7 @@ package frc.robot.commands;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 
 import edu.wpi.first.math.filter.SlewRateLimiter;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
 import frc.robot.RobotContainer;
@@ -22,10 +23,6 @@ public class DriveCommand extends CommandBase{
         double y = -RobotContainer.driverJoystick.getRawAxis(Constants.DriverConstants.ForwardDriveAxis);
         double x = RobotContainer.driverJoystick.getRawAxis(Constants.DriverConstants.TurningDriveAxis);
         
-        if ((Math.abs(y) > Constants.DriverConstants.deadbandLeftJoystick || Math.abs(x) > Constants.DriverConstants.deadbandRightJoystick) && drivetrainSubsystem.currentCmd != null) {
-                drivetrainSubsystem.autoEngaged = false;
-                drivetrainSubsystem.currentCmd.cancel();
-        }
         drivetrainSubsystem.robotDrive.setMaxOutput(Constants.DrivetrainCharacteristics.speedScale);
         drivetrainSubsystem.robotDrive.arcadeDrive(y,-x);
     }
