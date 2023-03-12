@@ -4,6 +4,7 @@ import com.pathplanner.lib.PathConstraints;
 import com.pathplanner.lib.PathPlanner;
 import com.pathplanner.lib.PathPlannerTrajectory;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandBase;
@@ -29,8 +30,8 @@ public class RunBottomChargeStation extends CommandBase{
         @Override
         public void initialize(){
                 double distanceFromTrajectoryStart = 
-                        Math.sqrt(Math.pow(trajectory.getInitialPose().relativeTo(drivetrainSubsystem.getPose()).getX(), 2) + 
-                        Math.pow(trajectory.getInitialPose().relativeTo(drivetrainSubsystem.getPose()).getY(), 2));
+                        Math.sqrt(Math.pow(trajectory.getInitialPose().relativeTo(drivetrainSubsystem.getPoseBasedOnAlliance()).getX(), 2) + 
+                        Math.pow(trajectory.getInitialPose().relativeTo(drivetrainSubsystem.getPoseBasedOnAlliance()).getY(), 2));
                 if(distanceFromTrajectoryStart > Constants.DrivetrainCharacteristics.maxCycleErrorDistanceMeters) return;
 
                 pathCommand = Autos.runCyclePath(drivetrainSubsystem, trajectory);

@@ -21,13 +21,16 @@ import edu.wpi.first.math.controller.RamseteController;
 import edu.wpi.first.math.estimator.DifferentialDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
 import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.math.system.plant.DCMotor;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.simulation.DifferentialDrivetrainSim;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
@@ -190,8 +193,8 @@ public class DrivetrainSubsystem extends SubsystemBase {
     double rightDistanceMeters = DuckGearUtil.encoderTicksToMeters(MainRightMotorBack.getSelectedSensorPosition(),
     Constants.DrivetrainCharacteristics.gearing, 2048.0, Constants.DrivetrainCharacteristics.wheelRadiusMeters);
 
-    SmartDashboard.putNumber("Pose x", getPose().getX());
-    SmartDashboard.putNumber("Pose y", getPose().getY());
+    SmartDashboard.putNumber("Pose x", getPoseBasedOnAlliance().getX());
+    SmartDashboard.putNumber("Pose y", getPoseBasedOnAlliance().getY());
 
     runAutoCycle();
 
@@ -289,6 +292,16 @@ public class DrivetrainSubsystem extends SubsystemBase {
 
   public Pose2d getPose() {
     return odometry.getEstimatedPosition();
+  }
+
+  public Pose2d getPoseBasedOnAlliance(){
+        if(DriverStation.getAlliance().equals(Alliance.Blue)){
+                return getPose();
+        }
+        double x = 16.54 - odometry.getEstimatedPosition().getX();
+        double y = odometry.getEstimatedPosition().getY();
+
+        return new Pose2d(x, y, odometry.getEstimatedPosition().getRotation());
   }
 
   public void tankDriveVolts(double leftVolts, double rightVolts) {

@@ -8,10 +8,14 @@ import com.pathplanner.lib.PathPlanner;
 import com.pathplanner.lib.PathPlannerTrajectory;
 
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.RobotController;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
+import frc.robot.RobotContainer;
 import frc.robot.commands.Autos;
 import frc.robot.subsystems.DrivetrainSubsystem;
 
@@ -45,9 +49,9 @@ public class RunLoadingZone extends CommandBase{
 
         @Override
         public void initialize(){
-                poses.add(trajectoryFromTop.getInitialPose());
                 poses.add(trajectoryFromBottom.getInitialPose());
                 poses.add(trajectoryFromMiddle.getInitialPose());
+                poses.add(trajectoryFromTop.getInitialPose());
 
                 possibleTrajectories.add(trajectoryFromBottom);
                 possibleTrajectories.add(trajectoryFromTop);
@@ -58,8 +62,11 @@ public class RunLoadingZone extends CommandBase{
                 for (PathPlannerTrajectory trajectory : possibleTrajectories) {
                         if(trajectory.getInitialPose().equals(nearestPose)){
                                 double distanceFromTrajectoryStart = 
-                                        Math.sqrt(Math.pow(trajectory.getInitialPose().relativeTo(drivetrainSubsystem.getPose()).getX(), 2) + 
-                                        Math.pow(trajectory.getInitialPose().relativeTo(drivetrainSubsystem.getPose()).getY(), 2));
+                                        Math.sqrt(Math.pow(trajectory.getInitialPose().relativeTo(drivetrainSubsystem.getPoseBasedOnAlliance()).getX(), 2) + 
+                                        Math.pow(trajectory.getInitialPose().relativeTo(drivetrainSubsystem.getPoseBasedOnAlliance()).getY(), 2));
+
+                                SmartDashboard.putNumber("Pose Initial x", trajectory.getInitialPose().getX());
+                                SmartDashboard.putNumber("Pose Initial y", trajectory.getInitialPose().getY());
                                 if(distanceFromTrajectoryStart > Constants.DrivetrainCharacteristics.maxCycleErrorDistanceMeters) return;
 
                                 pathCommand = Autos.runCyclePath(drivetrainSubsystem, trajectory);
