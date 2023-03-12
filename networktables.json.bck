@@ -2,7 +2,7 @@
   {
     "name": "/Preferences/arm position",
     "type": "double",
-    "value": 76.5,
+    "value": 0.0,
     "properties": {
       "persistent": true
     }

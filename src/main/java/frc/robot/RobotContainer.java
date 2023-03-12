@@ -9,22 +9,18 @@ import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.Autos;
 import frc.robot.commands.Balance;
 import frc.robot.commands.BalanceComplexCommand;
-import frc.robot.commands.ClawWait;
+import frc.robot.commands.GrabGamePiece;
 import frc.robot.commands.RotateToAngle;
-import frc.robot.commands.SpinClawBackwards;
-import frc.robot.commands.SpinClawForward;
-import frc.robot.commands.cyclecommands.RunEnum;
+import frc.robot.commands.RunEnum;
+import frc.robot.commands.SpitOutGamePiece;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.ClawSubsystem;
 import frc.robot.subsystems.DrivetrainSubsystem;
-
-import com.ctre.phoenix.motorcontrol.ControlMode;
 
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandPS4Controller;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -70,20 +66,18 @@ public class RobotContainer {
   private void configureBindings() {
         driverJoystick.R1().whileTrue(new Balance(drivetrainSubsystem));
 
-        /*operatorJoystick.x().onTrue(new SequentialCommandGroup(new SpinClawBackwards(clawSubsystem), new ClawWait(clawSubsystem), 
-        new InstantCommand( () -> {
-                clawSubsystem.motor.set(ControlMode.PercentOutput, 0.0);
-        })));
-        operatorJoystick.a().onTrue(new SequentialCommandGroup(new SpinClawForward(clawSubsystem), new ClawWait(clawSubsystem), 
-                new InstantCommand( () -> {
-                        clawSubsystem.motor.set(ControlMode.PercentOutput, 0.0);
-                })));
+        /*
         operatorJoystick.y().onTrue(new InstantCommand(()->{
           armSubsystem.resetAngle(45.0);
         }));
         operatorJoystick.b().onTrue(new InstantCommand(()->{
           armSubsystem.resetAngle(90.0);
-        }));*/
+        }));
+        */
+
+        operatorJoystick.rightBumper().whileTrue(new GrabGamePiece(clawSubsystem));
+
+        operatorJoystick.leftBumper().whileTrue(new SpitOutGamePiece(clawSubsystem));
 
         operatorJoystick.x().onTrue(new InstantCommand( () -> {
                 drivetrainSubsystem.autoCycleState = RunEnum.RunLoadingZone;
@@ -95,6 +89,10 @@ public class RobotContainer {
 
         operatorJoystick.b().onTrue(new InstantCommand( () -> {
                 drivetrainSubsystem.autoCycleState = RunEnum.RunBottomChargeStation;
+        }));
+
+        operatorJoystick.povDown().onTrue(new InstantCommand( () -> {
+                drivetrainSubsystem.autoCycleState = RunEnum.MoveBottomGrid;
         }));
 
         operatorJoystick.a().onTrue(new InstantCommand( () -> {

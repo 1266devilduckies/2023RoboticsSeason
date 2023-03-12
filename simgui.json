@@ -1,10 +1,5 @@
 {
   "HALProvider": {
-    "DIO": {
-      "window": {
-        "visible": true
-      }
-    },
     "Other Devices": {
       "Talon FX[1]": {
         "header": {
@@ -13,62 +8,20 @@
       },
       "Talon FX[90]/Integrated Sensor": {
         "header": {
-          "open": true
+          "open": false
         }
-      },
-      "window": {
-        "visible": false
       }
     }
   },
   "NTProvider": {
     "types": {
       "/FMSInfo": "FMSInfo",
-      "/LiveWindow/Ungrouped/DifferentialDrive[1]": "DifferentialDrive",
-      "/LiveWindow/Ungrouped/DigitalInput[4]": "Digital Input",
-      "/LiveWindow/Ungrouped/PIDController[10]": "PIDController",
-      "/LiveWindow/Ungrouped/PIDController[11]": "PIDController",
-      "/LiveWindow/Ungrouped/PIDController[12]": "PIDController",
-      "/LiveWindow/Ungrouped/PIDController[13]": "PIDController",
-      "/LiveWindow/Ungrouped/PIDController[14]": "PIDController",
-      "/LiveWindow/Ungrouped/PIDController[15]": "PIDController",
-      "/LiveWindow/Ungrouped/PIDController[16]": "PIDController",
-      "/LiveWindow/Ungrouped/PIDController[1]": "PIDController",
-      "/LiveWindow/Ungrouped/PIDController[2]": "PIDController",
-      "/LiveWindow/Ungrouped/PIDController[3]": "PIDController",
-      "/LiveWindow/Ungrouped/PIDController[4]": "PIDController",
-      "/LiveWindow/Ungrouped/PIDController[5]": "PIDController",
-      "/LiveWindow/Ungrouped/PIDController[6]": "PIDController",
-      "/LiveWindow/Ungrouped/PIDController[7]": "PIDController",
-      "/LiveWindow/Ungrouped/PIDController[8]": "PIDController",
-      "/LiveWindow/Ungrouped/PIDController[9]": "PIDController",
-      "/LiveWindow/Ungrouped/Scheduler": "Scheduler",
-      "/LiveWindow/Ungrouped/Talon FX [2]": "Motor Controller",
-      "/LiveWindow/Ungrouped/Talon FX [3]": "Motor Controller",
-      "/LiveWindow/Ungrouped/Talon FX [6]": "Motor Controller",
-      "/LiveWindow/Ungrouped/Talon FX [7]": "Motor Controller",
-      "/LiveWindow/Ungrouped/navX-Sensor[4]": "Gyro",
       "/SmartDashboard/Arm Sim": "Mechanism2d",
       "/SmartDashboard/Field": "Field2d",
-      "/SmartDashboard/PPRamseteCommand_field": "Field2d",
       "/SmartDashboard/SendableChooser[0]": "String Chooser"
-    },
-    "windows": {
-      "/SmartDashboard/Field": {
-        "image": "D:\\Desktop\\field23.png",
-        "window": {
-          "visible": true
-        }
-      }
     }
   },
   "NetworkTables Info": {
-    "Clients": {
-      "open": true
-    },
-    "Server": {
-      "open": true
-    },
     "visible": true
   }
 }

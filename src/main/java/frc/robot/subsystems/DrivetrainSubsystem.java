@@ -41,10 +41,11 @@ import frc.robot.Robot;
 import frc.robot.RobotContainer;
 import frc.robot.commands.Autos;
 import frc.robot.commands.DriveCommand;
+import frc.robot.commands.RunEnum;
 import frc.robot.commands.cyclecommands.RunBottomChargeStation;
-import frc.robot.commands.cyclecommands.RunEnum;
 import frc.robot.commands.cyclecommands.RunLoadingZone;
 import frc.robot.commands.cyclecommands.RunTopChargeStation;
+import frc.robot.commands.gridcommands.MoveBottomGrid;
 
 public class DrivetrainSubsystem extends SubsystemBase {
   public final DifferentialDrive robotDrive;
@@ -229,6 +230,8 @@ public class DrivetrainSubsystem extends SubsystemBase {
                 case RunLoadingZone:
                         new RunLoadingZone(this).schedule();
                         break;
+                case MoveBottomGrid:
+                        new MoveBottomGrid(this).schedule();
                 default:
                         return;
         }

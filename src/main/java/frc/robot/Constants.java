@@ -72,7 +72,7 @@ public final class Constants {
         }
 
         public static class DrivetrainCharacteristics {
-                public static final double trackWidthMeters = Units.inchesToMeters(18);
+                public static final double trackWidthMeters = 0.4572;//Units.inchesToMeters(18);
                 public static final double gearing = 6.4;
                 public static final double wheelRadiusMeters = Units.inchesToMeters(2);
                 public static final double rampPGain = 0.1;
@@ -124,6 +124,10 @@ public final class Constants {
                 public static final String TOP_TO_LOAD = "TopChargeStationToLoading";
                 public static final String LOAD_TO_BOTTOM = "LoadingToBottomChargeStation";
                 public static final String LOAD_TO_TOP = "LoadingToTopChargeStation";
+
+                public static final String TOP_TO_TOP_GRID = "TopToTopGrid";
+                public static final String TOP_TO_MID_GRID = "TopToMiddleGrid";
+                public static final String TOP_TO_BOTTOM_GRID = "TopToBottomGrid";
         }
 
         public static class ClawCharacteristics {
