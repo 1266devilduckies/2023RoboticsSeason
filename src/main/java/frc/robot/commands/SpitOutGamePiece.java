@@ -21,12 +21,12 @@ public class SpitOutGamePiece extends CommandBase {
         startTime = Timer.getFPGATimestamp();
     }
     public void execute() {
-        double controlEffort = Preferences.getDouble(Constants.ClawCharacteristics.clawSpeedKey, this.clawSubsystem.getClawSpeed());
-        this.clawSubsystem.motor.set(ControlMode.PercentOutput, controlEffort);
+        //double controlEffort = Preferences.getDouble(Constants.ClawCharacteristics.clawSpeedKey, this.clawSubsystem.getClawSpeed());
+        this.clawSubsystem.motor.set(ControlMode.PercentOutput, 0.2);
     }
     @Override
     public boolean isFinished() {
-        return !(this.clawSubsystem.sonarSensor.get()) || (Timer.getFPGATimestamp() - startTime) > 5.;
+        return !(this.clawSubsystem.sonarSensor.get()) || (Timer.getFPGATimestamp() - startTime) > 3.;
     }
     public void end(boolean interrupted) {
         SmartDashboard.putNumber("ended", Timer.getFPGATimestamp());
