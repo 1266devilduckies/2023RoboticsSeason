@@ -102,6 +102,11 @@ public final class Constants {
                 public static double maxCycleErrorDistanceMeters = 2;
         }
 
+        public static class Field{
+                public static double fieldHeight = 8.21;
+                public static double fieldWidth = 16.54;
+        }
+
         public static class CameraCharacteristics {
                 public static final String photonVisionName = "camera";
                 public static final Transform3d robotToCamMeters = new Transform3d(

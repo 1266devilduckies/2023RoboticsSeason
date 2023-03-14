@@ -57,7 +57,7 @@ public class RunLoadingZone extends CommandBase{
                 possibleTrajectories.add(trajectoryFromTop);
                 possibleTrajectories.add(trajectoryFromMiddle);
 
-                Pose2d nearestPose = drivetrainSubsystem.getPose().nearest(poses);
+                Pose2d nearestPose = drivetrainSubsystem.getPoseBasedOnAlliance().nearest(poses);
 
                 for (PathPlannerTrajectory trajectory : possibleTrajectories) {
                         if(trajectory.getInitialPose().equals(nearestPose)){
@@ -65,8 +65,11 @@ public class RunLoadingZone extends CommandBase{
                                         Math.sqrt(Math.pow(trajectory.getInitialPose().relativeTo(drivetrainSubsystem.getPoseBasedOnAlliance()).getX(), 2) + 
                                         Math.pow(trajectory.getInitialPose().relativeTo(drivetrainSubsystem.getPoseBasedOnAlliance()).getY(), 2));
 
+                                SmartDashboard.putNumber("Distance from Nearest Start", distanceFromTrajectoryStart);
                                 SmartDashboard.putNumber("Pose Initial x", trajectory.getInitialPose().getX());
                                 SmartDashboard.putNumber("Pose Initial y", trajectory.getInitialPose().getY());
+                                SmartDashboard.putNumber("Pose Attempt x", trajectory.getInitialPose().getX());
+                                SmartDashboard.putNumber("Pose Attempt y", trajectory.getInitialPose().getY());
                                 if(distanceFromTrajectoryStart > Constants.DrivetrainCharacteristics.maxCycleErrorDistanceMeters) return;
 
                                 pathCommand = Autos.runCyclePath(drivetrainSubsystem, trajectory);

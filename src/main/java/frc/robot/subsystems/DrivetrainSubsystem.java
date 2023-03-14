@@ -298,10 +298,10 @@ public class DrivetrainSubsystem extends SubsystemBase {
         if(DriverStation.getAlliance().equals(Alliance.Blue)){
                 return getPose();
         }
-        double x = 16.54 - odometry.getEstimatedPosition().getX();
-        double y = odometry.getEstimatedPosition().getY();
-
-        return new Pose2d(x, y, odometry.getEstimatedPosition().getRotation());
+        
+        return new Pose2d(getPose().getX(),
+                Constants.Field.fieldHeight - getPose().getY(),
+                Rotation2d.fromDegrees(getPose().getRotation().getDegrees() + 180.0));
   }
 
   public void tankDriveVolts(double leftVolts, double rightVolts) {
