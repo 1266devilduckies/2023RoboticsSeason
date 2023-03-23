@@ -8,17 +8,29 @@ import frc.robot.Constants.DriverConstants;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.Autos;
 import frc.robot.commands.Balance;
+import frc.robot.commands.GrabGamePiece;
+import frc.robot.commands.SpitOutGamePiece;
+import frc.robot.commands.armPoses.GoHome;
+import frc.robot.commands.armPoses.GroundConeScore;
+import frc.robot.commands.armPoses.GroundCubeScore;
+import frc.robot.commands.armPoses.HighConeScore;
+import frc.robot.commands.armPoses.HighCubeScore;
+import frc.robot.commands.armPoses.MidConeScore;
+import frc.robot.commands.armPoses.MidCubeScore;
+import frc.robot.commands.armPoses.PickupCone;
+import frc.robot.commands.armPoses.PickupConeHumanPlayer;
+import frc.robot.commands.armPoses.PickupCube;
+import frc.robot.commands.armPoses.PickupCubeHumanPlayer;
+import frc.robot.subsystems.ArmSubsystem;
+import frc.robot.subsystems.ClawSubsystem;
 import frc.robot.subsystems.DrivetrainSubsystem;
-import frc.robot.subsystems.VisionSubsystem;
-import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
-import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandPS4Controller;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 /**
@@ -30,7 +42,8 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   private final DrivetrainSubsystem drivetrainSubsystem = new DrivetrainSubsystem(this);
-  private final VisionSubsystem visionSubsystem = new VisionSubsystem(drivetrainSubsystem);
+  private final ClawSubsystem clawSubsystem = new ClawSubsystem();
+  private final ArmSubsystem armSubsystem = new ArmSubsystem();
   
   public SendableChooser<DuckAutoProfile> autonomousMode = new SendableChooser<DuckAutoProfile>();
 
@@ -38,17 +51,13 @@ public class RobotContainer {
       new CommandPS4Controller(DriverConstants.port);
   public final static CommandXboxController operatorJoystick =
       new CommandXboxController(OperatorConstants.port);
-  public final static GenericHID operatorPanel = new GenericHID(2);
-  JoystickButton operatorPanelBtn1 = new JoystickButton(operatorPanel, 1);
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     Autos.pushAutosToDashboard(autonomousMode, drivetrainSubsystem);
-    SmartDashboard.putData(autonomousMode);
+    Shuffleboard.getTab("autos").add(autonomousMode);
     // Configure the trigger bindings
     configureBindings();
-    //configure the auton markers
-    configureMarkers();
   }
 
   /**
@@ -62,15 +71,80 @@ public class RobotContainer {
    */
   private void configureBindings() {
         driverJoystick.R1().whileTrue(new Balance(drivetrainSubsystem));
-        operatorPanelBtn1.whileTrue(new InstantCommand(() -> {
-                SmartDashboard.putBoolean("being pressed", true);
-        }));
-        operatorPanelBtn1.whileFalse(new InstantCommand(() -> {
-                SmartDashboard.putBoolean("being pressed", false);
-        }));
-  }
-  private void configureMarkers() {
 
+        //spit out both game pieces
+        operatorJoystick.x().whileTrue(new SpitOutGamePiece(clawSubsystem));
+        operatorJoystick.povLeft().whileTrue(new SpitOutGamePiece(clawSubsystem));
+        
+        //pickup cube floor
+        operatorJoystick.rightTrigger(0.8).whileTrue(new ParallelDeadlineGroup(
+                new PickupCube(armSubsystem),
+                new GrabGamePiece(clawSubsystem, true)));
+        operatorJoystick.rightTrigger(0.8).onFalse(new GoHome(armSubsystem));
+        //pickup cone floor
+        operatorJoystick.leftTrigger(0.8).whileTrue(new ParallelDeadlineGroup(
+                new PickupCone(armSubsystem),
+                new GrabGamePiece(clawSubsystem, false)
+        ));
+        operatorJoystick.leftTrigger(0.8).onFalse(new GoHome(armSubsystem));
+
+        //pickup cone from human player
+        operatorJoystick.leftBumper().whileTrue(new ParallelDeadlineGroup(
+                new PickupConeHumanPlayer(armSubsystem),
+                new GrabGamePiece(clawSubsystem, false)));
+        operatorJoystick.leftBumper().onFalse(new SequentialCommandGroup(
+                new WaitCommand(0.5),
+                new GoHome(armSubsystem)
+        ));
+
+        //pickup cube from human player
+        operatorJoystick.rightBumper().whileTrue(new ParallelDeadlineGroup(
+                new PickupCubeHumanPlayer(armSubsystem),
+                new GrabGamePiece(clawSubsystem, true)));
+        operatorJoystick.rightBumper().onFalse(new SequentialCommandGroup(
+                new WaitCommand(0.5),
+                new GoHome(armSubsystem)
+        ));
+
+        //deposit cube ground
+        operatorJoystick.a().whileTrue(new GroundCubeScore(armSubsystem));
+        operatorJoystick.a().onFalse(new SequentialCommandGroup(
+                new WaitCommand(0.5),
+                new GoHome(armSubsystem)));
+
+        //deposit cone ground
+        operatorJoystick.povDown().whileTrue(new GroundConeScore(armSubsystem));
+        operatorJoystick.povDown().onFalse(new SequentialCommandGroup(
+                new WaitCommand(0.5),
+                new GoHome(armSubsystem)));
+
+        //deposit cube mid
+        operatorJoystick.b().whileTrue(new MidCubeScore(armSubsystem));
+        operatorJoystick.b().onFalse(new SequentialCommandGroup(
+                new WaitCommand(0.5),
+                new GoHome(armSubsystem)
+        ));
+
+        //deposit cone mid
+        operatorJoystick.povRight().whileTrue(new MidConeScore(armSubsystem));
+        operatorJoystick.povRight().onFalse(new SequentialCommandGroup(
+                new WaitCommand(0.5),
+                new GoHome(armSubsystem)
+        ));
+
+        //deposit cube high
+        operatorJoystick.y().whileTrue(new HighCubeScore(armSubsystem));
+        operatorJoystick.y().onFalse(new SequentialCommandGroup(
+                new WaitCommand(0.5),
+                new GoHome(armSubsystem)
+        ));
+
+        //deposit cone high
+        operatorJoystick.povUp().whileTrue(new HighConeScore(armSubsystem));
+        operatorJoystick.povUp().onFalse(new SequentialCommandGroup(
+                new WaitCommand(0.5),
+                new GoHome(armSubsystem)
+        ));
   }
 
   public DuckAutoProfile getAutonomousProfile() {

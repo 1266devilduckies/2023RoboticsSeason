@@ -6,9 +6,6 @@ package frc.robot;
 
 import java.util.HashMap;
 
-import edu.wpi.first.math.geometry.Rotation3d;
-import edu.wpi.first.math.geometry.Transform3d;
-import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.Command;
 
@@ -29,15 +26,16 @@ public final class Constants {
 
         public static class OperatorConstants {
                 public static final int port = 1;
-                public static final int movementAxis = 1;
+                public static final int movementAxis = 5;
                 public static final double movementDeadband = 0.5;
+                public static final int elbowMovementAxis = 1;
         }
 
         public static class DriverConstants {
                 public static final int port = 0;
                 public static final double deadbandLeftJoystick = 0.05;
                 public static final double deadbandRightJoystick = deadbandLeftJoystick;
-                public static final int ForwardDriveAxis = 1;//3;
+                public static final int ForwardDriveAxis = 1;
                 public static final int TurningDriveAxis = 2;
         }
 
@@ -53,7 +51,8 @@ public final class Constants {
                 }
 
                 public static class Arm {
-                        public static final int armMotor = 8;
+                        public static final int elbowMotor = 10;
+                        public static final int shoulderMotor = 8;
                 }
                 public static class Claw {
                         public static final int motor = 9;
@@ -61,14 +60,10 @@ public final class Constants {
         }
 
         public static class Arm {
-                public static final double gearing = 3.67*3.67*3.67;
-                public static final double armMassKg = 10.;
-                public static final double armLengthMeters = 1.;
-                public static final String kArmPositionKey = "arm position";
-                public static final String kArmPKey = "arm kp";
-                public static final String kArmGKey = "arm kg";
-                public static final double minAngle = -90.0;
-                public static final double maxAngle = 90.0;
+                public static final double minAngleShoulder = 0.0;
+                public static final double maxAngleShoulder = 180.0;
+                public static final double maxAngleElbow = 125.0;
+                public static final double minAngleElbow = 0.0;
         }
 
         public static class DrivetrainCharacteristics {
@@ -76,27 +71,15 @@ public final class Constants {
                 public static final double gearing = 6.4;
                 public static final double wheelRadiusMeters = Units.inchesToMeters(2);
                 public static final double rampPGain = 0.1;
-                public static final String gyroPitchPGainKey = "gyro pitch kP";
-                public static final String movementPGainKey = "movement kP";
-                public static final String globalRotationPGainKey = "global rotation kP";
-                public static final String ksAngularKey = "rotation voltage min";
                 public static final double kSAngular = -0.1;
                 public static final double kS = 0.17825;
                 public static final double kV = 2.2146;
                 public static final double kA = 0.278;
                 public static final double kP = 0.37182;
-                public static final double maxAutoVelocityMeters = 4;
-                public static final double maxAutoAccelerationMeters = 3;
+                public static final double maxAutoVelocityMeters = 2;
+                public static final double maxAutoAccelerationMeters = 1.5;
                 public static final double speedScale = 0.8;
-                public static final double maxSpeedTicks = 21500 * speedScale;
                 public static final double deadband = 0.1;
-        }
-
-        public static class CameraCharacteristics {
-                public static final String photonVisionName = "camera";
-                public static final Transform3d robotToCamMeters = new Transform3d(
-                                new Translation3d(-Units.inchesToMeters(8.5), 0.0, Units.inchesToMeters(15.5)),
-                                new Rotation3d(0, Units.degreesToRadians(12), 0));
         }
 
         public static class AutoTrajectoryFileNames {
@@ -106,19 +89,14 @@ public final class Constants {
                 public static final String MID_BALANCE = "MidBalance";
                 public static final String CONE_TAXI = "ConeTaxi";
                 public static final String DOCK = "DockPath";
-                public static final String UPPER_COMMUNITY_TO_LOADING = "UpperCommunityToLoading";
-                public static final String LOWER_COMMUNITY_TO_LOADING = "LowerCommunityToLoading";
-                public static final String LOADING_COMMUNITY_TO_LOWER = "LoadingToUpperCommunity";
-                public static final String LOADING_COMMUNITY_TO_UPPER = "LoadingToLowerCommunity";
         }
 
         public static class ClawCharacteristics {
-                public static final String clawSpeedKey = "claw speed";
-                public static final String clawTimeKey = "claw time";
-                public static final String clawTimeoutTimeKey = "claw timeout time";
-                public static int forwardChannel = 0;
-                public static int reverseChannel = 1;
+                public static final double clawTime = 0.5;
+                public static final double clawSpeed = 0.8;
+                public static final double gamePieceSpitOutTime = 0.5;
         }
+
 
         public static HashMap<String, Command> eventMap = new HashMap<>();
 }

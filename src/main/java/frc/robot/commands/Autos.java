@@ -73,17 +73,6 @@ public final class Autos {
     return new DuckAutoProfile(new BalanceComplexCommand(drivetrainSubsystem), startPosition);
   }
 
-  /*private static DuckAutoProfile forwardAuto(DrivetrainSubsystem drivetrainSubsystem){
-    String pathName = Constants.AutoTrajectoryFileNames.LOW_FORWARD;
-    PathPlannerTrajectory pathTrajectory = PathPlanner.loadPath(pathName, new PathConstraints(
-      Constants.DrivetrainCharacteristics.maxAutoVelocityMeters, 
-    Constants.DrivetrainCharacteristics.maxAutoAccelerationMeters));
-    SequentialCommandGroup command = new SequentialCommandGroup(runPath(drivetrainSubsystem, pathTrajectory));
-    Pose2d startPosition = pathTrajectory.getInitialPose();
-
-    return new DuckAutoProfile(command, startPosition);
-  }*/
-
   //auto factory
   private static CommandBase runPath(DrivetrainSubsystem drivetrainSubsystem, PathPlannerTrajectory pathTrajectory) {
     
