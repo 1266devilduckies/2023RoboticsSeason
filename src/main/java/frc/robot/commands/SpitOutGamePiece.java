@@ -15,6 +15,7 @@ public class SpitOutGamePiece extends CommandBase {
 
         public SpitOutGamePiece(ClawSubsystem clawSubsystem) {
                 this.clawSubsystem = clawSubsystem;
+                suckInOverride = false;
                 addRequirements(this.clawSubsystem);
         }
 
@@ -31,7 +32,7 @@ public class SpitOutGamePiece extends CommandBase {
         public void execute() {
                 if (suckInOverride == false) {
                         this.clawSubsystem.motor.set(ControlMode.PercentOutput,
-                                        Constants.ClawCharacteristics.gamePieceSpitOutTime
+                                        clawSubsystem.getClawSpeed()
                                                         * (this.clawSubsystem.suckingInCube ? 1 : -1));
                 } else {
                         this.clawSubsystem.motor.set(ControlMode.PercentOutput,

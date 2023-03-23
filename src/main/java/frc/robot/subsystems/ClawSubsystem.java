@@ -10,6 +10,7 @@ import frc.robot.commands.ClawHoldPosition;
 public class ClawSubsystem extends SubsystemBase {
         public TalonFX motor = new TalonFX(Constants.CAN.Claw.motor);
         public boolean suckingInCube = false;
+        public boolean superSpeed = false;
         
         public ClawSubsystem() {
                 motor.configFactoryDefault();
@@ -20,7 +21,11 @@ public class ClawSubsystem extends SubsystemBase {
         }
         
         public double getClawSpeed() {
-                return Constants.ClawCharacteristics.clawSpeed;
+                if (superSpeed == true) {
+                        return 1.0;
+                } else {
+                        return Constants.ClawCharacteristics.clawSpeed;
+                }
         }
         public double getClawTime(){
                 return Constants.ClawCharacteristics.clawTime;

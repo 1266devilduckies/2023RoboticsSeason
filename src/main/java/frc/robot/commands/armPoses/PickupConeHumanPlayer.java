@@ -12,11 +12,11 @@ public class PickupConeHumanPlayer extends SequentialCommandGroup {
                 addRequirements(subsystem);
                 addCommands(
                         new InstantCommand(()->{
-                                this.subsystem.commandAngle(63.85);
+                                this.subsystem.commandAngle(71.5);
                         }),
                         new WaitUntilCommand(this.subsystem::shoulderAtTarget),
                         new InstantCommand(()->{
-                                this.subsystem.ElbowCommandAngle(125.0);
+                                this.subsystem.ElbowCommandAngle(154.5);
                         }),
                         new WaitUntilCommand(()->false)
                 );

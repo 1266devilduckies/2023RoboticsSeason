@@ -19,13 +19,16 @@ import frc.robot.commands.armPoses.MidConeScore;
 import frc.robot.commands.armPoses.MidCubeScore;
 import frc.robot.commands.armPoses.PickupCone;
 import frc.robot.commands.armPoses.PickupConeHumanPlayer;
+import frc.robot.commands.armPoses.PickupConeHumanPlayerRamp;
 import frc.robot.commands.armPoses.PickupCube;
 import frc.robot.commands.armPoses.PickupCubeHumanPlayer;
+import frc.robot.commands.armPoses.PickupCubeHumanPlayerRamp;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.ClawSubsystem;
 import frc.robot.subsystems.DrivetrainSubsystem;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
@@ -71,6 +74,20 @@ public class RobotContainer {
    */
   private void configureBindings() {
         driverJoystick.R1().whileTrue(new Balance(drivetrainSubsystem));
+        driverJoystick.square().whileTrue(new ParallelDeadlineGroup(
+                new PickupConeHumanPlayerRamp(armSubsystem),
+                new GrabGamePiece(clawSubsystem, false)));
+        driverJoystick.square().onFalse(new SequentialCommandGroup(
+                new WaitCommand(0.5),
+                new GoHome(armSubsystem)
+        ));
+        driverJoystick.circle().whileTrue(new ParallelDeadlineGroup(
+                new PickupCubeHumanPlayerRamp(armSubsystem),
+                new GrabGamePiece(clawSubsystem, true)));
+        driverJoystick.circle().onFalse(new SequentialCommandGroup(
+                new WaitCommand(0.5),
+                new GoHome(armSubsystem)
+        ));
 
         //spit out both game pieces
         operatorJoystick.x().whileTrue(new SpitOutGamePiece(clawSubsystem));
@@ -107,8 +124,11 @@ public class RobotContainer {
         ));
 
         //deposit cube ground
-        operatorJoystick.a().whileTrue(new GroundCubeScore(armSubsystem));
+        operatorJoystick.a().whileTrue(new GroundCubeScore(armSubsystem, clawSubsystem));
         operatorJoystick.a().onFalse(new SequentialCommandGroup(
+                new InstantCommand(()->{
+                        clawSubsystem.superSpeed = false;
+                }),
                 new WaitCommand(0.5),
                 new GoHome(armSubsystem)));
 
