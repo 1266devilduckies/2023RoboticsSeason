@@ -62,7 +62,7 @@ public final class Constants {
         public static class Arm {
                 public static final double minAngleShoulder = 0.0;
                 public static final double maxAngleShoulder = 180.0;
-                public static final double maxAngleElbow = 150.0;
+                public static final double maxAngleElbow = 165.0;
                 public static final double minAngleElbow = 0.0;
         }
 

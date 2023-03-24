@@ -16,7 +16,7 @@ public class GoHome extends SequentialCommandGroup {
                         }),
                         new WaitUntilCommand(this.subsystem::elbowAtTarget),
                         new InstantCommand(()->{
-                                this.subsystem.commandAngle(10.0);
+                                this.subsystem.commandAngle(5.0);
                         })
                 );
         }

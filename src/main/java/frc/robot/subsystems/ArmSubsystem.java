@@ -9,6 +9,7 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.RobotContainer;
 import frc.robot.commands.DriveArm;
 
 public class ArmSubsystem extends SubsystemBase{
@@ -32,7 +33,21 @@ public class ArmSubsystem extends SubsystemBase{
         public void periodic() {
                 armShoulderSetpointDegrees = MathUtil.clamp(armShoulderSetpointDegrees, Constants.Arm.minAngleShoulder, Constants.Arm.maxAngleShoulder);
                 armElbowSetpointDegrees = MathUtil.clamp(armElbowSetpointDegrees, Constants.Arm.minAngleElbow, Constants.Arm.maxAngleElbow);
+                double speed = 45.0; //degrees per second
+                double movementAxis = -RobotContainer.operatorJoystick.getRawAxis(Constants.OperatorConstants.movementAxis);
+                double elbowMovementAxis = -RobotContainer.operatorJoystick.getRawAxis(Constants.OperatorConstants.elbowMovementAxis);
+                
+                if (movementAxis > Constants.OperatorConstants.movementDeadband) {
+                        commandAngle(getShoulderAngleSetpoint() + speed * 0.02);
+                } else if (movementAxis < -Constants.OperatorConstants.movementDeadband) {
+                        commandAngle(getShoulderAngleSetpoint() - speed * 0.02);
+                }
 
+                if (elbowMovementAxis > Constants.OperatorConstants.movementDeadband) {
+                        ElbowCommandAngle(getElbowAngleSetpoint() + speed * 0.02);
+                } else if (elbowMovementAxis < -Constants.OperatorConstants.movementDeadband) {
+                        ElbowCommandAngle(getElbowAngleSetpoint() - speed * 0.02);
+                }
                 shoulderPID.setReference(armShoulderSetpointDegrees, ControlType.kPosition);
                 elbowPID.setReference(armElbowSetpointDegrees, ControlType.kPosition);
 
