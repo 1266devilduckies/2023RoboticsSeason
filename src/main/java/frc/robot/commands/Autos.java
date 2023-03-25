@@ -80,12 +80,13 @@ public final class Autos {
             }),
             new WaitCommand(0.2),
             new ParallelDeadlineGroup(
-                new SpitOutGamePiece(clawSubsystem),
-                new WaitCommand(0.2)
+                    new WaitCommand(0.2),
+                    new SpitOutGamePiece(clawSubsystem)
             ),
-            new ParallelCommandGroup(
-                new GoHome(armSubsystem),
-                new SequentialCommandGroup(
+            new InstantCommand(()-> {
+                armSubsystem.ElbowCommandAngle(5.0);
+                armSubsystem.commandAngle(5.0);
+            }),
             runPath(drivetrainSubsystem, pathTrajectory), 
             new WaitCommand(1), 
             new InstantCommand(()->{
@@ -94,7 +95,7 @@ public final class Autos {
               drivetrainSubsystem.MainRightMotorBack.setSelectedSensorPosition(0);
             }),
             new BalanceComplexCommand(drivetrainSubsystem)
-          )));
+        );
         Pose2d startPosition = pathTrajectory.getInitialPose();
         return new DuckAutoProfile(command, startPosition);
       }
@@ -131,12 +132,13 @@ public final class Autos {
   }
 
   public static void pushAutosToDashboard(SendableChooser<DuckAutoProfile> autonomousMode,
-      DrivetrainSubsystem drivetrainSubsystem) {
+      DrivetrainSubsystem drivetrainSubsystem, ArmSubsystem armSubsystem, ClawSubsystem clawSubsystem) {
 
         autonomousMode.setDefaultOption("low taxi auto", lowTaxiPath(drivetrainSubsystem));
     autonomousMode.addOption("mid balance auto", midBalance(drivetrainSubsystem));
     autonomousMode.addOption("high taxi auto", highTaxiPath(drivetrainSubsystem));
     autonomousMode.addOption("do nothing", new DuckAutoProfile());
     autonomousMode.addOption("just balance auto", justBalance(drivetrainSubsystem));
+    autonomousMode.addOption("score mid balance", scoreAndMidBalance(drivetrainSubsystem, armSubsystem, clawSubsystem));
   }
 }

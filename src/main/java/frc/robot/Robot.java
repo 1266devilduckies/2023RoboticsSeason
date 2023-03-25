@@ -67,7 +67,7 @@ public class Robot extends TimedRobot {
     if (waitDelayEntry.get() != waitDelay) {
       waitDelay = waitDelayEntry.get();
       
-      Autos.pushAutosToDashboard(m_robotContainer.autonomousMode, m_robotContainer.getDrivetrainSubsystem());
+      Autos.pushAutosToDashboard(m_robotContainer.autonomousMode, m_robotContainer.getDrivetrainSubsystem(), m_robotContainer.getArmSubsystem(), m_robotContainer.getClawSubsystem());
     }
   }
 
@@ -105,6 +105,13 @@ public class Robot extends TimedRobot {
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
     }
+
+    m_robotContainer.getDrivetrainSubsystem().MainLeftMotorBack.configClosedloopRamp(0.25);
+    m_robotContainer.getDrivetrainSubsystem().MainLeftMotorFront.configClosedloopRamp(0.25);
+    m_robotContainer.getDrivetrainSubsystem().MainRightMotorBack.configClosedloopRamp(0.25);
+    m_robotContainer.getDrivetrainSubsystem().MainRightMotorFront.configClosedloopRamp(0.25);
+    m_robotContainer.getDrivetrainSubsystem().leftTopMotor.configClosedloopRamp(0.25);
+    m_robotContainer.getDrivetrainSubsystem().rightTopMotor.configClosedloopRamp(0.25);
 
     m_robotContainer.getDrivetrainSubsystem().MainLeftMotorBack.setNeutralMode(NeutralMode.Coast);
     m_robotContainer.getDrivetrainSubsystem().MainLeftMotorFront.setNeutralMode(NeutralMode.Coast);

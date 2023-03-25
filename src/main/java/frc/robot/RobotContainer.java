@@ -57,7 +57,7 @@ public class RobotContainer {
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
-    Autos.pushAutosToDashboard(autonomousMode, drivetrainSubsystem);
+    Autos.pushAutosToDashboard(autonomousMode, drivetrainSubsystem, armSubsystem, clawSubsystem);
     Shuffleboard.getTab("autos").add(autonomousMode);
     // Configure the trigger bindings
     configureBindings();
@@ -174,5 +174,11 @@ public class RobotContainer {
 
   public DrivetrainSubsystem getDrivetrainSubsystem(){
     return drivetrainSubsystem;
+  }
+  public ArmSubsystem getArmSubsystem(){
+        return armSubsystem;
+  }
+  public ClawSubsystem getClawSubsystem() {
+        return clawSubsystem;
   }
 }
