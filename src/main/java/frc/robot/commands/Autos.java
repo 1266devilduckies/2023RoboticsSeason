@@ -15,10 +15,15 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants;
 import frc.robot.DuckAutoProfile;
+import frc.robot.commands.armPoses.GoHome;
+import frc.robot.subsystems.ArmSubsystem;
+import frc.robot.subsystems.ClawSubsystem;
 import frc.robot.subsystems.DrivetrainSubsystem;
 
 public final class Autos {
@@ -63,6 +68,36 @@ public final class Autos {
     Pose2d startPosition = pathTrajectory.getInitialPose();
     return new DuckAutoProfile(command, startPosition);
   }
+
+  private static DuckAutoProfile scoreAndMidBalance(DrivetrainSubsystem drivetrainSubsystem, ArmSubsystem armSubsystem, ClawSubsystem clawSubsystem){
+        String pathName = Constants.AutoTrajectoryFileNames.MID_BALANCE;
+        PathPlannerTrajectory pathTrajectory = PathPlanner.loadPath(pathName, new PathConstraints(
+          Constants.DrivetrainCharacteristics.maxAutoVelocityMeters, 
+          Constants.DrivetrainCharacteristics.maxAutoAccelerationMeters), true);
+        SequentialCommandGroup command = new SequentialCommandGroup(
+            new InstantCommand(()->{
+                armSubsystem.ElbowCommandAngle(34.0);
+            }),
+            new WaitCommand(0.2),
+            new ParallelDeadlineGroup(
+                new SpitOutGamePiece(clawSubsystem),
+                new WaitCommand(0.2)
+            ),
+            new ParallelCommandGroup(
+                new GoHome(armSubsystem),
+                new SequentialCommandGroup(
+            runPath(drivetrainSubsystem, pathTrajectory), 
+            new WaitCommand(1), 
+            new InstantCommand(()->{
+              drivetrainSubsystem.gyro.resetPitch();
+              drivetrainSubsystem.MainLeftMotorBack.setSelectedSensorPosition(0);
+              drivetrainSubsystem.MainRightMotorBack.setSelectedSensorPosition(0);
+            }),
+            new BalanceComplexCommand(drivetrainSubsystem)
+          )));
+        Pose2d startPosition = pathTrajectory.getInitialPose();
+        return new DuckAutoProfile(command, startPosition);
+      }
 
   private static DuckAutoProfile justBalance(DrivetrainSubsystem drivetrainSubsystem){
     String pathName = Constants.AutoTrajectoryFileNames.MID_BALANCE;
