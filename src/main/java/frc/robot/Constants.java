@@ -79,7 +79,7 @@ public final class Constants {
                 //changed speed from 2.5 to 1.5 cause moad told me to
                 public static final double maxAutoVelocityMeters = 1.5;
                 public static final double maxAutoAccelerationMeters = 1.5;
-                public static final double speedScale = 0.8;
+                public static final double speedScale = 0.75;
                 public static final double deadband = 0.1;
         }
 
