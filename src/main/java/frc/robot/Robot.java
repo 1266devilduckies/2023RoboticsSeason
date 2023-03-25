@@ -2,6 +2,8 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 package frc.robot;
+import com.ctre.phoenix.motorcontrol.NeutralMode;
+
 import edu.wpi.first.networktables.DoubleEntry;
 import edu.wpi.first.networktables.DoubleTopic;
 import edu.wpi.first.networktables.NetworkTableInstance;
@@ -103,6 +105,13 @@ public class Robot extends TimedRobot {
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
     }
+
+    m_robotContainer.getDrivetrainSubsystem().MainLeftMotorBack.setNeutralMode(NeutralMode.Coast);
+    m_robotContainer.getDrivetrainSubsystem().MainLeftMotorFront.setNeutralMode(NeutralMode.Coast);
+    m_robotContainer.getDrivetrainSubsystem().MainRightMotorBack.setNeutralMode(NeutralMode.Coast);
+    m_robotContainer.getDrivetrainSubsystem().MainRightMotorFront.setNeutralMode(NeutralMode.Coast);
+    m_robotContainer.getDrivetrainSubsystem().leftTopMotor.setNeutralMode(NeutralMode.Coast);
+    m_robotContainer.getDrivetrainSubsystem().rightTopMotor.setNeutralMode(NeutralMode.Coast);
   }
 
   /** This function is called periodically during operator control. */
