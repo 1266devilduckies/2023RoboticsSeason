@@ -80,6 +80,13 @@ public class DrivetrainSubsystem extends SubsystemBase {
     MainRightMotorFront.setNeutralMode(NeutralMode.Brake);
     leftTopMotor.setNeutralMode(NeutralMode.Brake);
     rightTopMotor.setNeutralMode(NeutralMode.Brake);
+// added ramping because moad told me to
+    MainLeftMotorBack.configClosedloopRamp(0.15);
+    MainLeftMotorFront.configClosedloopRamp(0.15);
+    MainRightMotorBack.configClosedloopRamp(0.15);
+    MainRightMotorFront.configClosedloopRamp(0.15);
+    leftTopMotor.configClosedloopRamp(0.15);
+    rightTopMotor.configClosedloopRamp(0.15);
 
     // Invert one of the sides
     MainLeftMotorBack.setInverted(true);
