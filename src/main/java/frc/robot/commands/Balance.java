@@ -16,6 +16,14 @@ public class Balance extends CommandBase{
         @Override
         public void initialize(){
                 drivetrainSubsystem.pidGyroPitch.setSetpoint(0.0);
+                
+                drivetrainSubsystem.MainLeftMotorBack.configOpenloopRamp(0.0);
+                drivetrainSubsystem.MainLeftMotorFront.configOpenloopRamp(0.0);
+                drivetrainSubsystem.MainRightMotorBack.configOpenloopRamp(0.0);
+                drivetrainSubsystem.MainRightMotorFront.configOpenloopRamp(0.0);
+                drivetrainSubsystem.leftTopMotor.configOpenloopRamp(0.0);
+                drivetrainSubsystem.rightTopMotor.configOpenloopRamp(0.0);
+                
                 drivetrainSubsystem.MainLeftMotorBack.setNeutralMode(NeutralMode.Brake);
                 drivetrainSubsystem.MainRightMotorBack.setNeutralMode(NeutralMode.Brake);
                 drivetrainSubsystem.MainLeftMotorFront.setNeutralMode(NeutralMode.Brake);

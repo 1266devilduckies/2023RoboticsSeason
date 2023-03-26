@@ -35,7 +35,7 @@ public final class Constants {
                 public static final int port = 0;
                 public static final double deadbandLeftJoystick = 0.05;
                 public static final double deadbandRightJoystick = deadbandLeftJoystick;
-                public static final int ForwardDriveAxis = 1;
+                public static final int ForwardDriveAxis = 3; //1
                 public static final int TurningDriveAxis = 2;
         }
 
@@ -70,7 +70,7 @@ public final class Constants {
                 public static final double trackWidthMeters = Units.inchesToMeters(18);
                 public static final double gearing = 6.4;
                 public static final double wheelRadiusMeters = Units.inchesToMeters(2);
-                public static final double rampPGain = 0.1;
+                //public static final double rampPGain = 0.1;
                 public static final double kSAngular = -0.1;
                 public static final double kS = 0.17825;
                 public static final double kV = 2.2146;
@@ -79,8 +79,8 @@ public final class Constants {
                 //changed speed from 2.5 to 1.5 cause moad told me to
                 public static final double maxAutoVelocityMeters = 2.5;
                 public static final double maxAutoAccelerationMeters = 2.5;
-                public static final double speedScale = 0.75;
-                public static final double deadband = 0.1;
+                public static final double speedScale = 0.8;
+                public static final double deadband = 0.02;
         }
 
         public static class AutoTrajectoryFileNames {

@@ -24,6 +24,7 @@
   "NTProvider": {
     "types": {
       "/FMSInfo": "FMSInfo",
+      "/Shuffleboard/autos/SendableChooser[0]": "String Chooser",
       "/SmartDashboard/Arm Sim": "Mechanism2d",
       "/SmartDashboard/Field": "Field2d",
       "/SmartDashboard/PPRamseteCommand_field": "Field2d",

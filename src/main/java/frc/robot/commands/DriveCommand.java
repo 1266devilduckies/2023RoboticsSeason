@@ -1,11 +1,18 @@
 package frc.robot.commands;
 
+import edu.wpi.first.math.controller.DifferentialDriveAccelerationLimiter;
+import edu.wpi.first.math.filter.SlewRateLimiter;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
 import frc.robot.RobotContainer;
 import frc.robot.subsystems.DrivetrainSubsystem;
 
 public class DriveCommand extends CommandBase{
+
+    //SurfVikings had 1.5 as there rate limit, that means that the robots percent output can change by 150% percent in 1 second
+    SlewRateLimiter rateLimiter = new SlewRateLimiter(1.6); //3
+    SlewRateLimiter turnRateLimiter = new SlewRateLimiter(1.9);
 
     DrivetrainSubsystem drivetrainSubsystem;
     public DriveCommand(DrivetrainSubsystem subsystem){
@@ -20,7 +27,7 @@ public class DriveCommand extends CommandBase{
         double x = RobotContainer.driverJoystick.getRawAxis(Constants.DriverConstants.TurningDriveAxis);
         
         drivetrainSubsystem.robotDrive.setMaxOutput(Constants.DrivetrainCharacteristics.speedScale);
-        drivetrainSubsystem.robotDrive.arcadeDrive(y,-x);
+        drivetrainSubsystem.robotDrive.arcadeDrive(rateLimiter.calculate(y),turnRateLimiter.calculate(-x), false);
     }
 
     // Make this return true when this Command no longer needs to run execute()

@@ -99,6 +99,29 @@ public final class Autos {
         Pose2d startPosition = pathTrajectory.getInitialPose();
         return new DuckAutoProfile(command, startPosition);
       }
+      private static DuckAutoProfile scoreAndLowTaxi(DrivetrainSubsystem drivetrainSubsystem, ArmSubsystem armSubsystem, ClawSubsystem clawSubsystem){
+        String pathName = Constants.AutoTrajectoryFileNames.LOW_TAXI;
+        PathPlannerTrajectory pathTrajectory = PathPlanner.loadPath(pathName, new PathConstraints(
+          Constants.DrivetrainCharacteristics.maxAutoVelocityMeters, 
+          Constants.DrivetrainCharacteristics.maxAutoAccelerationMeters), true);
+        SequentialCommandGroup command = new SequentialCommandGroup(
+            new InstantCommand(()->{
+                armSubsystem.ElbowCommandAngle(34.0);
+            }),
+            new WaitCommand(1),
+            new ParallelDeadlineGroup(
+                    new WaitCommand(0.2),
+                    new SpitOutGamePiece(clawSubsystem)
+            ),
+            new InstantCommand(()-> {
+                armSubsystem.ElbowCommandAngle(5.0);
+                armSubsystem.commandAngle(5.0);
+            }),
+            runPath(drivetrainSubsystem, pathTrajectory)
+        );
+        Pose2d startPosition = pathTrajectory.getInitialPose();
+        return new DuckAutoProfile(command, startPosition);
+      }
 
   private static DuckAutoProfile justBalance(DrivetrainSubsystem drivetrainSubsystem){
     String pathName = Constants.AutoTrajectoryFileNames.MID_BALANCE;
@@ -140,5 +163,6 @@ public final class Autos {
     autonomousMode.addOption("do nothing", new DuckAutoProfile());
     autonomousMode.addOption("just balance auto", justBalance(drivetrainSubsystem));
     autonomousMode.addOption("score mid balance", scoreAndMidBalance(drivetrainSubsystem, armSubsystem, clawSubsystem));
+    autonomousMode.addOption("score low taxi", scoreAndLowTaxi(drivetrainSubsystem, armSubsystem, clawSubsystem));
   }
 }

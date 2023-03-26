@@ -95,13 +95,14 @@ public class RobotContainer {
         
         //pickup cube floor
         operatorJoystick.rightTrigger(0.8).whileTrue(new ParallelDeadlineGroup(
-                new PickupCube(armSubsystem),
-                new GrabGamePiece(clawSubsystem, true)));
+                new GrabGamePiece(clawSubsystem, true),        
+                new PickupCube(armSubsystem)
+                ));
         operatorJoystick.rightTrigger(0.8).onFalse(new GoHome(armSubsystem));
         //pickup cone floor
         operatorJoystick.leftTrigger(0.8).whileTrue(new ParallelDeadlineGroup(
-                new PickupCone(armSubsystem),
-                new GrabGamePiece(clawSubsystem, false)
+                new GrabGamePiece(clawSubsystem, false),      
+                new PickupCone(armSubsystem)
         ));
         operatorJoystick.leftTrigger(0.8).onFalse(new GoHome(armSubsystem));
 

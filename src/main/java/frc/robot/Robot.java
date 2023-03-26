@@ -106,19 +106,19 @@ public class Robot extends TimedRobot {
       m_autonomousCommand.cancel();
     }
 
-    m_robotContainer.getDrivetrainSubsystem().MainLeftMotorBack.configClosedloopRamp(0.25);
-    m_robotContainer.getDrivetrainSubsystem().MainLeftMotorFront.configClosedloopRamp(0.25);
-    m_robotContainer.getDrivetrainSubsystem().MainRightMotorBack.configClosedloopRamp(0.25);
-    m_robotContainer.getDrivetrainSubsystem().MainRightMotorFront.configClosedloopRamp(0.25);
-    m_robotContainer.getDrivetrainSubsystem().leftTopMotor.configClosedloopRamp(0.25);
-    m_robotContainer.getDrivetrainSubsystem().rightTopMotor.configClosedloopRamp(0.25);
+    /*m_robotContainer.getDrivetrainSubsystem().MainLeftMotorBack.configOpenloopRamp(0.25);
+    m_robotContainer.getDrivetrainSubsystem().MainLeftMotorFront.configOpenloopRamp(0.25);
+    m_robotContainer.getDrivetrainSubsystem().MainRightMotorBack.configOpenloopRamp(0.25);
+    m_robotContainer.getDrivetrainSubsystem().MainRightMotorFront.configOpenloopRamp(0.25);
+    m_robotContainer.getDrivetrainSubsystem().leftTopMotor.configOpenloopRamp(0.25);
+    m_robotContainer.getDrivetrainSubsystem().rightTopMotor.configOpenloopRamp(0.25);*/
 
-    m_robotContainer.getDrivetrainSubsystem().MainLeftMotorBack.setNeutralMode(NeutralMode.Coast);
-    m_robotContainer.getDrivetrainSubsystem().MainLeftMotorFront.setNeutralMode(NeutralMode.Coast);
-    m_robotContainer.getDrivetrainSubsystem().MainRightMotorBack.setNeutralMode(NeutralMode.Coast);
-    m_robotContainer.getDrivetrainSubsystem().MainRightMotorFront.setNeutralMode(NeutralMode.Coast);
-    m_robotContainer.getDrivetrainSubsystem().leftTopMotor.setNeutralMode(NeutralMode.Coast);
-    m_robotContainer.getDrivetrainSubsystem().rightTopMotor.setNeutralMode(NeutralMode.Coast);
+    m_robotContainer.getDrivetrainSubsystem().MainLeftMotorBack.setNeutralMode(NeutralMode.Brake);
+    m_robotContainer.getDrivetrainSubsystem().MainLeftMotorFront.setNeutralMode(NeutralMode.Brake);
+    m_robotContainer.getDrivetrainSubsystem().MainRightMotorBack.setNeutralMode(NeutralMode.Brake);
+    m_robotContainer.getDrivetrainSubsystem().MainRightMotorFront.setNeutralMode(NeutralMode.Brake);
+    m_robotContainer.getDrivetrainSubsystem().leftTopMotor.setNeutralMode(NeutralMode.Brake);
+    m_robotContainer.getDrivetrainSubsystem().rightTopMotor.setNeutralMode(NeutralMode.Brake);
   }
 
   /** This function is called periodically during operator control. */
