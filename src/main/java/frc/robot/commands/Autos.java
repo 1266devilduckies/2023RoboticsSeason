@@ -22,13 +22,9 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants;
 import frc.robot.DuckAutoProfile;
-<<<<<<< HEAD
-import frc.robot.commands.armPoses.GoHome;
 import frc.robot.commands.armPoses.HighCubeScore;
 import frc.robot.commands.armPoses.MidConeScore;
 import frc.robot.commands.armPoses.PickupCube;
-=======
->>>>>>> 182a43ba894cef8dc759a99f63f8209db8c86769
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.ClawSubsystem;
 import frc.robot.subsystems.DrivetrainSubsystem;
