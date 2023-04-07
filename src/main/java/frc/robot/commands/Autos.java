@@ -137,7 +137,7 @@ public final class Autos {
         drivetrainSubsystem.drivetrainKinematics, 
         new SimpleMotorFeedforward(Constants.DrivetrainCharacteristics.kS, Constants.DrivetrainCharacteristics.kV,Constants.DrivetrainCharacteristics.kA),
         drivetrainSubsystem::getWheelSpeeds, 
-        new PIDConstants(Constants.DrivetrainCharacteristics.kP, 0.0, Constants.DrivetrainCharacteristics.kD),
+        new PIDConstants(Constants.DrivetrainCharacteristics.kP, 0.0, 0.0),
         drivetrainSubsystem::tankDriveVolts,
         Constants.eventMap,  
         true,
@@ -157,8 +157,8 @@ public final class Autos {
     autonomousMode.addOption("high taxi auto", highTaxiPath(drivetrainSubsystem));
     autonomousMode.addOption("do nothing", new DuckAutoProfile());
     autonomousMode.addOption("just balance auto", justBalance(drivetrainSubsystem));
-    autonomousMode.addOption("score mid balance", scoreAndMidBalance(drivetrainSubsystem, armSubsystem, clawSubsystem));
-    autonomousMode.addOption("score low taxi", scoreAndLowTaxi(drivetrainSubsystem, armSubsystem, clawSubsystem));
+//     autonomousMode.addOption("score mid balance", scoreAndMidBalance(drivetrainSubsystem, armSubsystem, clawSubsystem));
+//     autonomousMode.addOption("score low taxi", scoreAndLowTaxi(drivetrainSubsystem, armSubsystem, clawSubsystem));
     autonomousMode.addOption("demo", demo(armSubsystem, clawSubsystem));
   }
 }

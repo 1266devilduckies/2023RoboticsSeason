@@ -26,6 +26,7 @@ import frc.robot.commands.armPoses.PickupCubeHumanPlayerRamp;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.ClawSubsystem;
 import frc.robot.subsystems.DrivetrainSubsystem;
+import frc.robot.subsystems.LEDSubsystem;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -47,6 +48,7 @@ public class RobotContainer {
   private final DrivetrainSubsystem drivetrainSubsystem = new DrivetrainSubsystem(this);
   private final ClawSubsystem clawSubsystem = new ClawSubsystem();
   private final ArmSubsystem armSubsystem = new ArmSubsystem();
+  private final LEDSubsystem ledSubsystem = new LEDSubsystem();
   
   public SendableChooser<DuckAutoProfile> autonomousMode = new SendableChooser<DuckAutoProfile>();
 
@@ -181,5 +183,8 @@ public class RobotContainer {
   }
   public ClawSubsystem getClawSubsystem() {
         return clawSubsystem;
+  }
+  public LEDSubsystem getLEDSubsystem() {
+        return ledSubsystem;
   }
 }
