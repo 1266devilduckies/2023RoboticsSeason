@@ -22,10 +22,13 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants;
 import frc.robot.DuckAutoProfile;
+<<<<<<< HEAD
 import frc.robot.commands.armPoses.GoHome;
 import frc.robot.commands.armPoses.HighCubeScore;
 import frc.robot.commands.armPoses.MidConeScore;
 import frc.robot.commands.armPoses.PickupCube;
+=======
+>>>>>>> 182a43ba894cef8dc759a99f63f8209db8c86769
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.ClawSubsystem;
 import frc.robot.subsystems.DrivetrainSubsystem;
@@ -54,7 +57,7 @@ public final class Autos {
   }
 
 
-  private static DuckAutoProfile midBalance(DrivetrainSubsystem drivetrainSubsystem){
+  public static DuckAutoProfile midBalance(DrivetrainSubsystem drivetrainSubsystem){
     String pathName = Constants.AutoTrajectoryFileNames.MID_BALANCE;
     PathPlannerTrajectory pathTrajectory = PathPlanner.loadPath(pathName, new PathConstraints(
       Constants.DrivetrainCharacteristics.maxAutoVelocityMeters, 
@@ -72,60 +75,6 @@ public final class Autos {
     Pose2d startPosition = pathTrajectory.getInitialPose();
     return new DuckAutoProfile(command, startPosition);
   }
-
-  private static DuckAutoProfile scoreAndMidBalance(DrivetrainSubsystem drivetrainSubsystem, ArmSubsystem armSubsystem, ClawSubsystem clawSubsystem){
-        String pathName = Constants.AutoTrajectoryFileNames.MID_BALANCE;
-        PathPlannerTrajectory pathTrajectory = PathPlanner.loadPath(pathName, new PathConstraints(
-          Constants.DrivetrainCharacteristics.maxAutoVelocityMeters, 
-          Constants.DrivetrainCharacteristics.maxAutoAccelerationMeters), true);
-        SequentialCommandGroup command = new SequentialCommandGroup(
-            new InstantCommand(()->{
-                armSubsystem.ElbowCommandAngle(34.0);
-            }),
-            new WaitCommand(0.2),
-            new ParallelDeadlineGroup(
-                    new WaitCommand(0.2),
-                    new SpitOutGamePiece(clawSubsystem)
-            ),
-            new InstantCommand(()-> {
-                armSubsystem.ElbowCommandAngle(5.0);
-                armSubsystem.commandAngle(5.0);
-            }),
-            runPath(drivetrainSubsystem, pathTrajectory), 
-            new WaitCommand(1), 
-            new InstantCommand(()->{
-              drivetrainSubsystem.gyro.resetPitch();
-              drivetrainSubsystem.MainLeftMotorBack.setSelectedSensorPosition(0);
-              drivetrainSubsystem.MainRightMotorBack.setSelectedSensorPosition(0);
-            }),
-            new BalanceComplexCommand(drivetrainSubsystem)
-        );
-        Pose2d startPosition = pathTrajectory.getInitialPose();
-        return new DuckAutoProfile(command, startPosition);
-      }
-      private static DuckAutoProfile scoreAndLowTaxi(DrivetrainSubsystem drivetrainSubsystem, ArmSubsystem armSubsystem, ClawSubsystem clawSubsystem){
-        String pathName = Constants.AutoTrajectoryFileNames.LOW_TAXI;
-        PathPlannerTrajectory pathTrajectory = PathPlanner.loadPath(pathName, new PathConstraints(
-          Constants.DrivetrainCharacteristics.maxAutoVelocityMeters, 
-          Constants.DrivetrainCharacteristics.maxAutoAccelerationMeters), true);
-        SequentialCommandGroup command = new SequentialCommandGroup(
-            new InstantCommand(()->{
-                armSubsystem.ElbowCommandAngle(34.0);
-            }),
-            new WaitCommand(1),
-            new ParallelDeadlineGroup(
-                    new WaitCommand(0.2),
-                    new SpitOutGamePiece(clawSubsystem)
-            ),
-            new InstantCommand(()-> {
-                armSubsystem.ElbowCommandAngle(5.0);
-                armSubsystem.commandAngle(5.0);
-            }),
-            runPath(drivetrainSubsystem, pathTrajectory)
-        );
-        Pose2d startPosition = pathTrajectory.getInitialPose();
-        return new DuckAutoProfile(command, startPosition);
-      }
 
   private static DuckAutoProfile justBalance(DrivetrainSubsystem drivetrainSubsystem){
     String pathName = Constants.AutoTrajectoryFileNames.MID_BALANCE;
@@ -164,7 +113,9 @@ public final class Autos {
   }
 
   //auto factory
-  private static CommandBase runPath(DrivetrainSubsystem drivetrainSubsystem, PathPlannerTrajectory pathTrajectory) {
+
+  //changed to public static, if problem arises change back to private static
+  public static CommandBase runPath(DrivetrainSubsystem drivetrainSubsystem, PathPlannerTrajectory pathTrajectory) {
     
     RamseteAutoBuilder autoBuilder = new RamseteAutoBuilder(
     drivetrainSubsystem::getPose, 
@@ -180,6 +131,23 @@ public final class Autos {
     drivetrainSubsystem);
     return autoBuilder.fullAuto(pathTrajectory).andThen(() -> drivetrainSubsystem.tankDriveVolts(0,0));
   }
+
+  public static CommandBase runCyclePath(DrivetrainSubsystem drivetrainSubsystem, PathPlannerTrajectory pathTrajectory) {
+    
+        RamseteAutoBuilder autoBuilder = new RamseteAutoBuilder(
+        drivetrainSubsystem::getPose, 
+        drivetrainSubsystem::resetOdometry, 
+        drivetrainSubsystem.ramseteController, 
+        drivetrainSubsystem.drivetrainKinematics, 
+        new SimpleMotorFeedforward(Constants.DrivetrainCharacteristics.kS, Constants.DrivetrainCharacteristics.kV,Constants.DrivetrainCharacteristics.kA),
+        drivetrainSubsystem::getWheelSpeeds, 
+        new PIDConstants(Constants.DrivetrainCharacteristics.kP, 0.0, Constants.DrivetrainCharacteristics.kD),
+        drivetrainSubsystem::tankDriveVolts,
+        Constants.eventMap,  
+        true,
+        drivetrainSubsystem);
+        return autoBuilder.followPath(pathTrajectory).andThen(() -> drivetrainSubsystem.tankDriveVolts(0,0));
+   }
 
   private Autos() {
     throw new UnsupportedOperationException("This is a utility class!");
