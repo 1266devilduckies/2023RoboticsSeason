@@ -105,6 +105,7 @@ public class Robot extends TimedRobot {
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
     }
+    m_autonomousCommand.schedule(); //comment out if not running demo
 
     /*m_robotContainer.getDrivetrainSubsystem().MainLeftMotorBack.configOpenloopRamp(0.25);
     m_robotContainer.getDrivetrainSubsystem().MainLeftMotorFront.configOpenloopRamp(0.25);

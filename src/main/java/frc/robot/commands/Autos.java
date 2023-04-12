@@ -15,13 +15,14 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
-import edu.wpi.first.wpilibj2.command.RepeatCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
+import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import frc.robot.Constants;
 import frc.robot.DuckAutoProfile;
+import frc.robot.RobotContainer;
+import frc.robot.commands.armPoses.GoHome;
 import frc.robot.commands.armPoses.HighCubeScore;
 import frc.robot.commands.armPoses.MidConeScore;
 import frc.robot.commands.armPoses.PickupCube;
@@ -87,23 +88,36 @@ public final class Autos {
                 new PickupCube(armSubsystem)
       ),
       new WaitCommand(1), //wait for the person feeding the cube to move as to not hurt them
-      new HighCubeScore(armSubsystem),
-      new WaitCommand(5), //hold for 5 seconds
+      new ParallelDeadlineGroup(
+        new WaitCommand(5), //hold for 5 seconds
+        new HighCubeScore(armSubsystem)
+        ),
       new ParallelDeadlineGroup(
                     new WaitCommand(0.2),
                     new SpitOutGamePiece(clawSubsystem)
       ),
+      new ParallelDeadlineGroup(
+        new WaitCommand(1),
+        new GoHome(armSubsystem)
+      ),
+      new WaitUntilCommand(()->RobotContainer.operatorJoystick.x().getAsBoolean()),//wait for operator to click button to not hurt kid
       new ParallelDeadlineGroup(
               new GrabGamePiece(clawSubsystem, true),        
               new PickupCube(armSubsystem)
       ),
       new WaitCommand(1), //wait for the person feeding the cube to move as to not hurt them,
-      new MidConeScore(armSubsystem),
-      new WaitCommand(5), //hold for 5 seconds
+      new ParallelDeadlineGroup(
+        new WaitCommand(5), //hold for 5 seconds
+      new MidConeScore(armSubsystem)),
       new ParallelDeadlineGroup(
                     new WaitCommand(0.2),
                     new SpitOutGamePiece(clawSubsystem)
-      ) //do not wait as somebody might move in that timeframe if it is not moving
+      ), //do not wait as somebody might move in that timeframe if it is not moving
+      new ParallelDeadlineGroup(
+        new WaitCommand(1),
+        new GoHome(armSubsystem)
+      ),
+      new WaitUntilCommand(()->RobotContainer.operatorJoystick.x().getAsBoolean())//wait for operator to click button to not hurt kid
     );
     return new DuckAutoProfile(command.repeatedly(), new Pose2d());
   }
