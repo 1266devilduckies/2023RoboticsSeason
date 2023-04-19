@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj.PneumaticHub;
 import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.commands.Autos;
@@ -105,7 +106,8 @@ public class Robot extends TimedRobot {
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
     }
-    m_autonomousCommand.schedule(); //comment out if not running demo
+    DuckAutoProfile autoProfile = m_robotContainer.getAutonomousProfile();
+    autoProfile.getAutoCommand().schedule(); //comment out if not running demo
 
     /*m_robotContainer.getDrivetrainSubsystem().MainLeftMotorBack.configOpenloopRamp(0.25);
     m_robotContainer.getDrivetrainSubsystem().MainLeftMotorFront.configOpenloopRamp(0.25);

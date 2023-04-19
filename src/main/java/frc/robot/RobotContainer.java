@@ -92,7 +92,8 @@ public class RobotContainer {
         ));
 
         //spit out both game pieces
-        operatorJoystick.x().whileTrue(new SpitOutGamePiece(clawSubsystem));
+        //comment in if not in demo
+        //operatorJoystick.x().whileTrue(new SpitOutGamePiece(clawSubsystem));
         operatorJoystick.povLeft().whileTrue(new SpitOutGamePiece(clawSubsystem));
         
         //pickup cube floor

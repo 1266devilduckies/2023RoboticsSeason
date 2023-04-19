@@ -16,6 +16,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
+import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
@@ -26,6 +27,7 @@ import frc.robot.commands.armPoses.GoHome;
 import frc.robot.commands.armPoses.HighCubeScore;
 import frc.robot.commands.armPoses.MidConeScore;
 import frc.robot.commands.armPoses.PickupCube;
+import frc.robot.commands.armPoses.PickupCubeHumanPlayer;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.ClawSubsystem;
 import frc.robot.subsystems.DrivetrainSubsystem;
@@ -89,11 +91,15 @@ public final class Autos {
       ),
       new WaitCommand(1), //wait for the person feeding the cube to move as to not hurt them
       new ParallelDeadlineGroup(
-        new WaitCommand(5), //hold for 5 seconds
+        new WaitCommand(1),
+        new GoHome(armSubsystem)
+      ),
+      new ParallelDeadlineGroup(
+        new WaitCommand(3), //hold for 3 seconds
         new HighCubeScore(armSubsystem)
         ),
       new ParallelDeadlineGroup(
-                    new WaitCommand(0.2),
+                    new WaitCommand(0.25),
                     new SpitOutGamePiece(clawSubsystem)
       ),
       new ParallelDeadlineGroup(
@@ -107,10 +113,35 @@ public final class Autos {
       ),
       new WaitCommand(1), //wait for the person feeding the cube to move as to not hurt them,
       new ParallelDeadlineGroup(
-        new WaitCommand(5), //hold for 5 seconds
+        new WaitCommand(1),
+        new GoHome(armSubsystem)
+      ),
+      new ParallelDeadlineGroup(
+        new WaitCommand(3), //hold for 3 seconds
       new MidConeScore(armSubsystem)),
       new ParallelDeadlineGroup(
-                    new WaitCommand(0.2),
+                    new WaitCommand(0.25),
+                    new SpitOutGamePiece(clawSubsystem)
+      ), //do not wait as somebody might move in that timeframe if it is not moving
+      new ParallelDeadlineGroup(
+        new WaitCommand(1),
+        new GoHome(armSubsystem)
+      ),
+      new WaitUntilCommand(()->RobotContainer.operatorJoystick.x().getAsBoolean()),//wait for operator to click button to not hurt kid
+      new ParallelDeadlineGroup(
+              new GrabGamePiece(clawSubsystem, true),        
+              new PickupCubeHumanPlayer(armSubsystem)
+      ),
+      new WaitCommand(1), //wait for the person feeding the cube to move as to not hurt them,
+      new ParallelDeadlineGroup(
+        new WaitCommand(3),
+        new GoHome(armSubsystem)
+      ),
+      new ParallelDeadlineGroup(
+        new WaitCommand(3), //hold for 3 seconds
+      new MidConeScore(armSubsystem)),
+      new ParallelDeadlineGroup(
+                    new WaitCommand(0.25),
                     new SpitOutGamePiece(clawSubsystem)
       ), //do not wait as somebody might move in that timeframe if it is not moving
       new ParallelDeadlineGroup(
