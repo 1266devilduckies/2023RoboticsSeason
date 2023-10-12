@@ -76,6 +76,14 @@ public class RobotContainer {
    */
   private void configureBindings() {
         driverJoystick.R1().whileTrue(new Balance(drivetrainSubsystem));
+
+        driverJoystick.L1().whileTrue(
+                new InstantCommand(() -> Constants.DrivetrainCharacteristics.speedScale = Constants.DrivetrainCharacteristics.slowSpeed)
+        );
+        driverJoystick.L1().whileTrue(
+                new InstantCommand(() -> Constants.DrivetrainCharacteristics.speedScale = Constants.DrivetrainCharacteristics.maxSpeed)
+        );
+
         driverJoystick.square().whileTrue(new ParallelDeadlineGroup(
                 new PickupConeHumanPlayerRamp(armSubsystem),
                 new GrabGamePiece(clawSubsystem, false)));
