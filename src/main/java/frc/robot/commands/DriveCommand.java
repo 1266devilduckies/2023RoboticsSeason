@@ -10,7 +10,7 @@ public class DriveCommand extends CommandBase{
 
     //SurfVikings had 1.5 as there rate limit, that means that the robots percent output can change by 150% percent in 1 second
     SlewRateLimiter rateLimiter = new SlewRateLimiter(1.6); //3
-    SlewRateLimiter turnRateLimiter = new SlewRateLimiter(2.1);
+    SlewRateLimiter turnRateLimiter = new SlewRateLimiter(3);
 
     DrivetrainSubsystem drivetrainSubsystem;
     public DriveCommand(DrivetrainSubsystem subsystem){

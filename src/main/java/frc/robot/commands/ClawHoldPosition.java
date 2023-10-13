@@ -16,7 +16,7 @@ public class ClawHoldPosition extends CommandBase {
               
         }
         public void execute() {
-                 this.clawSubsystem.motor.set(ControlMode.PercentOutput, 0.1 * (this.clawSubsystem.suckingInCube == true ? -1 : 1));
+                 this.clawSubsystem.motor.set(ControlMode.PercentOutput, 0.05 * (this.clawSubsystem.suckingInCube == true ? -1 : 1));
         }
 
         @Override

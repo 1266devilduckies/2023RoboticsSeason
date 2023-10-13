@@ -35,7 +35,7 @@ public final class Constants {
                 public static final int port = 0;
                 public static final double deadbandLeftJoystick = 0.05;
                 public static final double deadbandRightJoystick = deadbandLeftJoystick;
-                public static final int ForwardDriveAxis = 3; //1
+                public static final int ForwardDriveAxis = 1; //3
                 public static final int TurningDriveAxis = 2;
         }
 
@@ -79,7 +79,7 @@ public final class Constants {
                 //changed speed from 2.5 to 1.5 cause moad told me to
                 public static final double maxAutoVelocityMeters = 2.5;
                 public static final double maxAutoAccelerationMeters = 2.5;
-                public static double speedScale = 0.8;
+                public static double speedScale = 0.7;
                 public static final double slowSpeed = 0.3;
                 public static final double maxSpeed = speedScale;
                 public static final double deadband = 0.02;

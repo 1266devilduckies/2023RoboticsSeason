@@ -80,7 +80,7 @@ public class RobotContainer {
         driverJoystick.L1().whileTrue(
                 new InstantCommand(() -> Constants.DrivetrainCharacteristics.speedScale = Constants.DrivetrainCharacteristics.slowSpeed)
         );
-        driverJoystick.L1().whileTrue(
+        driverJoystick.L1().whileFalse(
                 new InstantCommand(() -> Constants.DrivetrainCharacteristics.speedScale = Constants.DrivetrainCharacteristics.maxSpeed)
         );
 
@@ -100,8 +100,7 @@ public class RobotContainer {
         ));
 
         //spit out both game pieces
-        //comment in if not in demo
-        //operatorJoystick.x().whileTrue(new SpitOutGamePiece(clawSubsystem));
+        operatorJoystick.x().whileTrue(new SpitOutGamePiece(clawSubsystem));
         operatorJoystick.povLeft().whileTrue(new SpitOutGamePiece(clawSubsystem));
         
         //pickup cube floor

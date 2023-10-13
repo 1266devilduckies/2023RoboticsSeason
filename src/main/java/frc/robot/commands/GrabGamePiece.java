@@ -25,7 +25,7 @@ public class GrabGamePiece extends CommandBase {
 
     @Override
     public boolean isFinished() {
-        return Math.abs(this.clawSubsystem.motor.getStatorCurrent()) > 63.0 && ((Timer.getFPGATimestamp() - startTime) > 0.25);
+        return Math.abs(this.clawSubsystem.motor.getStatorCurrent()) > 58.0 && ((Timer.getFPGATimestamp() - startTime) > 0.25);
     }
     public void end(boolean interrupted) {
         this.clawSubsystem.motor.set(ControlMode.PercentOutput, 0.0);

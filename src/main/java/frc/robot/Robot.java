@@ -106,9 +106,6 @@ public class Robot extends TimedRobot {
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
     }
-    DuckAutoProfile autoProfile = m_robotContainer.getAutonomousProfile();
-    autoProfile.getAutoCommand().schedule(); //comment out if not running demo
-
     /*m_robotContainer.getDrivetrainSubsystem().MainLeftMotorBack.configOpenloopRamp(0.25);
     m_robotContainer.getDrivetrainSubsystem().MainLeftMotorFront.configOpenloopRamp(0.25);
     m_robotContainer.getDrivetrainSubsystem().MainRightMotorBack.configOpenloopRamp(0.25);
