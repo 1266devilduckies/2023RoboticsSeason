@@ -11,12 +11,12 @@ public class PickupCube extends SequentialCommandGroup {
                 this.subsystem = subsystem;
                 addRequirements(subsystem);
                 addCommands(
-                        new InstantCommand(()->{
+                        /*new InstantCommand(()->{
                                 this.subsystem.commandAngle(10.0);
                         }),
-                        new WaitUntilCommand(this.subsystem::shoulderAtTarget),
+                        new WaitUntilCommand(this.subsystem::shoulderAtTarget),*/
                         new InstantCommand(()->{
-                                this.subsystem.ElbowCommandAngle(120.0);
+                                this.subsystem.ElbowCommandAngle(115.0);
                         }),
                         new WaitUntilCommand(()->false)
                 );

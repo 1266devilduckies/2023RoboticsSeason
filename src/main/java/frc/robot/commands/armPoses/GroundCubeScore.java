@@ -14,13 +14,13 @@ public class GroundCubeScore extends SequentialCommandGroup {
                 this.claw = clawSubsystem;
                 addRequirements(subsystem);
                 addCommands(
-                        new InstantCommand(()->{
+                        /*new InstantCommand(()->{
                                 this.subsystem.commandAngle(10.0);
                         }),
-                        new WaitUntilCommand(this.subsystem::shoulderAtTarget),
+                        new WaitUntilCommand(this.subsystem::shoulderAtTarget),*/
                         new InstantCommand(()->{
                                 this.claw.superSpeed = true;
-                                this.subsystem.ElbowCommandAngle(120.0);
+                                this.subsystem.ElbowCommandAngle(115.0);
                         }),
                         new WaitUntilCommand(()->false)
                 );

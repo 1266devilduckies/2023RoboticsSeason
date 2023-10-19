@@ -11,12 +11,12 @@ public class MidCubeScore extends SequentialCommandGroup {
                 this.subsystem = subsystem;
                 addRequirements(subsystem);
                 addCommands(
-                        new InstantCommand(()->{
+                        /*new InstantCommand(()->{
                                 this.subsystem.commandAngle(45.0);
                         }),
-                        new WaitUntilCommand(this.subsystem::shoulderAtTarget),
+                        new WaitUntilCommand(this.subsystem::shoulderAtTarget),*/
                         new InstantCommand(()->{
-                                this.subsystem.ElbowCommandAngle(125.0);
+                                this.subsystem.ElbowCommandAngle(45.0);
                         }),
                         new WaitUntilCommand(()->false)
                 );
